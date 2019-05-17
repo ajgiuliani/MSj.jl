@@ -10,9 +10,14 @@ This package provides an API to the mzXML file format for mass spectrometry data
 ## Installation
 This package is unregistered, so it should be installed by:
 ```julia
+using Pkg
+Pkg.add(PackageSpec(url="https://github.com/ajgiuliani/msJ.jl"))
+```
+or by:
+```julia
 ]
 
-(v1.0) pkg> add https://github.com/ajgiuliani/msJ.jl
+(v1.1) pkg> add https://github.com/ajgiuliani/msJ.jl
 ```
 
 ## Usage
@@ -51,13 +56,13 @@ The spectra contained in the mzXML files are loaded in an array of MSscan.
 
 
 ### Chromatograms
-Chromatograms may be obtained from a file or from an array of MSscans and return an array for both retention time and ion current
+Chromatograms may be obtained from a file or from an array of MSscans previously loaded. The function returns an array for both retention time and ion current
 
 ```julia
 rt1, ic1 = msJ.load(filename)
 rt2, ic2 = msJ.load(scans)
 ```
-Both sets of `rt` and `ic` are identical if `scans` has been obtained from loading `filename`.
+Both `rt1, rt2` and `ic1, ic2` sets are identical if `scans` has been loaded from `filename`.
 
 ### Average mass spectra
 Average mass spectra may be obtained from a file or from an array of MSscans:
@@ -66,10 +71,10 @@ Average mass spectra may be obtained from a file or from an array of MSscans:
 ms1 = msJ.msfilter(filename)
 ms2 = msJ.msfilter(scans)
 ```
-The `msfilter` functions return an MSscans structure (! notice the s) which is similar to the previous MSscan structure, but keeps tracks of the individual scans used to get the average. Some fields, such as num, now become vectors.
+The `msfilter` functions return an `MSscans` structure (! notice the s at the end) which is similar to the previous `MSscan` structure, but keeps tracks of the individual scans used to get the average. Some fields, such as `num`, now become vectors.
 
 ### Filters
-Chromatogram and average mass spectra may be filtered to the structure fields, such as
+Chromatogram and average mass spectra may be filtered to the structure fields, such as:
 
 ```julia
 msJ.msfilter(filename, msJ.Precursor(1255.5))             # where 1255.5 is the m/z ratio of the precursor
@@ -78,7 +83,7 @@ msJ.msfilter(filename, msJ.Activation_Method("CID"))      # where CID is the act
 msJ.msfilter(filename, msJ.Level(2))                      # where 2 corresponds to the MS^n level
 ...
 ```
-
+or 
 ```julia
 msJ.chromatogram(filename, method = msJ.MZ([0, 500]))     # where [0,500] specifies the m/z range to get the total ion current
 msJ.chromatogram(filename, method = msJ.MZ([500, 2000]))  # same as above with m/z in the [500,2000] range
@@ -87,7 +92,7 @@ msJ.chromatogram(filename, msJ.Level(1))                  # chromaogram for all 
 ```
 
 ### Basic operations
-Mass spectral data may added, subtracted, multiplied or divided by a number.
+Mass spectral data may be added, subtracted, multiplied or divided by a number.
 
 ```julia
 ms450 = msJ.msfilter(data, msJ.RT([430, 470]))
@@ -96,4 +101,4 @@ ms450_bkg = ms450 - 0.95 * bk1
 ```
 
 ## Other packages
-* [mzXML](https://github.com/timholy/mzXML.jl)
+* [mzXML](https://github.com/timholy/mzXML.jl): Load mass spectrometry mzXML files.
