@@ -96,4 +96,4 @@ ms450_bkg = ms450 - 0.95 * bk1
 ```
 
 ## Other packages
-* [mzXML][https://github.com/timholy/mzXML.jl]
+* [mzXML](https://github.com/timholy/mzXML.jl)
