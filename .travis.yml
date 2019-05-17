@@ -13,7 +13,10 @@ julia:
   
 notifications:
   email: false
-    
+
+git:
+  depth: 99999999
+
 codecov: true
 coveralls: true
 
