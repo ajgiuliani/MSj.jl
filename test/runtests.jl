@@ -8,7 +8,7 @@ function tests()
         @test info[3] == "MS2+ 1255.5  CID(CE=18)"
         @test info[4] == "MS3+ 902.33  PQD(CE=35)"
         
-        scans = msJ.load("/Users/alex/hubiC/development/msJ/test.mzXML")
+        scans = msJ.load("test.mzXML")
         @test eltype(scans)              == msJ.MSscan
         @test length(scans)              == 6
         @test scans[1].num               == 1
