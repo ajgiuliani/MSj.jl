@@ -3,7 +3,15 @@ language: julia
 os:
   - linux
   - osx
-  
+  - os: windows
+      language: sh
+      before_install:
+        - choco install julia
+      script:
+        - julia --color=yes -e 'using InteractiveUtils; versioninfo(verbose=true)'
+        - julia --color=yes -e 'printstyled("hello\n", color=:green)'
+        - julia --color=yes --project=. -e 'using Pkg; Pkg.test()'
+	
 julia:
   - nightly
   - 1.1.1
