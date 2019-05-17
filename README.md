@@ -12,6 +12,7 @@ This package provides an API to the mzXML file format for mass spectrometry data
 This package is unregistered, so it should be installed by:
 ```julia
 ]
+
 (v1.0) pkg> add https://github.com/ajgiuliani/msJ.jl
 ```
 
@@ -26,7 +27,7 @@ msJ.info(filename)
 ### Loading mzXML data
 
 ```julia
-scans = msJ.load("/Users/alex/hubiC/development/msJ/test.mzXML")
+scans = msJ.load(filename)
 ```
 
 Individual mass spectra a stored in a structure called MSscan reflecting that of the mzXML files, containing:
@@ -55,7 +56,7 @@ Chromatograms may be obtained from a file or from an array of MSscans and return
 rt1, ic1 = msJ.load(filename)
 rt2, ic2 = msJ.load(scans)
 ```
-Both sets of rt and ic are identical if scans has been obtained from loading the 'filename' file.
+Both sets of `rt` and `ic` are identical if scans has been obtained from loading the 'filename' file.
 
 ### Average mass spectra
 Average mass spectra may be obtained from a file or from an array of MSscans:
