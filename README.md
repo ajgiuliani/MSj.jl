@@ -33,8 +33,9 @@ scans = msJ.load("/Users/alex/hubiC/development/msJ/test.mzXML")
 
 Individual mass spectra a stored in a structure called MSscan reflecting that of the mzXML files, containing:
 
-| num               | scan number                                           | Int             |
+| Field             | Description                                           | Type            |
 |-------------------|-------------------------------------------------------|-----------------|
+| num               | scan number                                           | Int             |
 | rt                | retention time (seconds)                              | Float64         |
 | tic               | total ion current                                     | Float64         |
 | mz                | m/z data                                              | Vector{Float64} |
