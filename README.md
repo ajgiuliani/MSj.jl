@@ -28,7 +28,7 @@ msJ.info(filename)
 scans = msJ.load(filename)
 ```
 
-Individual mass spectra a stored in a structure called MSscan reflecting that of the mzXML files, containing:
+Individual mass spectra are stored in structures called MSscan reflecting the organization of the mzXML files.
 
 | Field             | Description                                           | Type            |
 |-------------------|-------------------------------------------------------|-----------------|
@@ -45,7 +45,9 @@ Individual mass spectra a stored in a structure called MSscan reflecting that of
 | activationMethod  | Activation method used in MS/MS acquisitions          | String          |
 | collisionEnergy   | Collision energy used in MS/MS acquisitions           | Float64         |
 
-The spectra contained in the mzXML file are loaded in an array of MSscan.
+
+The spectra contained in the mzXML files are loaded in an array of MSscan.
+
 
 ### Chromatograms
 Chromatograms may be obtained from a file or from an array of MSscans and return an array for both retention time and ion current
@@ -54,7 +56,7 @@ Chromatograms may be obtained from a file or from an array of MSscans and return
 rt1, ic1 = msJ.load(filename)
 rt2, ic2 = msJ.load(scans)
 ```
-Both sets of `rt` and `ic` are identical if scans has been obtained from loading the 'filename' file.
+Both sets of `rt` and `ic` are identical if `scans` has been obtained from loading `filename`.
 
 ### Average mass spectra
 Average mass spectra may be obtained from a file or from an array of MSscans:
@@ -63,23 +65,23 @@ Average mass spectra may be obtained from a file or from an array of MSscans:
 ms1 = msJ.msfilter(filename)
 ms2 = msJ.msfilter(scans)
 ```
-The msfilter functions return an MSscans (! notice the s) which is based on the previous MSscan structure, but keeps tracks of the individual scans used to get the average. Some fields, such as num, are  now vectors.
+The `msfilter` functions return an MSscans structure (! notice the s) which is similar to the previous MSscan structure, but keeps tracks of the individual scans used to get the average. Some fields, such as num, now become vectors.
 
 ### Filters
 Chromatogram and average mass spectra may be filtered to the structure fields, such as
 
 ```julia
-msJ.msfilter(filename, msJ.Precursor(1255.5))
-msJ.msfilter(filename, msJ.Activation_Energy(18))
-msJ.msfilter(filename, msJ.Activation_Method("CID"))
-msJ.msfilter(filename, msJ.Level(2))
+msJ.msfilter(filename, msJ.Precursor(1255.5))             # where 1255.5 is the m/z ratio of the precursor
+msJ.msfilter(filename, msJ.Activation_Energy(18))         # where 18 is the collision energy of the MS/MS spectra
+msJ.msfilter(filename, msJ.Activation_Method("CID"))      # where CID is the activation method
+msJ.msfilter(filename, msJ.Level(2))                      # where 2 corresponds to the MS^n level
 ...
 ```
 
 ```julia
-msJ.chromatogram(filename, method = msJ.MZ([0, 500]))
-msJ.chromatogram(filename, method = msJ.MZ([500, 2000]))
-msJ.chromatogram(filename, msJ.Level(1))
+msJ.chromatogram(filename, method = msJ.MZ([0, 500]))     # where [0,500] specifies the m/z range to get the total ion current
+msJ.chromatogram(filename, method = msJ.MZ([500, 2000]))  # same as above with m/z in the [500,2000] range
+msJ.chromatogram(filename, msJ.Level(1))                  # chromaogram for all the MS spectra
 ...
 ```
 
