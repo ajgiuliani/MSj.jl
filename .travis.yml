@@ -4,8 +4,7 @@ language: julia
 os:
   - linux
   - osx
-  - windows
-	
+  - windows	
 julia:
   - nightly
   - 1.1
