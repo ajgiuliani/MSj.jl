@@ -33,8 +33,8 @@ scans = msJ.load("/Users/alex/hubiC/development/msJ/test.mzXML")
 
 Individual mass spectra a stored in a structure called MSscan reflecting that of the mzXML files, containing:
 
-|-------------------|-------------------------------------------------------|-----------------|
 | num               | scan number                                           | Int             |
+|-------------------|-------------------------------------------------------|-----------------|
 | rt                | retention time (seconds)                              | Float64         |
 | tic               | total ion current                                     | Float64         |
 | mz                | m/z data                                              | Vector{Float64} |
@@ -46,7 +46,6 @@ Individual mass spectra a stored in a structure called MSscan reflecting that of
 | polarity          | Ion mode of the scan ("+" or "-")                     | String          |
 | activationMethod  | Activation method used in MS/MS acquisitions          | String          |
 | collisionEnergy   | Collision energy used in MS/MS acquisitions           | Float64         |
-|-------------------|-------------------------------------------------------|-----------------|
 
 The spectra contained in the mzXML file are loaded in an array of MSscan.
 
