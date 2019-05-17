@@ -5,13 +5,6 @@ os:
   - linux
   - osx
   - os: windows
-      language: sh
-      before_install:
-        - choco install julia
-      script:
-        - julia --color=yes -e 'using InteractiveUtils; versioninfo(verbose=true)'
-        - julia --color=yes -e 'printstyled("hello\n", color=:green)'
-        - julia --color=yes --project=. -e 'using Pkg; Pkg.test()'
 	
 julia:
   - nightly
@@ -23,18 +16,3 @@ notifications:
     
 codecov: true
 coveralls: true
-
-after_success:
- - julia -e 'if VERSION >= v"0.7.0-" using Pkg end; cd(Pkg.dir("msJ")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())';
- - julia -e 'if VERSION >= v"0.7.0-" using Pkg end; cd(Pkg.dir("msJ")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())';
- 
- jobs:
-  include:
-    - stage: "Documentation"
-      julia: 1.0
-      os: linux
-      script:
-        - julia --project=docs/ -e 'using Pkg; Pkg.instantiate();
-                                    Pkg.develop(PackageSpec(path=pwd()))'
-        - julia --project=docs/ docs/make.jl
-after_success: skip
