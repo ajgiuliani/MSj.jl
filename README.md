@@ -1,10 +1,10 @@
 # msJ.jl
 
-[![Build Status](https://travis-ci.org/ajgiuliani/msJ.jl.svg?branch=master)](https://travis-ci.org/ajgiuliani/msJ.jl)
+[![Build Status](https://travis-ci.org/ajgiuliani/msJ.jl.svg?branch=master)](https://travis-ci.org/ajgiuliani/msJ.jl?branch=master)
 
-[![Coverage Status](https://coveralls.io/repos/ajgiuliani/msJ.j/badge.svg?branch=master&service=github)](https://coveralls.io/github//ajgiuliani/msJ.j?branch=master)
+[![Coverage Status](https://coveralls.io/repos/ajgiuliani/msJ.j/badge.svg?branch=master&service=github)](https://coveralls.io/github//ajgiuliani/msJ.jl?branch=master)
 
-[![codecov.io](http://codecov.io/github//ajgiuliani/msJ.j/coverage.svg?branch=master)](http://codecov.io/github/ajgiuliani/msJ.j?branch=master)
+[![codecov.io](http://codecov.io/github//ajgiuliani/msJ.j/coverage.svg?branch=master)](http://codecov.io/github/ajgiuliani/msJ.jl?branch=master)
 
 This package provides an API to the mzXML file format for mass spectrometry data.
 
