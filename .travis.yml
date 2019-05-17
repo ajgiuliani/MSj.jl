@@ -1,5 +1,6 @@
 ## Documentation: http://docs.travis-ci.com/user/languages/julia/
 language: julia
+
 os:
   - linux
   - osx
@@ -14,11 +15,11 @@ os:
 	
 julia:
   - nightly
-  - 1.1.1
-  - 1.0.4
+  - 1.1
+  - 1.0
   
 notifications:
-  email: true
+  email: false
     
 codecov: true
 coveralls: true
