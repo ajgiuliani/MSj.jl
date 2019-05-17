@@ -19,7 +19,5 @@ codecov: true
 coveralls: true
 
 after_success:
-  push coverage results to Coveralls
   - julia -e 'cd(Pkg.dir("msJ")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
-  push coverage results to Codecov
   - julia -e 'cd(Pkg.dir("msJ")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
