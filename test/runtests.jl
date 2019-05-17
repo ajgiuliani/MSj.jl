@@ -1,3 +1,6 @@
+require 'coveralls'
+Coveralls.wear!
+
 using msJ, Test
 
 function tests()
