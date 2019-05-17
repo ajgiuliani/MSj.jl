@@ -4,7 +4,7 @@
 
 [![Coverage Status](https://coveralls.io/repos/ajgiuliani/msJ.j/badge.svg?branch=master&service=github)](https://coveralls.io/github//ajgiuliani/msJ.j?branch=master)
 
-[![codecov.io](http://codecov.io/github//ajgiuliani/msJ.j/coverage.svg?branch=master)](http://codecov.io/github//ajgiuliani/msJ.j?branch=master)
+[![codecov.io](http://codecov.io/github//ajgiuliani/msJ.j/coverage.svg?branch=master)](http://codecov.io/github/ajgiuliani/msJ.j?branch=master)
 
 This package provides an API to the mzXML file format for mass spectrometry data.
 
@@ -13,8 +13,8 @@ This package is unregistered, so it should be installed by:
 ```julia
 ]
 ```
-```pkg
- add https://github.com/ajgiuliani/msJ.jl
+```julia
+(v1.0) pkg> add https://github.com/ajgiuliani/msJ.jl
 ```
 
 ## Usage
