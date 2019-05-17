@@ -12,8 +12,6 @@ This package provides an API to the mzXML file format for mass spectrometry data
 This package is unregistered, so it should be installed by:
 ```julia
 ]
-```
-```julia
 (v1.0) pkg> add https://github.com/ajgiuliani/msJ.jl
 ```
 
