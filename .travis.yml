@@ -4,7 +4,7 @@ language: julia
 os:
   - linux
   - osx
-  - os: windows
+  - windows
 	
 julia:
   - nightly
@@ -16,3 +16,4 @@ notifications:
     
 codecov: true
 coveralls: true
+
