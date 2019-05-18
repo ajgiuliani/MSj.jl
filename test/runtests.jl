@@ -7,7 +7,7 @@ function tests()
         @test info[9] == "6 scans"
         @test info[10] == "MS1+"
         @test info[11] == "MS2+ 1255.5  CID(CE=18)"
-        @test info[12] == "MS3+ 902.33  PQD(CE=35)"    
+        @test info[12] == "MS3+ 902.33  PQD(CE=35)"
         scans = msJ.load("test.mzXML")
         @test eltype(scans)              == msJ.MSscan
         @test length(scans)              == 6
@@ -16,7 +16,7 @@ function tests()
         @test scans[3].polarity          == "+"
         @test scans[2].activationMethod  == "CID"
         @test scans[3].collisionEnergy   == 35.0
-        @test size(scans[1].int, 1)      == 22320        
+        @test size(scans[1].int, 1)      == 22320
         rt = msJ.retention_time("test.mzXML")
         @test length(rt) == 6
         rt, tic = msJ.chromatogram("test.mzXML", method = msJ.TIC() )
