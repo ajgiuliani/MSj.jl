@@ -7,8 +7,7 @@ function tests()
         @test info[9] == "6 scans"
         @test info[10] == "MS1+"
         @test info[11] == "MS2+ 1255.5  CID(CE=18)"
-        @test info[12] == "MS3+ 902.33  PQD(CE=35)"
-
+        @test info[12] == "MS3+ 902.33  PQD(CE=35)"    
         scans = msJ.load("test.mzXML")
         @test eltype(scans)              == msJ.MSscan
         @test length(scans)              == 6
@@ -17,8 +16,7 @@ function tests()
         @test scans[3].polarity          == "+"
         @test scans[2].activationMethod  == "CID"
         @test scans[3].collisionEnergy   == 35.0
-        @test size(scans[1].int, 1)      == 22320
-
+        @test size(scans[1].int, 1)      == 22320        
         rt = msJ.retention_time("test.mzXML")
         @test length(rt) == 6
         rt, tic = msJ.chromatogram("test.mzXML", method = msJ.TIC() )
@@ -43,7 +41,6 @@ function tests()
                                        msJ.Activation_Method(["CID", "PQD"]),
                                        msJ.Level([2, 3]) )
         @test length(xrt2) == 2
-
         rt = msJ.retention_time(scans)
         @test length(rt) == 6
         rt, tic = msJ.chromatogram(scans, method = msJ.TIC() )
@@ -68,7 +65,6 @@ function tests()
                                      msJ.Activation_Method(["CID", "PQD"]),
                                      msJ.Level([2, 3]) )
         @test (xrt, xtic) == ([0.7307, 2.1379], [9727.2, 11.3032])
-
         ms = msJ.msfilter("test.mzXML")
         @test length(ms.num) == 6
         ms = msJ.msfilter("test.mzXML", msJ.Polarity("+"),
@@ -89,7 +85,6 @@ function tests()
                           msJ.IC([0, 1e4]))
         @test ms isa msJ.MSscans
         @test ms.num == [2, 3]
-
         ms = msJ.msfilter(scans)
         @test length(ms.num) == 6
         ms = msJ.msfilter(scans, msJ.Polarity("+"),
@@ -109,11 +104,9 @@ function tests()
                           msJ.RT([1,2]),
                           msJ.IC([0, 1e4]))
         @test ms isa msJ.MSscans
-        @test ms.num == [2, 3]
-        
+        @test ms.num == [2, 3]        
     end
 end
-
 tests()
 
 
