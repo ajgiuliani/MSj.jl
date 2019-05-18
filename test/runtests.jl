@@ -2,7 +2,6 @@ using msJ, Test
 
 function tests()
     @testset "Subset of tests"  begin
-        # info
         info = msJ.info("test.mzXML", verbose = true)
         @test info[1] == "parentFile: test.raw"      
         @test info[9] == "6 scans"
@@ -10,7 +9,6 @@ function tests()
         @test info[11] == "MS2+ 1255.5  CID(CE=18)"
         @test info[12] == "MS3+ 902.33  PQD(CE=35)"
 
-        # loading
         scans = msJ.load("test.mzXML")
         @test eltype(scans)              == msJ.MSscan
         @test length(scans)              == 6
@@ -21,8 +19,6 @@ function tests()
         @test scans[3].collisionEnergy   == 35.0
         @test size(scans[1].int, 1)      == 22320
 
-        
-        # chromatogram mzxml
         rt = msJ.retention_time("test.mzXML")
         @test length(rt) == 6
         rt, tic = msJ.chromatogram("test.mzXML", method = msJ.TIC() )
@@ -48,7 +44,6 @@ function tests()
                                        msJ.Level([2, 3]) )
         @test length(xrt2) == 2
 
-        # chromatogram scans
         rt = msJ.retention_time(scans)
         @test length(rt) == 6
         rt, tic = msJ.chromatogram(scans, method = msJ.TIC() )
@@ -74,7 +69,6 @@ function tests()
                                      msJ.Level([2, 3]) )
         @test (xrt, xtic) == ([0.7307, 2.1379], [9727.2, 11.3032])
 
-        # msfilter mzxml
         ms = msJ.msfilter("test.mzXML")
         @test length(ms.num) == 6
         ms = msJ.msfilter("test.mzXML", msJ.Polarity("+"),
@@ -96,8 +90,6 @@ function tests()
         @test ms isa msJ.MSscans
         @test ms.num == [2, 3]
 
-
-        # msfilter scans
         ms = msJ.msfilter(scans)
         @test length(ms.num) == 6
         ms = msJ.msfilter(scans, msJ.Polarity("+"),
