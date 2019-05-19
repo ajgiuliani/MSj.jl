@@ -136,7 +136,7 @@ function tests()
         a = msJ.avg(scans[1], scans[4])
         @test a.num == [1,4]                                                           #56
 
-        info = msJ.info("test.mzXML")
+        info = msJ.info("test64.mzXML")
         @test info[2] == "MS1-"                                                        #57
         
         scans = msJ.load("test64.mzXML")
