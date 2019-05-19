@@ -76,9 +76,9 @@ function tests()
         @test ms isa msJ.MSscans                                                       #33
         @test ms.num == [2, 3]                                                         #34
 
-        ms = msJ.msfilter(scans, msJ.Polarity(["+"]),msJ.Scan([2,3]),msJ.Precursor([1255.5, 902.33]),msJ.Activation_Energy([18, 35]),msJ.Activation_Method(["CID", "PQD"]),msJ.RT([[1,2], [2,3]]),msJ.IC([0, 1e4]))
+        ms = msJ.msfilter("test.mzXML", msJ.RT( [[1,2], [2,3]] ), stats = false )
         @test ms isa msJ.MSscans                                                       #35
-        @test ms.num == [2, 3]                                                         #36
+        @test ms.num == [2, 3, 4]                                                         #36
 
         ms = msJ.msfilter("test.mzXML", msJ.Polarity(["+"]),msJ.Scan([2,3]),msJ.Precursor([1255.5, 902.33]),msJ.Activation_Method(["CID", "PQD"]),msJ.RT([1,2]),msJ.IC([0, 1e4]))   #msJ.Activation_Energy([18., 35.]),
         @test ms isa msJ.MSscans                                                       #37
