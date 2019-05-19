@@ -78,14 +78,18 @@ function tests()
 
         ms = msJ.msfilter("test.mzXML", msJ.RT( [[1,2], [2,3]] ), stats = false )
         @test ms isa msJ.MSscans                                                       #35
-        @test ms.num == [2, 3, 4]                                                         #36
+        @test ms.num == [2, 3, 4]                                                      #36
 
         ms = msJ.msfilter("test.mzXML", msJ.Polarity(["+"]),msJ.Scan([2,3]),msJ.Precursor([1255.5, 902.33]),msJ.Activation_Method(["CID", "PQD"]),msJ.RT([1,2]),msJ.IC([0, 1e4]))   #msJ.Activation_Energy([18., 35.]),
         @test ms isa msJ.MSscans                                                       #37
         @test ms.num == [2, 3]                                                         #38
 
         xrt, xtic = msJ.chromatogram("test.mzXML", msJ.Polarity(["+"]),msJ.Scan([2,3]),msJ.Precursor([1255.5, 902.33]),msJ.Activation_Method(["CID", "PQD"]),msJ.Level([2, 3]) )   #msJ.Activation_Energy([18.0, 35.0]),
-        @test length(xrt) == 2                                                        #39
+        @test length(xrt) == 2                                                         #39
+
+        ms = msJ.msfilter(scans, msJ.RT( [[1,2], [2,3]] ), stats = false )
+        @test ms isa msJ.MSscans                                                       #40
+        @test ms.num == [2, 3, 4]                                                      #41
 
         
     end
