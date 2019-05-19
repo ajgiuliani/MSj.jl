@@ -89,10 +89,9 @@ or combined together.
 ```julia
 msJ.msfilter(filename, msJ.Precursor(1255.5),
                        msJ.Activation_Energy(18),
-				       msJ.Activation_Method("CID"),
-					   msJ.Level(2),
-					   msJ.RT( [1, 60] ),
-					   )
+	   	       msJ.Activation_Method("CID"),
+		       msJ.Level(2),
+		       msJ.RT( [1, 60] ))
 ```
 The average mass spectrum is the average of the MS2 scans (level = 2), for which the precursor is m/z 1255.5 obtained upon CID with an activation energy of 18 and for retention times in the 1 to 60 s range.
 
