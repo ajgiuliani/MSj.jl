@@ -84,8 +84,8 @@ function tests()
         @test ms isa msJ.MSscans                                                       #37
         @test ms.num == [2, 3]                                                         #38
 
-#        xrt, xtic = msJ.chromatogram("test.mzXML", msJ.Polarity(["+"]),msJ.Scan([2,3]),msJ.Precursor([1255.5, 902.33]),msJ.Activation_Energy([18, 35]),msJ.Activation_Method(["CID", "PQD"]),msJ.Level([2, 3]) )
-#        @test length(xrt) == 2                                                        #39
+        xrt, xtic = msJ.chromatogram("test.mzXML", msJ.Polarity(["+"]),msJ.Scan([2,3]),msJ.Precursor([1255.5, 902.33]),msJ.Activation_Energy([18.0, 35.0]),msJ.Activation_Method(["CID", "PQD"]),msJ.Level([2, 3]) )
+        @test length(xrt) == 2                                                        #39
 
         
     end
