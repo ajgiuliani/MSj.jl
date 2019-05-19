@@ -85,21 +85,21 @@ msJ.msfilter(filename, msJ.Level(2))                      # where 2 corresponds 
 msJ.msfilter(filename, msJ.RT([1,5))                      # where [1,5] stands for retention time from 1 to 5s.
 ...
 ```
-or combined together.
+```julia
+msJ.chromatogram(filename, method = msJ.MZ([0, 500]))     # where [0,500] specifies the m/z range to get the total ion current
+msJ.chromatogram(filename, method = msJ.MZ([500, 2000]))  # same as above with m/z in the [500,2000] range
+msJ.chromatogram(filename, msJ.Level(1))                  # chromaogram for all the MS spectra
+...
+```
+
+or combined together. For example the script below is used to obtain the average mass spectrum for the MS2 scans (level = 2), for which the precursor is m/z 1255.5, obtained upon CID with an activation energy of 18 and for retention times in the 1 to 60 s range.
+
 ```julia
 msJ.msfilter(filename, msJ.Precursor(1255.5),
                        msJ.Activation_Energy(18),
 	   	       msJ.Activation_Method("CID"),
 		       msJ.Level(2),
 		       msJ.RT( [1, 60] ))
-```
-The average mass spectrum is the average of the MS2 scans (level = 2), for which the precursor is m/z 1255.5 obtained upon CID with an activation energy of 18 and for retention times in the 1 to 60 s range.
-
-```julia
-msJ.chromatogram(filename, method = msJ.MZ([0, 500]))     # where [0,500] specifies the m/z range to get the total ion current
-msJ.chromatogram(filename, method = msJ.MZ([500, 2000]))  # same as above with m/z in the [500,2000] range
-msJ.chromatogram(filename, msJ.Level(1))                  # chromaogram for all the MS spectra
-...
 ```
 
 ### Basic operations
