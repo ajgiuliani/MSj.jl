@@ -142,7 +142,8 @@ function tests()
         scans = msJ.load("test64.mzXML")
         @test eltype(scans)              == msJ.MSscan                                 #58
 
-
+        info = msJ.info("test.mzXMLM")
+        @test info.msg == "File format not supported."                                 #59
     end
 end
 tests()
