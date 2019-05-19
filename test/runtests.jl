@@ -122,10 +122,10 @@ function tests()
         @test b.num == [2,3,4]                                                         #51
 
         b = ms + scans[1]
-        @test b.num == [2,3,4, 1]                                                      #52
+        @test b.num == [2,3,4,1]                                                      #52
 
         b = scans[1] + ms 
-        @test b.num == [2,3,4, 1]                                                      #53
+        @test b.num == [1,2,3,4]                                                      #53
 
         b = scans[1] + scans[4] 
         @test b.num == [1,4]                                                           #54
