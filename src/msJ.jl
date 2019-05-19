@@ -41,7 +41,6 @@ struct MSscans  <: MScontainer
     activationMethod::Vector{String}  # activationMethod
     collisionEnergy::Vector{Float64}  # collisionEnergy
     s::Vector{Float64}                # variance
-
 end
 
 
