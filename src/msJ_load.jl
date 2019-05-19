@@ -22,7 +22,7 @@ function load(filename::String)
 #        return load_ascii!(filename, scans)
 
     else
-        ErrorException("File format not supported.")
+        return ErrorException("File format not supported.")
     end
 end
 

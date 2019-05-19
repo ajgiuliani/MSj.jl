@@ -144,6 +144,27 @@ function tests()
 
         info = msJ.info("test.mzXMLM")
         @test info.msg == "File format not supported."                                 #59
+
+        scans = msJ.load("test.mzXMLL")
+        @test info.msg == "File format not supported."                                 #60
+
+        scans = msJ.load("bad1.mzXML")
+        @test scans.msg == "Not an mzXML file."                                        #61
+
+        scans = msJ.info("bad1.mzXML")
+        @test scans.msg == "Not an mzXML file."                                        #62
+
+        scans = msJ.load("bad2.mzXML")
+        @test scans[1].num == 0                                                        #63
+
+        scans = msJ.load("bad3.mzXML")
+        @test scans[1].num == scans[2].num == 0                                        #64
+
+        rt, tic = msJ.chromatogram("test.mzXML", method = msJ.∆MZ([1, 2]))
+        @test rt.msg == "Bad mz ± ∆mz values."                                         #65
+        
+
+
     end
 end
 tests()

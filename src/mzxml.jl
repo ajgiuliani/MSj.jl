@@ -5,7 +5,7 @@ function info_mzxml!(filename::String, info::Vector{String}, verbose::Bool=false
     xdoc = parse_file(filename)
     xroot = root(xdoc)       
     if name(xroot) != "mzXML"
-        ErrorException("Not an mzXML file.")
+        return ErrorException("Not an mzXML file.")
     end
     
     msRun = find_element(xroot, "msRun")
@@ -90,7 +90,7 @@ function load_mzxml!(filename::String)
     xdoc = parse_file(filename)
     xroot = root(xdoc)
     if name(xroot) != "mzXML"
-        ErrorException("Not an mzXML file.")
+        return ErrorException("Not an mzXML file.")
     end
     msRun = find_element(xroot, "msRun")
     scanCount = attribute(msRun, "scanCount")
@@ -118,7 +118,7 @@ function load_mzxml(filename::String, index::Int)
     xdoc = parse_file(filename)
     xroot = root(xdoc)
     if name(xroot) != "mzXML"
-        ErrorException("Not an mzXML file.")
+        return ErrorException("Not an mzXML file.")
     end
     msRun = find_element(xroot, "msRun")
     scanCount = attribute(msRun, "scanCount")
@@ -179,12 +179,11 @@ function load_mzxml_spectrum(c::XMLElement)
     
     peaks = find_element(c, "peaks")
     pairOrder = attribute(peaks, "pairOrder")
-    if pairOrder == "m/z-int"
-        #
-    elseif pairOrder == nothing
+    if pairOrder == nothing
         pairOrder = attribute(peaks, "contentType")
-    else
-        ErrorException("PairOrder / contentType $pairOrder unknown.")
+    end
+    if pairOrder != "m/z-int"
+        return MSscan(0 , 0.0, 0.0, [], [], 0, 0.0, 0.0 , 0.0, "", "", 0.0 )
     end
     
     precision = attribute(peaks, "precision")
@@ -197,10 +196,9 @@ function load_mzxml_spectrum(c::XMLElement)
     
     byteOrder = attribute(peaks, "byteOrder")
     if byteOrder == "network"
-        #ntoh!(A)
         A = ntoh.(A)
     else
-        ErrorException("ByteOrder $byteOrder unknown.")
+        return MSscan(0 , 0.0, 0.0, [], [], 0, 0.0, 0.0 , 0.0, "", "", 0.0 )
     end
     
     int = A[2:2:end]
@@ -525,7 +523,7 @@ function extracted_chromatogram(filename::String, indices::Vector{Int},method::M
     elseif method isa ∆MZ
         mz1 = convert(Float64, method.arg[1] - method.arg[2] )  # mz - ∆mz
         if(mz1 < 0.0)
-            ErrorException("Bas mz ± ∆mz values.")
+            return ErrorException("Bad mz ± ∆mz values."), ""
         end
         mz2 = convert(Float64, method.arg[1] + method.arg[2] ) # mz + ∆mz
         for i = 1:length(indices)
