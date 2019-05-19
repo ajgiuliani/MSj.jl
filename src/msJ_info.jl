@@ -34,8 +34,8 @@ function info(filename::String; verbose::Bool = false)
 
 #    elseif Unicode.normalize(extension, casefold=true) == "ascii"
 #        return info_ascii!(filename, info)
-    else 
-        error("File format not supported.") 
+    else
+        return ErrorException("File format not supported.")
     end 
 end
 
