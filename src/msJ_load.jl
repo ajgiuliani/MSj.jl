@@ -21,8 +21,8 @@ function load(filename::String)
 #        #println("loading ascii file...")
 #        return load_ascii!(filename, scans)
 
-    else 
-        error("File format not supported.") 
+    else
+        ErrorException("File format not supported.")
     end
 end
 
@@ -49,7 +49,7 @@ function retention_time(filename::String)
         xdoc = parse_file(filename)
         xroot = root(xdoc)
         if name(xroot) != "mzXML"
-            error("Not an mzXML file")
+            ErrorException("Not an mzXML file.")
         end
         
         msRun = find_element(xroot, "msRun")    
@@ -60,8 +60,8 @@ function retention_time(filename::String)
 
 #    elseif Unicode.normalize(extension, casefold=true) == "ascii"
 #        rt = rt_ascii!(filename, rt)
-    else 
-        error("File format not supported.") 
+    else
+        ErrorException("File format not supported.")
     end
     return rt
 end
@@ -101,7 +101,7 @@ function chromatogram(filename::String, filters::FilterType...; method::MethodTy
         xdoc = parse_file(filename)
         xroot = root(xdoc)
         if name(xroot) != "mzXML"
-            error("Not an mzXML file")
+            ErrorException("Not an mzXML file.")
         end
         
         msRun = find_element(xroot, "msRun")    
@@ -116,8 +116,8 @@ function chromatogram(filename::String, filters::FilterType...; method::MethodTy
         
 #    elseif Unicode.normalize(extension, casefold=true) == "ascii"
 #        xrt, xic = xtic_ascii!(filename, xrt, xtic, arg::FilterType )       
-    else 
-        error("File format .$extension not supported.") 
+    else
+        ErrorException("File format not supported.")
     end
     free(xdoc)
 
@@ -125,7 +125,7 @@ function chromatogram(filename::String, filters::FilterType...; method::MethodTy
     if length(indices) != 0
         return extracted_chromatogram(filename, indices, method)
     else
-        error("No matching spectra")
+        ErrorException("No matching spectra.")
     end
 
 end
@@ -156,7 +156,7 @@ function msfilter(filename::String, arguments::FilterType...; stats::Bool=true)
         xdoc = parse_file(filename)
         xroot = root(xdoc)
         if name(xroot) != "mzXML"
-            error("Not an mzXML file")
+            ErrorException("Not an mzXML file.")
         end        
         msRun = find_element(xroot, "msRun")    
         scanCount = parse(Int, attribute(msRun, "scanCount"))
@@ -170,8 +170,8 @@ function msfilter(filename::String, arguments::FilterType...; stats::Bool=true)
 
 #    elseif Unicode.normalize(extension, casefold=true) == "ascii"
 #        error("msfilter not supported for Bruker ascii")
-    else 
-        error("File format not supported.") 
+    else
+        ErrorException("File format not supported.")
     end
 
     free(xdoc)
@@ -181,7 +181,7 @@ function msfilter(filename::String, arguments::FilterType...; stats::Bool=true)
     elseif length(indices) == 1
         return load_mzxml(filename, indices[1])
     else
-        error("No matching spectra")
+        ErrorException("No matching spectra.")
     end
 end
 
@@ -215,7 +215,7 @@ function chromatogram(scans::Vector{MSscan}, filters::FilterType...; method::Met
     if length(indices) != 0
         return extracted_chromatogram(scans, indices, method)
     else
-        error("No matching spectra")
+        ErrorException("No matching spectra.")
     end    
 end
 
@@ -251,7 +251,7 @@ function msfilter(scans::Vector{MSscan}, arguments::FilterType...; stats::Bool=t
     elseif length(indices) == 1
         return scans[indices[1] ]
     else
-        error("No matching spectra")
+        ErrorException("No matching spectra.")
     end
 end
 

@@ -4,8 +4,8 @@ function info_mzxml!(filename::String, info::Vector{String}, verbose::Bool=false
     filter = ""
     xdoc = parse_file(filename)
     xroot = root(xdoc)       
-    if name(xroot) != "mzXML"       
-        error("Not an mzXML file")    
+    if name(xroot) != "mzXML"
+        ErrorException("Not an mzXML file.")
     end
     
     msRun = find_element(xroot, "msRun")
@@ -90,7 +90,7 @@ function load_mzxml!(filename::String)
     xdoc = parse_file(filename)
     xroot = root(xdoc)
     if name(xroot) != "mzXML"
-        error("Not an mzXML file")
+        ErrorException("Not an mzXML file.")
     end
     msRun = find_element(xroot, "msRun")
     scanCount = attribute(msRun, "scanCount")
@@ -118,7 +118,7 @@ function load_mzxml(filename::String, index::Int)
     xdoc = parse_file(filename)
     xroot = root(xdoc)
     if name(xroot) != "mzXML"
-        error("Not an mzXML file")
+        ErrorException("Not an mzXML file.")
     end
     msRun = find_element(xroot, "msRun")
     scanCount = attribute(msRun, "scanCount")
@@ -184,7 +184,7 @@ function load_mzxml_spectrum(c::XMLElement)
     elseif pairOrder == nothing
         pairOrder = attribute(peaks, "contentType")
     else
-        error("PairOrder/contentType $pairOrder unknonwn")
+        ErrorException("PairOrder / contentType $pairOrder unknown.")
     end
     
     precision = attribute(peaks, "precision")
@@ -200,7 +200,7 @@ function load_mzxml_spectrum(c::XMLElement)
         #ntoh!(A)
         A = ntoh.(A)
     else
-        error("ByteOrder $byteOrder unknown")
+        ErrorException("ByteOrder $byteOrder unknown.")
     end
     
     int = A[2:2:end]
@@ -525,7 +525,7 @@ function extracted_chromatogram(filename::String, indices::Vector{Int},method::M
     elseif method isa ∆MZ
         mz1 = convert(Float64, method.arg[1] - method.arg[2] )  # mz - ∆mz
         if(mz1 < 0.0)
-            error("Bad mz ± ∆mz values")
+            ErrorException("Bas mz ± ∆mz values.")
         end
         mz2 = convert(Float64, method.arg[1] + method.arg[2] ) # mz + ∆mz
         for i = 1:length(indices)
