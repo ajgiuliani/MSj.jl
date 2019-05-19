@@ -60,8 +60,8 @@ The spectra contained in the mzXML files are loaded in an array of MSscan.
 Chromatograms may be obtained from a file or from an array of MSscans previously loaded. The function returns an array for both retention time and ion current
 
 ```julia
-rt1, ic1 = msJ.load(filename)
-rt2, ic2 = msJ.load(scans)
+rt1, ic1 = msJ.chromatogram(filename)
+rt2, ic2 = msJ.chromatogram(scans)
 ```
 Both `rt1, rt2` and `ic1, ic2` sets are identical if `scans` has been loaded from `filename`.
 
@@ -82,9 +82,20 @@ msJ.msfilter(filename, msJ.Precursor(1255.5))             # where 1255.5 is the 
 msJ.msfilter(filename, msJ.Activation_Energy(18))         # where 18 is the collision energy of the MS/MS spectra
 msJ.msfilter(filename, msJ.Activation_Method("CID"))      # where CID is the activation method
 msJ.msfilter(filename, msJ.Level(2))                      # where 2 corresponds to the MS^n level
+msJ.msfilter(filename, msJ.RT([1,5))                      # where [1,5] stands for retention time from 1 to 5s.
 ...
 ```
-or 
+or combined together.
+```julia
+msJ.msfilter(filename, msJ.Precursor(1255.5),
+                       msJ.Activation_Energy(18),
+				       msJ.Activation_Method("CID"),
+					   msJ.Level(2),
+					   msJ.RT( [1, 60] ),
+					   )
+```
+The average mass spectrum is the average of the MS2 scans (level = 2), for which the precursor is m/z 1255.5 obtained upon CID with an activation energy of 18 and for retention times in the 1 to 60 s range.
+
 ```julia
 msJ.chromatogram(filename, method = msJ.MZ([0, 500]))     # where [0,500] specifies the m/z range to get the total ion current
 msJ.chromatogram(filename, method = msJ.MZ([500, 2000]))  # same as above with m/z in the [500,2000] range
@@ -93,7 +104,7 @@ msJ.chromatogram(filename, msJ.Level(1))                  # chromaogram for all 
 ```
 
 ### Basic operations
-Mass spectral data may be added, subtracted, multiplied or divided by a number.
+Mass spectral data may be added, subtracted, multiplied together or multiplied or divided by a number.
 
 ```julia
 ms450 = msJ.msfilter(data, msJ.RT([430, 470]))
