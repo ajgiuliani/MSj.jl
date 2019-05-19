@@ -37,8 +37,23 @@ function tests()
         xrt, xtic = msJ.chromatogram("test.mzXML", msJ.Polarity("+"), msJ.Scan(2),msJ.Precursor(1255.5), msJ.Activation_Energy(18), msJ.Activation_Method("CID"), msJ.Level(2) )
         @test length(xrt) == 1
         
-        xrt, xtic = msJ.chromatogram("test.mzXML", msJ.Polarity(["+"]),msJ.Scan([2,3]),msJ.Precursor([1255.5, 902.33]),msJ.Activation_Energy([18, 35]),msJ.Activation_Method(["CID", "PQD"]),msJ.Level([2, 3]) )
-        @test length(xrt) == 2
+#        xrt, xtic = msJ.chromatogram("test.mzXML", msJ.Polarity(["+"]),msJ.Scan([2,3]),msJ.Precursor([1255.5, 902.33]),msJ.Activation_Energy([18, 35]),msJ.Activation_Method(["CID", "PQD"]),msJ.Level([2, 3]) )
+#        @test length(xrt) == 2
+
+        rt = msJ.retention_time(scans)
+        @test length(rt) == 6
+        
+        rt, tic = msJ.chromatogram(scans, method = msJ.TIC() )
+        @test length(rt) == 6
+        
+        rt, tic = msJ.chromatogram(scans, method = msJ.MZ([0, 500]))
+        @test length(rt) == 6
+        
+        rt, tic = msJ.chromatogram(scans, method = msJ.∆MZ([1000, 1]))
+        @test length(rt) == 6
+        
+        rt, tic = msJ.chromatogram(scans, method = msJ.BasePeak())
+        @test length(rt) == 6
 
         
     end
