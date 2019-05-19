@@ -251,49 +251,6 @@ function filter(msRun::XMLElement, rt::Vector{Float64}, tic::Vector{Float64})
     return rt, tic
 end
 
-function filter(msRun::XMLElement, ∆mz::∆MZ{<:AbstractVector})
-    # ∆MZ
-    subindex = Set{Int}()
-    mz1 = convert(Float64, ∆mz.arg[1] - ∆mz.arg[2] )  # mz - ∆mz
-    mz2 = convert(Float64, ∆mz.arg[1] + ∆mz.arg[2] ) # mz + ∆mz
-    if(mz1 < 0.0)
-        error("Bad mz ± ∆mz values")
-    end
-    for c1 in child_elements(msRun)
-        while name(c1) == "scan"
-            push!(xrt, load_mzxml_spectrum(c1).rt)
-            value = add_ion_current(load_mzxml_spectrum(c1).mz, load_mzxml_spectrum(c1).int, mz1, mz2)
-            push!(xtic, value)
-            c1 = find_element(c1,"scan")
-            if c1 == nothing
-                break
-            end
-        end
-    end
-   
-    return  xrt, xtic
-end
-
-function filter(msRun::XMLElement, mz::MZ{<:AbstractVector})
-    # MZ
-    subindex = Set{Int}()
-    mz1 = convert(Float64,mz.arg[1])
-    mz2 = convert(Float64,mz.arg[2])
-    for c1 in child_elements(msRun)
-        while name(c1) == "scan"
-            push!(xrt, load_mzxml_spectrum(c1).rt)
-            value = add_ion_current(load_mzxml_spectrum(c1).mz, load_mzxml_spectrum(c1).int, mz1, mz2)
-            push!(xtic, value)
-            c1 = find_element(c1,"scan")
-            if c1 == nothing
-                break
-            end
-        end
-    end
-   
-    return xrt, xtic
-end
-
 function filter(msRun::XMLElement, xrt::Vector{Float64}, xtic::Vector{Float64}, argument::BasePeak)
     # BasePeak
     subindex = Set{Int}()
@@ -386,7 +343,7 @@ function filter(msRun::XMLElement, argument::Activation_Energy{<:AbstractVector}
         for c in child_elements(msRun)
             while name(c) == "scan"
                 if load_mzxml_spectrum(c).collisionEnergy == i
-                    push!(filter, load_mzxml_spectrum(c).num)
+                    push!(subindex, load_mzxml_spectrum(c).num)
                 end
                 c = find_element(c,"scan")
                 if c == nothing
