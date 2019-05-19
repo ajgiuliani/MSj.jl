@@ -17,9 +17,9 @@ function load(filename::String)
         #println("loading mzXML file...")
         return load_mzxml!(filename)
 
-    elseif Unicode.normalize(extension, casefold=true) == "ascii"
-        #println("loading ascii file...")
-        return load_ascii!(filename, scans)
+#    elseif Unicode.normalize(extension, casefold=true) == "ascii"
+#        #println("loading ascii file...")
+#        return load_ascii!(filename, scans)
 
     else 
         error("File format not supported.") 
@@ -58,14 +58,14 @@ function retention_time(filename::String)
         rt = retention_time(msRun)
         free(xdoc)
 
-    elseif Unicode.normalize(extension, casefold=true) == "ascii"
-        rt = rt_ascii!(filename, rt)
-
+#    elseif Unicode.normalize(extension, casefold=true) == "ascii"
+#        rt = rt_ascii!(filename, rt)
     else 
         error("File format not supported.") 
     end
     return rt
 end
+
 
 function retention_time(scans::Vector{MSscan})
     rt  = Vector{Float64}(undef,0)
@@ -74,6 +74,7 @@ function retention_time(scans::Vector{MSscan})
     end
     return rt
 end
+
 
 
 """
@@ -96,7 +97,6 @@ function chromatogram(filename::String, filters::FilterType...; method::MethodTy
     xic = Vector{Float64}(undef,0)
     index = Set{Int}()
     extension = split(filename, ".")[end]
-    
     if Unicode.normalize(extension, casefold=true) == "mzxml"
         xdoc = parse_file(filename)
         xroot = root(xdoc)
@@ -114,8 +114,8 @@ function chromatogram(filename::String, filters::FilterType...; method::MethodTy
             index = intersect(index, subindex) 
         end
         
-    elseif Unicode.normalize(extension, casefold=true) == "ascii"
-        xrt, xic = xtic_ascii!(filename, xrt, xtic, arg::FilterType )       
+#    elseif Unicode.normalize(extension, casefold=true) == "ascii"
+#        xrt, xic = xtic_ascii!(filename, xrt, xtic, arg::FilterType )       
     else 
         error("File format .$extension not supported.") 
     end
@@ -168,8 +168,8 @@ function msfilter(filename::String, arguments::FilterType...; stats::Bool=true)
             index = intersect(index, subindex)
         end
 
-    elseif Unicode.normalize(extension, casefold=true) == "ascii"
-        error("msfilter not supported for Bruker ascii")
+#    elseif Unicode.normalize(extension, casefold=true) == "ascii"
+#        error("msfilter not supported for Bruker ascii")
     else 
         error("File format not supported.") 
     end
@@ -200,7 +200,6 @@ julia> rt, ic = msJ.chromatogram("test.mzxml", method = msJ.MZ([200,1000]))
 ([0.1384  …  60.4793], [4.74795e6  …  17.4918])
 ```
 """
-
 function chromatogram(scans::Vector{MSscan}, filters::FilterType...; method::MethodType=TIC())
     # Ranges of mz value used to compute the tic from
     xrt = Vector{Float64}(undef,0)
@@ -219,6 +218,7 @@ function chromatogram(scans::Vector{MSscan}, filters::FilterType...; method::Met
         error("No matching spectra")
     end    
 end
+
 
 """
     msfilter(filename::String, filters::FilterType...; stats::Bool=true)
