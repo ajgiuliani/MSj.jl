@@ -92,7 +92,7 @@ msJ.chromatogram(filename, msJ.Level(1))                  # chromaogram for all 
 ...
 ```
 
-or combined together. For example the script below is used to obtain the average mass spectrum for the MS2 scans (level = 2), for which the precursor is m/z 1255.5, obtained upon CID with an activation energy of 18 and for retention times in the 1 to 60 s range.
+or combined together. For example the script below may be used to obtain the average mass spectrum for the MS2 scans (level = 2), for which the precursor is m/z 1255.5, obtained upon CID with an activation energy of 18 and for retention times in the 1 to 60 s range.
 
 ```julia
 msJ.msfilter(filename, msJ.Precursor(1255.5),
