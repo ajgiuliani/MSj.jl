@@ -32,9 +32,8 @@ function info(filename::String; verbose::Bool = false)
     if Unicode.normalize(extension, casefold=true) == "mzxml"
         return info_mzxml!(filename, info, verbose)
 
-    elseif Unicode.normalize(extension, casefold=true) == "ascii"
-        return info_ascii!(filename, info)
-
+#    elseif Unicode.normalize(extension, casefold=true) == "ascii"
+#        return info_ascii!(filename, info)
     else 
         error("File format not supported.") 
     end 
