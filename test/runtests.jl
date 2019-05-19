@@ -36,6 +36,11 @@ function tests()
         
         xrt, xtic = msJ.chromatogram("test.mzXML", msJ.Polarity("+"), msJ.Scan(2),msJ.Precursor(1255.5), msJ.Activation_Energy(18), msJ.Activation_Method("CID"), msJ.Level(2) )
         @test length(xrt) == 1
+        
+        xrt, xtic = msJ.chromatogram("test.mzXML", msJ.Polarity(["+"]),msJ.Scan([2,3]),msJ.Precursor([1255.5, 902.33]),msJ.Activation_Energy([18, 35]),msJ.Activation_Method(["CID", "PQD"]),msJ.Level([2, 3]) )
+        @test length(xrt) == 2
+
+        
     end
 end
 tests()
