@@ -231,43 +231,6 @@ function retention_time(msRun::XMLElement)
     return rt
 end
 
-
-function filter(msRun::XMLElement, rt::Vector{Float64}, tic::Vector{Float64})
-    for c1 in child_elements(msRun)
-        while name(c1) == "scan"
-            if has_attribute(c1, "totIonCurrent")
-                totIonCurrent = attribute(c1, "totIonCurrent")
-                retentionTime = attribute(c1, "retentionTime")
-                push!(tic, parse(Float64,totIonCurrent))
-                push!(rt, parse(Float64,retentionTime[3:end-1]))
-            end           
-            c1 = find_element(c1,"scan")
-            if c1 == nothing
-                break
-            end
-        end
-    end
-    
-    return rt, tic
-end
-
-function filter(msRun::XMLElement, xrt::Vector{Float64}, xtic::Vector{Float64}, argument::BasePeak)
-    # BasePeak
-    subindex = Set{Int}()
-    for c in child_elements(msRun)
-        while name(c) == "scan"
-            push!(subindex, load_mzxml_spectrum(c).num)
-            c = find_element(c,"scan")
-            if c == nothing
-                break
-            end
-        end
-    end
-    return  xrt, xtic
-end
-
-
-
 function filter(msRun::XMLElement, argument::Precursor{<:Real})
     subindex = Set{Int}()
     for c in child_elements(msRun)
