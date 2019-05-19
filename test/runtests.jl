@@ -106,17 +106,35 @@ function tests()
         a = scans[1] * scans[2]
         @test a.tic == 4.943314404e10                                                  #46
 
+        a = scans[2] * scans[1]
+        @test a.tic == 4.943314404e10                                                  #47
+
         a = scans[1] - scans[2]
-        @test a.tic == 5.0722228e6                                                     #47
+        @test a.tic == 5.0722228e6                                                     #48
+
+        a = scans[2] - scans[1]
+        @test a.tic == -5.0722228e6                                                    #49
+
+        a = scans[1] - scans[4]
+        @test a.tic == 273550.0                                                        #50
 
         b = ms - scans[1]
-        @test b.num == [2,3,4]                                                         #48
+        @test b.num == [2,3,4]                                                         #51
 
         b = ms + scans[1]
-        @test b.num == [2,3,4, 1]                                                      #49
+        @test b.num == [2,3,4, 1]                                                      #52
+
+        b = scans[1] + ms 
+        @test b.num == [2,3,4, 1]                                                      #53
+
+        b = scans[1] + scans[4] 
+        @test b.num == [1,4]                                                           #54
 
         a = msJ.avg(scans[1], scans[2])
-        @test a.num == [1,2]                                                           #50
+        @test a.num == [1,2]                                                           #55
+
+        a = msJ.avg(scans[1], scans[4])
+        @test a.num == [1,4]                                                           #56
 
 
     end
