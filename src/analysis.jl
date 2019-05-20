@@ -6,9 +6,9 @@
 Checks the file extension and calls the right function to load the mass spectra if it exists. Returns an array of individual mass spectra 
 # Examples
 ```julia-repl
-julia> scans = msJ.load("test.mzXML")
-51-element Array{msJ.MSscan,1}:
- msJ.MSscan(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
+julia> reduced_data = msJ.find_peaks(filename)
+msJ.MSscans
+msJ.MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
 
@@ -41,7 +41,6 @@ function cwt(scan::MScontainer)                                         # Contin
 end
 
 function tbpd(scan::MScontainer, R::Real, shape::Symbol, thres::Real)   #template based peak detection
-    @show shape
     if shape == :gauss
         # Gaussian shape function
         # width            = p[1]
@@ -62,9 +61,7 @@ function tbpd(scan::MScontainer, R::Real, shape::Symbol, thres::Real)   #templat
     else
         error("Unsupported function")
     end
-    @show ∆mz    
     box = num2pnt(scan.mz, scan.mz[1]+0.4) - 1        # taking a box of 0.5 width m/z
-    @show box
     correlation = zeros(length(scan.mz))
     maxi = maximum(scan.int)
     val = 0.0
