@@ -24,9 +24,8 @@ function test(scan::MScontainer, method::MethodType...)
     end
 end
 
-function smooth(scan::MScontainer; method::MethodType=SG(7, 15))
+function smooth(scan::MScontainer; method::MethodType=SG(5, 9))
     if method isa msJ.SG
-        println(method.order, "  ", method.window)
         return savitzky_golay_filtering(scan, method.order, method.window)
     end
     
@@ -34,7 +33,6 @@ function smooth(scan::MScontainer; method::MethodType=SG(7, 15))
 end
 
 function savitzky_golay_filtering(scan::MScontainer, order::Int, window::Int, deriv::Int=0)
-    println(order, " ",window )
     if window % 2 != 1
         return ErrorException("Window has to be an odd number.")
     elseif window < 1
