@@ -221,7 +221,7 @@ end
 
 
 """
-    msfilter(filename::String, filters::FilterType...; stats::Bool=true)
+    msfilter(scans::Vector{MSscan}, arguments::FilterType...; stats::Bool=true)
 Returns the average mass spectrum container (MSscans) along with the sample standard deviation of the intensities with stats=true (default) for all the mass spectra within the Array of mass spectrum container MSscan.. The data may be filtered by level, precursor mass, activation methods, etc, using the arguments msJ.Level(N), msJ.Precursor(mz), msJ.Activation_Method("method"), or any combination of these arguments.
 # Examples
 ```julia-repl

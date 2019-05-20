@@ -167,11 +167,28 @@ function tests()
         @test rt.msg == "Bad mz ± ∆mz values."                                         #66
 
         scans = msJ.load("test.mzXML")
-        @test msJ.smooth(scans[1]) isa msJ.MSscan                                      #67
+        @test msJ.smooth(scans[1], method = msJ.SG(7,15)) isa msJ.MSscan               #67
 
         a = msJ.avg(scans[1], scans[4])
         @test msJ.smooth(a) isa msJ.MSscans                                            #68
 
+        a = scans[1] * scans[4]
+        @test a.num == [1,4]                                                           #69
+
+        a = (scans[2]+scans[3]) - scans[1]
+        @test a.num == [2, 3]                                                          #70
+
+        a = (scans[1] + scans[4]) - (scans[1] - scans[4])
+        @test a.num == [1, 4]                                                          #71
+
+        a = scans[1] + msJ.avg(scans[2], scans[5])
+        @test a.num == [1, 2, 5]                                                       #72
+
+        a = msJ.smooth(scans[1], method = msJ.SG(5,9))
+        @test a.num == 1                                                               #73
+
+       a = msJ.centroid(sm1, method = msJ.TBPD(:gauss, 4500., 0.2))                    #74
+       @test length(a.int) == 788
 
     end
 end

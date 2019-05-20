@@ -73,22 +73,31 @@ struct MZ{argT <: Union{Real, AbstractVector{<:Real} }} <: MethodType
    MZ(arg::argT) where{argT} = new{argT}(arg)
 end
 
-struct PP <: MethodType
-    #
-    method::Symbol
-    resolution::Symbol
-    R::Real
-    shape::Symbol
-    threshold::Real
-    PP() = new()
-end
-
 struct SG{argT <: Int} <: MethodType   #Savinsky & Golay filtering
     order::argT
     window::argT
     SG(order::argT, window::argT) where{argT} = new{argT}(order, window)
 end
 
+struct TBPD{argT1 <: Symbol, argT2 <: Real}  <: MethodType
+    shape::argT1
+#    resolution::argT1
+    resolution::argT2
+    threshold::argT2
+    TBPD(shape::argT1, resolution::argT2, threshold::argT2) where{argT1, argT2} = new{argT1, argT2}(shape, resolution, threshold)
+end
+
+"""
+struct SNRA{argT <: Real}  <: MethodType
+    threshold::argT
+    SNRA(threshold::argT) where{argT} = new{argT}(threshold)
+end
+
+struct CWT{argT <: Real}  <: MethodType
+    threshold::argT
+    CWT(threshold::argT) where{argT} = new{argT}(threshold)
+end
+"""
 
 ### Filters
 
@@ -188,7 +197,7 @@ function *(a::MScontainer, b::MScontainer)
         mz = b.mz
             
     elseif length(a.mz) == length(b.mz)
-        mz = a.mzq
+        mz = a.mz
         int = a.int .* b.int
     end
 

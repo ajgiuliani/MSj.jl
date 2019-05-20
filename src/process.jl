@@ -2,35 +2,20 @@
 # Mass spectra
 
 """
-    msprocess(scan::MScontainer; resolution::Symbol = :medium, R::Real = 4500., shape::Symbol = :gauss, threshold::Real = 0.2)
-Checks the file extension and calls the right function to load the mass spectra if it exists. Returns an array of individual mass spectra 
+    smooth(scan::MScontainer; method::MethodType=SG(5, 9))
+Smooth the intensity of the input data and returns a similar structure.
 # Examples
 ```julia-repl
-julia> reduced_data = msJ.find_peaks(filename)
-msJ.MSscans
+julia> smoothed_data = msJ.smooth(scans)
 msJ.MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
-#function msprocess(scan::MScontainer; resolution::Symbol = :medium, R::Real = 4500., shape::Symbol = :gauss, threshold::Real = 0.2 )
-function test(scan::MScontainer, method::MethodType...)
-    for el in method
-        if el isa PP
-            println(el)
-            if el.method == nothing
-                println("default tbpd")
-            end
-            
-        end
-    end
-end
-
 function smooth(scan::MScontainer; method::MethodType=SG(5, 9))
     if method isa msJ.SG
         return savitzky_golay_filtering(scan, method.order, method.window)
-    end
-    
-    
+    end  
 end
+
 
 function savitzky_golay_filtering(scan::MScontainer, order::Int, window::Int, deriv::Int=0)
     if window % 2 != 1
@@ -63,6 +48,29 @@ function savitzky_golay_filtering(scan::MScontainer, order::Int, window::Int, de
 end
  
 
+"""
+    centroid(scan::MScontainer; resolution::Symbol = :medium, R::Real = 4500., shape::Symbol = :gauss, threshold::Real = 0.2)
+Checks the file extension and calls the right function to load the mass spectra if it exists. Returns an array of individual mass spectra 
+# Examples
+```julia-repl
+julia> reduced_data = msJ.find_peaks(scans)
+msJ.MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
+```
+"""
+function centroid(scan::MScontainer; method::MethodType=TBPD(:gauss, 4500., 0.2) )
+    if method isa msJ.TBPD
+        return tbpd(scan, method.shape, method.resolution, method.threshold)
+#    elseif method isa msJ.SNRA()
+#        return snra(scan, method.threshold)
+#    elseif method isa msJ.CWT()
+#        return cwt(scan, method.threshold)
+#    else
+#        ErrorException("Unsupported method.")
+    end
+    
+end
+
+"""
 function centroid(scan::MScontainer; resolution::Symbol = :medium, R::Real = 4500., shape::Symbol = :gauss, threshold::Real = 0.2 )
     if R == 4500.
         if resolution == :low
@@ -82,16 +90,9 @@ function centroid(scan::MScontainer; resolution::Symbol = :medium, R::Real = 450
     return tbpd(scan, R, shape, threshold)
 end
 
+"""
 
-function snra(scan::MScontainer)                                        # Signal to Noise Ration Analysis
-    error("SNR not implemented")
-end
-
-function cwt(scan::MScontainer)                                         # Continuous Wavelet Transform 
-    error("Wavelets not implemented")
-end
-
-function tbpd(scan::MScontainer, R::Real, shape::Symbol, thres::Real)   #template based peak detection
+function tbpd(scan::MScontainer, shape::Symbol,  R::Real, thres::Real)   #template based peak detection
     if shape == :gauss
         # Gaussian shape function
         # width            = p[1]
@@ -100,17 +101,18 @@ function tbpd(scan::MScontainer, R::Real, shape::Symbol, thres::Real)   #templat
         # background level = p[4]
         @. model(x, p) = p[4] + p[3] * exp(- ( (x-p[2])/p[1] )^2)
         ∆mz = 500.0 / R                  # according to ∆mz / mz  = R, we take the value @ m/z 500
-    elseif shape == :lorentz
+#    elseif shape == :lorentz
         # Lorentzian shape function
         # width            = p[1]
         # x0               = p[2]
         # height           = p[3]
         # background level = p[4]
         #@. model(x, p) = p[4] + (p[3] / ( p[1] * (x-p[2])^2) )
-    elseif shape == :voigt
+#    elseif shape == :voigt
         # Voight shape function
-    else
-        error("Unsupported function")
+#    else
+#        ErrorException("Unsupported shape.")
+
     end
     box = num2pnt(scan.mz, scan.mz[1]+0.4) - 1        # taking a box of 0.5 width m/z
     correlation = zeros(length(scan.mz))
@@ -166,3 +168,13 @@ function tbpd(scan::MScontainer, R::Real, shape::Symbol, thres::Real)   #templat
         return MSscan(scan.num, scan.rt, sum(peaks_int), peaks_mz, peaks_int, scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy)
     end
 end
+
+"""
+function snra(scan::MScontainer)                                        # Signal to Noise Ration Analysis
+    error("SNR not implemented")
+end
+
+function cwt(scan::MScontainer)                                         # Continuous Wavelet Transform 
+    error("Wavelets not implemented")
+end
+"""
