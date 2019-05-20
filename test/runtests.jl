@@ -187,7 +187,7 @@ function tests()
         a = msJ.smooth(scans[1], method = msJ.SG(5,9))
         @test a.num == 1                                                               #73
 
-       a = msJ.centroid(scans[1], method = msJ.TBPD(:gauss, 4500., 0.2))                    #74
+       a = msJ.centroid(scans[1], method = msJ.TBPD(:gauss, 4500., 0.2))               #74
        @test length(a.int) == 703
 
     end
