@@ -166,7 +166,11 @@ function tests()
         rt, tic = msJ.chromatogram(scans, method = msJ.∆MZ([1, 2]))
         @test rt.msg == "Bad mz ± ∆mz values."                                         #66
 
+        scans = msJ.load("test/test.mzXML")
+        @test msJ.smooth(scans[1]) isa msJ.MSscan                                      #67
 
+        a = msJ.avg(scans[1], scans[4])
+        @test msJ.smooth(a) isa msJ.MSscasn                                            #68
 
 
     end
