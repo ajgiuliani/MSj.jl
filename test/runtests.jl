@@ -170,7 +170,7 @@ function tests()
         @test msJ.smooth(scans[1]) isa msJ.MSscan                                      #67
 
         a = msJ.avg(scans[1], scans[4])
-        @test msJ.smooth(a) isa msJ.MSscasn                                            #68
+        @test msJ.smooth(a) isa msJ.MSscans                                            #68
 
 
     end
