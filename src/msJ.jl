@@ -4,7 +4,10 @@ using LightXML, Codecs
 using Interpolations
 using Unicode
 using LsqFit
-
+using DSP
+using DataFrames
+using DataFramesMeta
+using LinearAlgebra
 using Statistics
 import Base: +, -, *, /
 
@@ -68,6 +71,22 @@ struct MZ{argT <: Union{Real, AbstractVector{<:Real} }} <: MethodType
    arg::argT
    #field = "mz range"
    MZ(arg::argT) where{argT} = new{argT}(arg)
+end
+
+struct PP <: MethodType
+    #
+    method::Symbol
+    resolution::Symbol
+    R::Real
+    shape::Symbol
+    threshold::Real
+    PP() = new()
+end
+
+struct SG{argT <: Int} <: MethodType   #Savinsky & Golay filtering
+    order::argT
+    window::argT
+    SG(order::argT, window::argT) where{argT} = new{argT}(order, window)
 end
 
 
@@ -433,6 +452,6 @@ include("msJ_info.jl")
 include("msJ_load.jl")
 include("msscans.jl")
 include("mzxml.jl")
-include("analysis.jl")
+include("process.jl")
 
 end # module

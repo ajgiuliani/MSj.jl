@@ -2,7 +2,7 @@
 # Mass spectra
 
 """
-    find_peaks(scan::MScontainer; resolution::Symbol = :medium, R::Real = 4500., shape::Symbol = :gauss, threshold::Real = 0.2)
+    msprocess(scan::MScontainer; resolution::Symbol = :medium, R::Real = 4500., shape::Symbol = :gauss, threshold::Real = 0.2)
 Checks the file extension and calls the right function to load the mass spectra if it exists. Returns an array of individual mass spectra 
 # Examples
 ```julia-repl
@@ -11,8 +11,61 @@ msJ.MSscans
 msJ.MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
+#function msprocess(scan::MScontainer; resolution::Symbol = :medium, R::Real = 4500., shape::Symbol = :gauss, threshold::Real = 0.2 )
+function test(scan::MScontainer, method::MethodType...)
+    for el in method
+        if el isa PP
+            println(el)
+            if el.method == nothing
+                println("default tbpd")
+            end
+            
+        end
+    end
+end
 
-function find_peaks(scan::MScontainer; resolution::Symbol = :medium, R::Real = 4500., shape::Symbol = :gauss, threshold::Real = 0.2 )
+function smooth(scan::MScontainer; method::MethodType=SG(7, 15))
+    if method isa msJ.SG
+        println(method.order, "  ", method.window)
+        return savitzky_golay_filtering(scan, method.order, method.window)
+    end
+    
+    
+end
+
+function savitzky_golay_filtering(scan::MScontainer, order::Int, window::Int, deriv::Int=0)
+    println(order, " ",window )
+    if window % 2 != 1
+        return ErrorException("Window has to be an odd number.")
+    elseif window < 1
+        return ErrorException("window has to be a positive number.")
+    elseif window < order + 2
+        return ErrorException("window is too small for the order.")
+    end
+    order_range = range(1, length=(order+1))
+    half_window = Int( (window-1) / 2 )
+
+    b = zeros(window, order+1)
+
+    for i = 0:order
+        b[:,i+1] = [x for x = -half_window:half_window].^(i)
+    end
+    
+    m = b * LinearAlgebra.pinv(b' * b)
+    coefs = m[:,deriv + 1] * factorial(deriv)
+        
+    pad = vcat(scan.int[1]*ones(half_window), scan.int, scan.int[end]*ones(half_window))
+    y = conv(coefs[end:-1:1], pad)[2 * half_window + 1 : end - 2 * half_window]
+    
+    if scan isa msJ.MSscan
+        return MSscan(scan.num, scan.rt, scan.tic, scan.mz, y, scan.level, scan.basePeakMz, scan.basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy)
+    elseif scan isa MSscans
+        return msJ.MSscans(scan.num, scan.rt, scan.tic, scan.mz, y, scan.level, scan.basePeakMz, scan.basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy, scan.s)
+    end
+end
+ 
+
+function centroid(scan::MScontainer; resolution::Symbol = :medium, R::Real = 4500., shape::Symbol = :gauss, threshold::Real = 0.2 )
     if R == 4500.
         if resolution == :low
             R = 1000.
