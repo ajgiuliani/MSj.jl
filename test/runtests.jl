@@ -163,6 +163,10 @@ function tests()
         rt, tic = msJ.chromatogram("test.mzXML", method = msJ.∆MZ([1, 2]))
         @test rt.msg == "Bad mz ± ∆mz values."                                         #65
         
+        rt, tic = msJ.chromatogram(scans, method = msJ.∆MZ([1, 2]))
+        @test rt.msg == "Bad mz ± ∆mz values."                                         #66
+
+
 
 
     end
