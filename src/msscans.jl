@@ -197,7 +197,8 @@ function extracted_chromatogram(scans::Vector{MSscan}, indices::Vector{Int},meth
     elseif method isa ∆MZ
         mz1 = convert(Float64, method.arg[1] - method.arg[2] )  # mz - ∆mz
         if(mz1 < 0.0)
-            error("Bad mz ± ∆mz values")
+            return ErrorException("Bad mz ± ∆mz values."), ""
+            #error("Bad mz ± ∆mz values")
         end
         mz2 = convert(Float64, method.arg[1] + method.arg[2] ) # mz + ∆mz
         for i = 1:length(indices)
