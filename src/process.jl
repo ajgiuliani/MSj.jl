@@ -10,14 +10,14 @@ julia> smoothed_data = msJ.smooth(scans)
 msJ.MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
-function smooth(scan::MScontainer; method::MethodType=SG(5, 9))
+function smooth(scan::MScontainer; method::MethodType=SG(5, 9, 0))
     if method isa msJ.SG
-        return savitzky_golay_filtering(scan, method.order, method.window)
+        return savitzky_golay_filtering(scan, method.order, method.window, method.derivative)
     end  
 end
 
 
-function savitzky_golay_filtering(scan::MScontainer, order::Int, window::Int, deriv::Int=0)
+function savitzky_golay_filtering(scan::MScontainer, order::Int, window::Int, deriv::Int)
     if window % 2 != 1
         return ErrorException("Window has to be an odd number.")
     elseif window < 1

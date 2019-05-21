@@ -76,7 +76,8 @@ end
 struct SG{argT <: Int} <: MethodType   #Savinsky & Golay filtering
     order::argT
     window::argT
-    SG(order::argT, window::argT) where{argT} = new{argT}(order, window)
+    derivative::argT
+    SG(order::argT, window::argT, derivative::argT) where{argT} = new{argT}(order, window, derivative)
 end
 
 struct TBPD{argT1 <: Symbol, argT2 <: Real}  <: MethodType
