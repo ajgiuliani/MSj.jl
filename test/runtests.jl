@@ -1,5 +1,4 @@
 using msJ, Test
-using Plots
 
 function tests()
     @testset "Subset of tests"  begin
