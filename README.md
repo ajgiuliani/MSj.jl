@@ -111,5 +111,16 @@ bk1 = msJ.msfilter(data, msJ.RT([500,550]))
 ms450_bkg = ms450 - 0.95 * bk1
 ```
 
+### Plots
+Plots [recipes](https://docs.juliaplots.org/latest/recipes/) have been created for plotting mass spectra and chromatograms.
+```julia
+ms = msJ.filter(filename)
+plot(ms)
+cr = msJ.chromatogram(filename)
+plot(cr)
+```
+
+
+
 ## Other packages
 * [mzXML](https://github.com/timholy/mzXML.jl): Load mass spectrometry mzXML files.
