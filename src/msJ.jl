@@ -14,7 +14,7 @@ import Base: +, -, *, /
 ### Containers
     
 abstract type MScontainer  end
-    
+
 struct MSscan <: MScontainer
     num::Int                          # num
     rt::Float64                       # retentionTime
@@ -45,6 +45,13 @@ struct MSscans  <: MScontainer
     collisionEnergy::Vector{Float64}  # collisionEnergy
     s::Vector{Float64}                # variance
 end
+
+struct Chromatogram  <: MScontainer
+    rt::Vector{Float64}
+    ic::Vector{Float64}
+    maxic::Float64
+end
+
 
 
 ### Methods
