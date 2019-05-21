@@ -1,4 +1,5 @@
 using msJ, Test
+using Plots
 
 function tests()
     @testset "Subset of tests"  begin
@@ -189,6 +190,13 @@ function tests()
 
        a = msJ.centroid(scans[1], method = msJ.TBPD(:gauss, 4500., 0.2))               #74
        @test length(a.int) == 703
+
+       @test typeof(plot(scans[1])) == Plots.Plot{Plots.PyPlotBackend}                 #75
+
+
+
+
+
 
     end
 end
