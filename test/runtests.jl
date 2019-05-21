@@ -193,7 +193,7 @@ function tests()
 
        @test typeof(plot( scans[1] )) == Plots.Plot{Plots.GRBackend}                   #75
 
-       @test typeof(plot( cr )) == Plots.Plot{Plots.GRBackend}                         #76
+       @test typeof(plot( msJ.chromatogram(scans) )) == Plots.Plot{Plots.GRBackend}    #76
 
 
 
