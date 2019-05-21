@@ -57,13 +57,13 @@ The spectra contained in the mzXML files are loaded in an array of MSscan.
 
 
 ### Chromatograms
-Chromatograms may be obtained from a file or from an array of MSscans previously loaded. The function returns an array for both retention time and ion current
+Chromatograms may be obtained from a file or from an array of MSscans previously loaded. The function returns an struct containing an array for both retention time and ion current and the maximum value of the ion current vector.
 
 ```julia
-rt1, ic1 = msJ.chromatogram(filename)
-rt2, ic2 = msJ.chromatogram(scans)
+run1 = msJ.chromatogram(filename)
+run2 = msJ.chromatogram(scans)
 ```
-Both `rt1, rt2` and `ic1, ic2` sets are identical if `scans` has been loaded from `filename`.
+Both `run1.rt, run2.rt` and `run1.ic, run2.ic` sets are identical if `scans` has been loaded from `filename`.
 
 ### Average mass spectra
 Average mass spectra may be obtained from a file or from an array of MSscans:
