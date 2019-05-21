@@ -79,7 +79,7 @@ end
 
 """
     chromatogram(filename::String, filters::FilterType...; method::MethodType=TIC())
-Returns the retention time and the total ion current by default for all the mass spectra within the file. Alternatively, other options may be supplied such as method = msJ.BasePeak, which returs the base peak intensity, method = msJ.∆MZ([500,5]), which returns the ion current for the range mz = 500 ± 5, or method = msJ.MZ([200,1000]) which return the ion current in the range from m/z 200 to m/z 1000.  The data may be filtered by ms level, precursor mass, activation methods, etc, using the arguments msJ.Level(N), msJ.Precursor(mz), msJ.Activation_Method("method")...
+Returns a structure holding the retention time (rt),  the ion current (ic) and the maximum value (maxic) for all the mass spectra within the file. Alternatively, other options may be supplied such as method = msJ.BasePeak, which returns the base peak intensity, method = msJ.∆MZ([500,5]), which returns the ion current for the range mz = 500 ± 5, or method = msJ.MZ([200,1000]) which return the ion current in the range from m/z 200 to m/z 1000.  The data may be filtered by ms level, precursor mass, activation methods, etc, using the arguments msJ.Level(N), msJ.Precursor(mz), msJ.Activation_Method("method")...
 # Examples
 ```julia-repl
 julia> rt, ic = msJ.chromatogram("test.mzxml")
