@@ -22,41 +22,41 @@ function tests()
         rt = msJ.retention_time("test.mzXML")
         @test length(rt) == 6                                                          #14
         
-        rt, tic = msJ.chromatogram("test.mzXML", method = msJ.TIC() )
-        @test length(rt) == 6                                                          #15
+        cr = msJ.chromatogram("test.mzXML", method = msJ.TIC() )
+        @test length(cr.rt) == 6                                                          #15
         
-        rt, tic = msJ.chromatogram("test.mzXML", method = msJ.MZ([0, 500]))
-        @test length(rt) == 6                                                          #16
+        cr = msJ.chromatogram("test.mzXML", method = msJ.MZ([0, 500]))
+        @test length(cr.rt) == 6                                                          #16
         
-        rt, tic = msJ.chromatogram("test.mzXML", method = msJ.∆MZ([1000, 1]))
-        @test length(rt) == 6                                                          #17
+        cr = msJ.chromatogram("test.mzXML", method = msJ.∆MZ([1000, 1]))
+        @test length(cr.rt) == 6                                                          #17
         
-        rt, tic = msJ.chromatogram("test.mzXML", method = msJ.BasePeak())
-        @test length(rt) == 6                                                          #18
+        cr = msJ.chromatogram("test.mzXML", method = msJ.BasePeak())
+        @test length(cr.rt) == 6                                                          #18
         
-        xrt, xtic = msJ.chromatogram("test.mzXML", msJ.Polarity("+"), msJ.Scan(2),msJ.Precursor(1255.5), msJ.Activation_Energy(18), msJ.Activation_Method("CID"), msJ.Level(2) )
-        @test length(xrt) == 1                                                         #19
+        cr = msJ.chromatogram("test.mzXML", msJ.Polarity("+"), msJ.Scan(2),msJ.Precursor(1255.5), msJ.Activation_Energy(18), msJ.Activation_Method("CID"), msJ.Level(2) )
+        @test length(cr.rt) == 1                                                         #19
 
         rt = msJ.retention_time(scans)
         @test length(rt) == 6                                                          #20
         
-        rt, tic = msJ.chromatogram(scans, method = msJ.TIC() )
-        @test length(rt) == 6                                                          #21
+        cr = msJ.chromatogram(scans, method = msJ.TIC() )
+        @test length(cr.rt) == 6                                                          #21
         
-        rt, tic = msJ.chromatogram(scans, method = msJ.MZ([0, 500]))
-        @test length(rt) == 6                                                          #22
+        cr = msJ.chromatogram(scans, method = msJ.MZ([0, 500]))
+        @test length(cr.rt) == 6                                                          #22
         
-        rt, tic = msJ.chromatogram(scans, method = msJ.∆MZ([1000, 1]))
-        @test length(rt) == 6                                                          #23
+        cr = msJ.chromatogram(scans, method = msJ.∆MZ([1000, 1]))
+        @test length(cr.rt) == 6                                                          #23
         
-        rt, tic = msJ.chromatogram(scans, method = msJ.BasePeak())
-        @test length(rt) == 6                                                          #24
+        cr = msJ.chromatogram(scans, method = msJ.BasePeak())
+        @test length(cr.rt) == 6                                                          #24
         
-        xrt, xtic = msJ.chromatogram(scans, msJ.Polarity("+"),msJ.Scan(2),msJ.Precursor(1255.5),msJ.Activation_Energy(18),msJ.Activation_Method("CID"),msJ.Level(2) )
-        @test (xrt, xtic) == ([0.7307], [9727.2])                                      #25
+        cr = msJ.chromatogram(scans, msJ.Polarity("+"),msJ.Scan(2),msJ.Precursor(1255.5),msJ.Activation_Energy(18),msJ.Activation_Method("CID"),msJ.Level(2) )
+        @test (cr.rt, cr.ic) == ([0.7307], [9727.2])                                      #25
         
-        xrt, xtic = msJ.chromatogram(scans, msJ.Polarity(["+"]),msJ.Scan([2,3]),msJ.Precursor([1255.5, 902.33]),msJ.Activation_Energy([18, 35]),msJ.Activation_Method(["CID", "PQD"]),msJ.Level([2, 3]) )
-        @test (xrt, xtic) == ([0.7307, 2.1379], [9727.2, 11.3032])                     #26
+        cr = msJ.chromatogram(scans, msJ.Polarity(["+"]),msJ.Scan([2,3]),msJ.Precursor([1255.5, 902.33]),msJ.Activation_Energy([18, 35]),msJ.Activation_Method(["CID", "PQD"]),msJ.Level([2, 3]) )
+        @test (cr.rt, cr.ic) == ([0.7307, 2.1379], [9727.2, 11.3032])                     #26
         
         ms = msJ.msfilter("test.mzXML")
         @test length(ms.num) == 6                                                      #27
@@ -84,8 +84,8 @@ function tests()
         @test ms isa msJ.MSscans                                                       #37
         @test ms.num == [2, 3]                                                         #38
 
-        xrt, xtic = msJ.chromatogram("test.mzXML", msJ.Polarity(["+"]),msJ.Scan([2,3]),msJ.Precursor([1255.5, 902.33]),msJ.Activation_Method(["CID", "PQD"]),msJ.Level([2, 3]) )   #msJ.Activation_Energy([18.0, 35.0]),
-        @test length(xrt) == 2                                                         #39
+        cr = msJ.chromatogram("test.mzXML", msJ.Polarity(["+"]),msJ.Scan([2,3]),msJ.Precursor([1255.5, 902.33]),msJ.Activation_Method(["CID", "PQD"]),msJ.Level([2, 3]) )   #msJ.Activation_Energy([18.0, 35.0]),
+        @test length(cr.rt) == 2                                                         #39
 
         ms = msJ.msfilter(scans, msJ.RT( [[1,2], [2,3]] ), stats = false )
         @test ms isa msJ.MSscans                                                       #40
@@ -160,14 +160,14 @@ function tests()
         scans = msJ.load("bad3.mzXML")
         @test scans[1].num == scans[2].num == 0                                        #64
 
-        rt, tic = msJ.chromatogram("test.mzXML", method = msJ.∆MZ([1, 2]))
-        @test rt.msg == "Bad mz ± ∆mz values."                                         #65
+        cr = msJ.chromatogram("test.mzXML", method = msJ.∆MZ([1, 2]))
+        @test cr.msg == "Bad mz ± ∆mz values."                                         #65
         
-        rt, tic = msJ.chromatogram(scans, method = msJ.∆MZ([1, 2]))
-        @test rt.msg == "Bad mz ± ∆mz values."                                         #66
+        cr = msJ.chromatogram(scans, method = msJ.∆MZ([1, 2]))
+        @test cr.msg == "Bad mz ± ∆mz values."                                         #66
 
         scans = msJ.load("test.mzXML")
-        @test msJ.smooth(scans[1], method = msJ.SG(7,15)) isa msJ.MSscan               #67
+        @test msJ.smooth(scans[1], method = msJ.SG(7,15,0)) isa msJ.MSscan               #67
 
         a = msJ.avg(scans[1], scans[4])
         @test msJ.smooth(a) isa msJ.MSscans                                            #68
@@ -184,7 +184,7 @@ function tests()
         a = scans[1] + msJ.avg(scans[2], scans[5])
         @test a.num == [1, 2, 5]                                                       #72
 
-        a = msJ.smooth(scans[1], method = msJ.SG(5,9))
+        a = msJ.smooth(scans[1], method = msJ.SG(5,9,0))
         @test a.num == 1                                                               #73
 
        a = msJ.centroid(scans[1], method = msJ.TBPD(:gauss, 4500., 0.2))               #74
