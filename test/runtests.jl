@@ -198,12 +198,6 @@ function tests()
        @test typeof(plot( a, method = :relative )) == Plots.Plot{Plots.GRBackend}      #77
        @test typeof(plot( a, method = :absolute )) == Plots.Plot{Plots.GRBackend}      #78
 
-                 
-
-
-
-
-
 
 
     end
