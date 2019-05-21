@@ -7,6 +7,7 @@ using LsqFit
 using DSP
 using DataFrames
 using DataFramesMeta
+using RecipesBase
 using LinearAlgebra
 using Statistics
 import Base: +, -, *, /
@@ -464,11 +465,10 @@ function num2pnt(x::Vector{Float64}, val::Real)
     return ibest
 end 
 
-
-include("msJ_info.jl")
-include("msJ_load.jl")
 include("msscans.jl")
 include("mzxml.jl")
 include("process.jl")
+include("plots.jl")
+include("io.jl")
 
 end # module

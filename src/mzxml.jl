@@ -506,7 +506,7 @@ function filter(msRun::XMLElement, argument::IC{<:AbstractVector})
             if c == nothing
                 break
             end
-        end
+        endb
     end
     return subindex
 end
@@ -523,7 +523,7 @@ function extracted_chromatogram(filename::String, indices::Vector{Int},method::M
     elseif method isa ∆MZ
         mz1 = convert(Float64, method.arg[1] - method.arg[2] )  # mz - ∆mz
         if(mz1 < 0.0)
-            return ErrorException("Bad mz ± ∆mz values."), ""
+            return ErrorException("Bad mz ± ∆mz values.")
         end
         mz2 = convert(Float64, method.arg[1] + method.arg[2] ) # mz + ∆mz
         for i = 1:length(indices)
@@ -547,7 +547,7 @@ function extracted_chromatogram(filename::String, indices::Vector{Int},method::M
         end
 
     end
-    return xrt, xic 
+    return Chromatogram(xrt, xic, maximum(xic))
 end
 
 function composite_spectra(filename::String, indices::Vector{Int}, stats::Bool)
