@@ -36,8 +36,9 @@ function savitzky_golay_filtering(scan::MScontainer, order::Int, window::Int, de
     
     m = b * LinearAlgebra.pinv(b' * b)
     coefs = m[:,deriv + 1] * factorial(deriv)
-        
-    pad = vcat(scan.int[1]*ones(half_window), scan.int, scan.int[end]*ones(half_window))
+    yfirst = scan.int[1]*ones(half_window)
+    ylast = scan.int[end]*ones(half_window-1)
+    pad = vcat(yfirst, scan.int, ylast)
     y = conv(coefs[end:-1:1], pad)[2 * half_window + 1 : end - 2 * half_window]
     
     if scan isa msJ.MSscan
