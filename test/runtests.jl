@@ -198,6 +198,10 @@ function tests()
        @test typeof(plot( a, method = :relative )) == Plots.Plot{Plots.GRBackend}      #77
        @test typeof(plot( a, method = :absolute )) == Plots.Plot{Plots.GRBackend}      #78
 
+       cr = msJ.chromatogram(scans)
+       @test typeof(plot( cr, method = :relative )) == Plots.Plot{Plots.GRBackend}     #79
+       @test typeof(plot( cr, method = :absolute )) == Plots.Plot{Plots.GRBackend}     #80
+
 
 
     end
