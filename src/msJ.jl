@@ -8,6 +8,7 @@ using DSP
 using DataFrames
 using DataFramesMeta
 using RecipesBase
+using Plots
 using LinearAlgebra
 using Statistics
 import Base: +, -, *, /
