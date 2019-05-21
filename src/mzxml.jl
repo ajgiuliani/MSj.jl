@@ -506,7 +506,7 @@ function filter(msRun::XMLElement, argument::IC{<:AbstractVector})
             if c == nothing
                 break
             end
-        endb
+        end
     end
     return subindex
 end
