@@ -20,7 +20,7 @@ end
     if method == :relative
         y = normalisation(ms)
         ylabel --> "Intensity (%)"
-    else
+    elseis method == :absolute
         y = ms.int
         ylabel --> "Intensity (a.u.)"
     end
