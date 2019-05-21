@@ -191,9 +191,15 @@ function tests()
        a = msJ.centroid(scans[1], method = msJ.TBPD(:gauss, 4500., 0.2))               #74
        @test length(a.int) == 703
 
-       @test typeof(plot( scans[1] )) == Plots.Plot{Plots.GRBackend}                   #75
+       @test typeof(plot(scans[1], method = :relative)) == Plots.Plot{Plots.GRBackend} #75
+       @test typeof(plot(scans[1], method = :absolute)) == Plots.Plot{Plots.GRBackend} #76
 
-       @test typeof(plot( msJ.chromatogram(scans) )) == Plots.Plot{Plots.GRBackend}    #76
+       a = msJ.avg(scans[2], scans[5])
+       @test typeof(plot( a, method = :relative )) == Plots.Plot{Plots.GRBackend}      #77
+       @test typeof(plot( a, method = :absolute )) == Plots.Plot{Plots.GRBackend}      #78
+
+                 
+
 
 
 
