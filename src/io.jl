@@ -1,5 +1,14 @@
 """
-     info(filename::String, verbose::Bool = false)
+Module for importing and exporting data. Dispatch to specific methods according to the file extension.
+"""
+module io
+
+using Unicode
+
+export info, load, chromatogram
+
+"""
+    info(filename::String, verbose::Bool = false)
 The function looks into an file and returns in an Array{String} containing the number of scans and the different scans described by their MS level, polarity and eventually the precursor m/z followed by the activation method and collision energy. Each entry is unique, which gives a summary of the input file. With verbose = true, the functions also returns the parentFile, msManufacturer, msModel, msIonisation, msMassAnalyzer, msDetector, software and dataProcessing if existing.
 # Example
 ```julia-repl
@@ -42,8 +51,8 @@ end
 
 
 """
-    load(filename::String)
-Checks the file extension and calls the right function to load the mass spectra if it exists. Returns an array of individual mass spectra 
+    function load(filename::String)
+Checks the file extension and calls the right function to load the mass spectra if it exists. Returns an array of msJ.MSscan where the individual mass spectra are stored. 
 # Examples
 ```julia-repl
 julia> scans = msJ.load("test.mzXML")
@@ -51,12 +60,10 @@ julia> scans = msJ.load("test.mzXML")
  msJ.MSscan(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
-
 function load(filename::String)
     extension = split(filename, ".")[end]
 
     if Unicode.normalize(extension, casefold=true) == "mzxml"
-        #println("loading mzXML file...")
         return load_mzxml!(filename)
 
 #    elseif Unicode.normalize(extension, casefold=true) == "ascii"
@@ -109,7 +116,20 @@ function retention_time(filename::String)
 end
 
 
-function retention_time(scans::Vector{MSscan})
+"""
+    retention_time(scans::Vector{msJ.MSscan})
+Returns an array composed of the retention times of the individual mass spectra. 
+# Examples
+```julia-repl
+julia> msJ.retention_time("scans")
+51-element Array{Float64,1}:
+  0.1384
+  0.7307
+  2.1379
+....
+```
+"""
+function retention_time(scans::Vector{msJ.MSscan})
     rt  = Vector{Float64}(undef,0)
     for elem in scans
         push!(rt, elem.rt)
@@ -172,8 +192,9 @@ function chromatogram(filename::String, filters::FilterType...; method::MethodTy
 
 end
 
+
 """
-    msfilter(filename::String, filters::FilterType...; stats::Bool=true)
+    msfilter(filename::String, arguments::FilterType...; stats::Bool=true)
 Returns the average mass spectrum container (MSscans) along with the sample standard deviation of the intensities with stats=true (default) for all the mass spectra within file. The data may be filtered by level, precursor mass, activation methods, etc, using the arguments msJ.Level(N), msJ.Precursor(mz), msJ.Activation_Method("method"), or any combination of these arguments.
 # Examples
 ```julia-repl
@@ -227,8 +248,10 @@ function msfilter(filename::String, arguments::FilterType...; stats::Bool=true)
     end
 end
 
+
+
 """
-    chromatogram(scans::Vector{MSscan}, filters::FilterType...; method::MethodType=TIC())
+    chromatogram(scans::Vector{msJ.MSscan}, filters::msJ.FilterType...; method::msJ.MethodType=TIC())
 Returns the retention time and the total ion current by default for all the mass spectra within the Array of mass spectrum container MSscan. Alternatively, other options may be supplied such as method = msJ.BasePeak, which returs the base peak intensity, method = msJ.∆MZ([500,5]), which returns the ion current for the range mz = 500 ± 5, or method = msJ.MZ([200,1000]) which return the ion current in the range from m/z 200 to m/z 1000.  The data may be filtered by ms level, precursor mass, activation methods, etc, using the arguments msJ.Level(N), msJ.Precursor(mz), msJ.Activation_Method("method")...
 # Examples
 ```julia-repl
@@ -242,7 +265,7 @@ julia> rt, ic = msJ.chromatogram("test.mzxml", method = msJ.MZ([200,1000]))
 ([0.1384  …  60.4793], [4.74795e6  …  17.4918])
 ```
 """
-function chromatogram(scans::Vector{MSscan}, filters::FilterType...; method::MethodType=TIC())
+function chromatogram(scans::Vector{msJ.MSscan}, filters::msJ.FilterType...; method::msJ.MethodType=msJ.TIC())
     # Ranges of mz value used to compute the tic from
     xrt = Vector{Float64}(undef,0)
     xic = Vector{Float64}(undef,0)
@@ -260,6 +283,7 @@ function chromatogram(scans::Vector{MSscan}, filters::FilterType...; method::Met
         ErrorException("No matching spectra.")
     end    
 end
+
 
 
 """
@@ -297,3 +321,4 @@ function msfilter(scans::Vector{MSscan}, arguments::FilterType...; stats::Bool=t
     end
 end
 
+end

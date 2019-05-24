@@ -1,6 +1,16 @@
-  
-# Mass spectra
+"""
+"""
+module process
 
+
+using Statistics     # used for Perasons correlation calculation
+using LsqFit         # used for curve fitting
+using DSP            # used for convolution
+
+
+
+
+# Mass spectra
 """
     smooth(scan::MScontainer; method::MethodType=SG(5, 9))
 Smooth the intensity of the input data and returns a similar structure.
@@ -10,14 +20,19 @@ julia> smoothed_data = msJ.smooth(scans)
 msJ.MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
-function smooth(scan::MScontainer; method::MethodType=SG(5, 9, 0))
+function smooth(scan::msJ.MScontainer; method::msJ.MethodType=SG(5, 9, 0))
     if method isa msJ.SG
         return savitzky_golay_filtering(scan, method.order, method.window, method.derivative)
     end  
 end
 
 
-function savitzky_golay_filtering(scan::MScontainer, order::Int, window::Int, deriv::Int)
+
+"""
+    savitzky_golay_filtering(scan::msJ.MScontainer, order::Int, window::Int, deriv::Int)
+Savinsky and Golay filtering of mz and int data within the MSscan(s) container.
+"""
+function savitzky_golay_filtering(scan::msJ.MScontainer, order::Int, window::Int, deriv::Int)
     if window % 2 != 1
         return ErrorException("Window has to be an odd number.")
     elseif window < 1
@@ -58,7 +73,7 @@ julia> reduced_data = msJ.find_peaks(scans)
 msJ.MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
-function centroid(scan::MScontainer; method::MethodType=TBPD(:gauss, 4500., 0.2) )
+function centroid(scan::msJ.MScontainer; method::msJ.MethodType=TBPD(:gauss, 4500., 0.2) )
     if method isa msJ.TBPD
         return tbpd(scan, method.shape, method.resolution, method.threshold)
 #    elseif method isa msJ.SNRA()
@@ -71,29 +86,12 @@ function centroid(scan::MScontainer; method::MethodType=TBPD(:gauss, 4500., 0.2)
     
 end
 
-"""
-function centroid(scan::MScontainer; resolution::Symbol = :medium, R::Real = 4500., shape::Symbol = :gauss, threshold::Real = 0.2 )
-    if R == 4500.
-        if resolution == :low
-            R = 1000.
-        elseif resolution == :medium
-            R = 4500.
-        elseif resolution == :high
-            R = 50000.
-        elseif resolution == :veryhigh
-            R = 300000.
-        else
-            error("Unsupported resolution")
-        end
-    else
-        resolution = :custom
-    end
-    return tbpd(scan, R, shape, threshold)
-end
 
 """
-
-function tbpd(scan::MScontainer, shape::Symbol,  R::Real, thres::Real)   #template based peak detection
+    tbpd(scan::msJ.MScontainer, shape::Symbol,  R::Real, thres::Real)
+Template based beak detection algorithm
+"""
+function tbpd(scan::msJ.MScontainer, shape::Symbol,  R::Real, thres::Real)   #template based peak detection
     if shape == :gauss
         # Gaussian shape function
         # width            = p[1]
@@ -143,7 +141,7 @@ function tbpd(scan::MScontainer, shape::Symbol,  R::Real, thres::Real)   #templa
     diff_prev = 0.0
     diff      = 0.0 
 
-    # numerical differentiation of correlation vector to find its maximum
+    # rough numerical differentiation of correlation vector to find its maximum
     for i =2:length(correlation)-2
         diff = (-correlation[i-1] +correlation[i+1]) / 2.0 
         if diff < 0.0
@@ -163,10 +161,10 @@ function tbpd(scan::MScontainer, shape::Symbol,  R::Real, thres::Real)   #templa
     basePeakIntensity = maximum(peaks_int)
     basePeakMz = peaks_mz[ num2pnt(peaks_int, basePeakIntensity) ]
     
-    if scan isa MSscans
-        return MSscans(scan.num, scan.rt, sum(peaks_int), peaks_mz, peaks_int, scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy, peaks_s)
-    elseif scan isa MSscan
-        return MSscan(scan.num, scan.rt, sum(peaks_int), peaks_mz, peaks_int, scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy)
+    if scan isa msJ.MSscans
+        return msJ.MSscans(scan.num, scan.rt, sum(peaks_int), peaks_mz, peaks_int, scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy, peaks_s)
+    elseif scan isa msJ.MSscan
+        return msJ.MSscan(scan.num, scan.rt, sum(peaks_int), peaks_mz, peaks_int, scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy)
     end
 end
 
@@ -179,3 +177,8 @@ function cwt(scan::MScontainer)                                         # Contin
     error("Wavelets not implemented")
 end
 """
+
+
+
+
+end

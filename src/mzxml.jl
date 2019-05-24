@@ -1,5 +1,16 @@
+"""
+Interface to the mzxml file format
+"""
+module mzxml
+
+using LightXML, Codecs
 
 
+"""
+    info_mzxml!(filename::String, info::Vector{String}, verbose::Bool=false)
+Returns the information content of an mzXML file into a string. Verbosity is controlled by the verbose Boolean variable set by default to false.
+
+"""
 function info_mzxml!(filename::String, info::Vector{String}, verbose::Bool=false)
     filter = ""
     xdoc = parse_file(filename)
@@ -86,6 +97,10 @@ function info_mzxml!(filename::String, info::Vector{String}, verbose::Bool=false
     info
 end
 
+"""
+    load_mzxml!(filename::String)
+Open an mzxml file, and return the  
+"""
 function load_mzxml!(filename::String)
     xdoc = parse_file(filename)
     xroot = root(xdoc)
@@ -108,9 +123,6 @@ function load_mzxml!(filename::String)
         end
     end
     free(xdoc)   
-    return scans
-
-    
     return scans
 end
 
@@ -140,7 +152,10 @@ function load_mzxml(filename::String, index::Int)
 end
 
 
-
+"""
+    load_mzxml_spectrum(c::XMLElement)
+From an XMLElement, returns the data into an MSscan. 
+"""
 function load_mzxml_spectrum(c::XMLElement)
     num = attribute(c, "num")
     msLevel = attribute(c, "msLevel")
@@ -212,6 +227,10 @@ function load_mzxml_spectrum(c::XMLElement)
     
 end
 
+"""
+    retention_time(msRun::XMLElement)
+From an XMLE element returns the retention time.
+"""
 function retention_time(msRun::XMLElement)
     rt  = Vector{Float64}(undef,0)
     for c1 in child_elements(msRun)
@@ -229,6 +248,11 @@ function retention_time(msRun::XMLElement)
     return rt
 end
 
+
+"""
+    filter(msRun::XMLElement, argument::Precursor{<:Real})
+Search for scans matching the argument precursor mz and returns a list of index
+"""
 function filter(msRun::XMLElement, argument::Precursor{<:Real})
     subindex = Set{Int}()
     for c in child_elements(msRun)
@@ -245,6 +269,12 @@ function filter(msRun::XMLElement, argument::Precursor{<:Real})
     return subindex
 end
 
+
+"""
+    filter(msRun::XMLElement, argument::Level{<:Int})
+Search for scans matching the argument level and returns a list of index
+
+"""
 function filter(msRun::XMLElement, argument::Level{<:Int})
     subindex = Set{Int}()
     for c in child_elements(msRun)
@@ -261,6 +291,11 @@ function filter(msRun::XMLElement, argument::Level{<:Int})
     return subindex
 end
 
+"""
+    filter(msRun::XMLElement, argument::Level{<:AbstractVector}
+Search for scans matching the argument levels and returns a list of index
+
+"""
 function filter(msRun::XMLElement, argument::Level{<:AbstractVector})
     subindex = Set{Int}()
     for i in argument.arg       
@@ -279,6 +314,11 @@ function filter(msRun::XMLElement, argument::Level{<:AbstractVector})
     return subindex
 end
 
+"""
+    filter(msRun::XMLElement, argument::Precursor{<:AbstractVector})
+Search for scans matching the argument precusors mz and returns a list of index
+
+"""
 function filter(msRun::XMLElement, argument::Precursor{<:AbstractVector})
     subindex = Set{Int}()
     for i in argument.arg       
@@ -298,6 +338,10 @@ function filter(msRun::XMLElement, argument::Precursor{<:AbstractVector})
 end
 
 
+"""
+    filter(msRun::XMLElement, argument::Activation_Energy{<:AbstractVector})
+Search for scans matching the argument activation energies and returns a list of index
+"""
 function filter(msRun::XMLElement, argument::Activation_Energy{<:AbstractVector})
     subindex = Set{Int}()
     for i in argument.arg       
@@ -316,6 +360,10 @@ function filter(msRun::XMLElement, argument::Activation_Energy{<:AbstractVector}
     return subindex
 end
 
+"""
+    filter(msRun::XMLElement, argument::Activation_Energy{<:Real})
+Search for scans matching the argument activation energy and returns a list of index
+"""
 function filter(msRun::XMLElement, argument::Activation_Energy{<:Real})
     subindex = Set{Int}()
     for c in child_elements(msRun)
@@ -332,6 +380,10 @@ function filter(msRun::XMLElement, argument::Activation_Energy{<:Real})
     return subindex
 end
 
+"""
+    filter(msRun::XMLElement, argument::Activation_Method{<:AbstractVector})
+Search for scans matching the argument activation methods and returns a list of index
+"""
 function filter(msRun::XMLElement, argument::Activation_Method{<:AbstractVector})
     subindex = Set{Int}()
     for i in argument.arg       
@@ -350,6 +402,10 @@ function filter(msRun::XMLElement, argument::Activation_Method{<:AbstractVector}
     return subindex
 end
 
+"""
+    filter(msRun::XMLElement, argument::Activation_Method{<:String})
+Search for scans matching the argument activation method and returns a list of index
+"""
 function filter(msRun::XMLElement, argument::Activation_Method{<:String})
     subindex = Set{Int}()
     for c in child_elements(msRun)
@@ -366,6 +422,10 @@ function filter(msRun::XMLElement, argument::Activation_Method{<:String})
     return subindex
 end
 
+"""
+    filter(msRun::XMLElement, argument::Polarity{<:AbstractVector})
+Search for scans matching the argument polarities and returns a list of index
+"""
 function filter(msRun::XMLElement, argument::Polarity{<:AbstractVector})
     subindex = Set{Int}()
     for i in argument.arg       
@@ -384,6 +444,10 @@ function filter(msRun::XMLElement, argument::Polarity{<:AbstractVector})
     return subindex
 end
 
+"""
+    filter(msRun::XMLElement, argument::Polarity{<:String})
+Search for scans matching the argument polarity and returns a list of index
+"""
 function filter(msRun::XMLElement, argument::Polarity{<:String})
     subindex = Set{Int}()
     for c in child_elements(msRun)
@@ -400,6 +464,11 @@ function filter(msRun::XMLElement, argument::Polarity{<:String})
     return subindex
 end
 
+
+"""
+    filter(msRun::XMLElement, argument::Scan{<:AbstractVector}
+Search for scans matching the argument scan nums and returns a list of index
+"""
 function filter(msRun::XMLElement, argument::Scan{<:AbstractVector})
     subindex = Set{Int}()
     for i in argument.arg       
@@ -418,6 +487,10 @@ function filter(msRun::XMLElement, argument::Scan{<:AbstractVector})
     return subindex
 end
 
+"""
+    filter(msRun::XMLElement, argument::Scan{<:Int})
+Search for scans matching the argument scan num and returns a list of index
+"""
 function filter(msRun::XMLElement, argument::Scan{<:Int})
     subindex = Set{Int}()
     for c in child_elements(msRun)
@@ -434,6 +507,10 @@ function filter(msRun::XMLElement, argument::Scan{<:Int})
     return subindex
 end
 
+"""
+    filter(msRun::XMLElement, argument::RT{<:Real})
+Search for scans matching the argument retention time and returns a list of index
+"""
 function filter(msRun::XMLElement, argument::RT{<:Real})
     subindex = Set{Int}()
     rt = retention_time(msRun)
@@ -453,6 +530,10 @@ function filter(msRun::XMLElement, argument::RT{<:Real})
     return subindex
 end
 
+"""
+    filter(msRun::XMLElement, argument::RT{<:AbstractVector}
+Search for scans matching the argument retention times within the range and returns a list of index
+"""
 function filter(msRun::XMLElement, argument::RT{<:AbstractVector})
     subindex = Set{Int}()
     rt = retention_time(msRun)
@@ -474,6 +555,10 @@ function filter(msRun::XMLElement, argument::RT{<:AbstractVector})
     return subindex
 end
 
+"""
+    filter(msRun::XMLElement, argument::RT{<:AbstractVector{<:AbstractVector} } )
+Search for scans matching the argument retention times within the ranges and returns a list of index
+"""
 function filter(msRun::XMLElement, argument::RT{<:AbstractVector{<:AbstractVector} } )
     subindex = Set{Int}()
     rt = retention_time(msRun)
@@ -495,6 +580,10 @@ function filter(msRun::XMLElement, argument::RT{<:AbstractVector{<:AbstractVecto
     return subindex
 end
 
+"""
+    filter(msRun::XMLElement, argument::IC{<:AbstractVector})
+Search for scans matching for which the total ion current is within the input range returns a list of index
+"""
 function filter(msRun::XMLElement, argument::IC{<:AbstractVector})
     subindex = Set{Int}()
     for c in child_elements(msRun)
@@ -512,6 +601,10 @@ function filter(msRun::XMLElement, argument::IC{<:AbstractVector})
 end
 
 
+"""
+    extracted_chromatogram(filename::String, indices::Vector{Int},method::MethodType)
+Returns the extracted chromatogram for input file according to the selected method and for set of scan num as input
+"""
 function extracted_chromatogram(filename::String, indices::Vector{Int},method::MethodType)
     xrt = Vector{Float64}(undef,0)
     xic = Vector{Float64}(undef,0)
@@ -550,6 +643,10 @@ function extracted_chromatogram(filename::String, indices::Vector{Int},method::M
     return Chromatogram(xrt, xic, maximum(xic))
 end
 
+"""
+    composite_spectra(filename::String, indices::Vector{Int}, stats::Bool)
+Returns the average MSscans for input filename and according to the input scan num. Calculation of variance is controlled by the stats Boolean variable.
+"""
 function composite_spectra(filename::String, indices::Vector{Int}, stats::Bool)
     if stats == false
         result = load_mzxml(filename, indices[1])
@@ -567,3 +664,5 @@ function composite_spectra(filename::String, indices::Vector{Int}, stats::Bool)
 
 end
 
+
+end
