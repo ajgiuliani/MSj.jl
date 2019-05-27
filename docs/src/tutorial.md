@@ -1,6 +1,10 @@
 Tutorial
 ========
 
+```@meta
+using Plots
+```
+
 The msJ package intends to provide an access to the common open source mass spectrometry file format.
 
 # Loading mass spectrometry data
@@ -60,14 +64,9 @@ CID_TIC    = chromatogram(scans, msJ.Activation_Method("CID"))
 mz902_TIC  = chromatogram(scans, msJ.Precursor(902.33))
 ```
 
-The individual extracted chromatogram may be plotted. First we need to import the `Julia` package for plotting:
+The individual extracted chromatogram may be plotted. First we need to import the `Julia` package for plotting. Then, we can make a figure with the chromatograms:
 ```@example 1
-Using Plots
-```
-Then, we can make a figure with the chromatograms:
-```@example 1
-using Plots
-pyplot()
+using Plots ;
 p1 = plot(full_TIC, label = "full tic")
 p2 = plot(MS1_TIC, label = " MS1_TIC")
 p3 = plot(CID_TIC, label = "CID_TIC")
