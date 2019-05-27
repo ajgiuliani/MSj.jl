@@ -28,6 +28,6 @@ makedocs(
 )
 
 deploydocs(
-    repo = "ithub.com/ajgiuliani/msJ.jl.git",
+    repo = "github.com/ajgiuliani/msJ.jl.git",
     target = "build",
 )
