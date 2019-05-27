@@ -125,7 +125,6 @@ msJ.filter(scans::Vector{MSscan}, argument::RT{<:AbstractVector{<:AbstractVector
 msJ.filter(scans::Vector{MSscan}, argument::IC{<:AbstractVector})
 msJ.extracted_chromatogram(scans::Vector{MSscan}, indices::Vector{Int},method::MethodType)
 msJ.composite_spectra(scans::Vector{MSscan}, indices::Vector{Int}, stats::Bool)
-msJ.filter :: Tuple{LightXML.XMLElement,msJ.Activation_Method{#s21} where #s21<:String}
 ```
 
 
