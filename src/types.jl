@@ -1,18 +1,18 @@
 """
 Submodule with types and structures used to stored the data and dispatch to the right methods.
 """
-module types
-
 
 ### Containers
 
 """
+    abstract type MScontainer  end
 Abstract type containing any imported data belongs to the MScontainer type.
 """
 abstract type MScontainer  end
 
 
 """
+    struct MSscan <: MScontainer
 Data structure used to store individual mass spectrometry scans organized following the structure of mzXML files.
 """
 struct MSscan <: MScontainer
@@ -31,6 +31,7 @@ struct MSscan <: MScontainer
 end
 
 """
+    struct MSscans  <: MScontainer
 Data structure designed to store mass spectra obtained after filtering operation along with the history of these operation.
 """
 struct MSscans  <: MScontainer
@@ -51,6 +52,7 @@ end
 
 
 """
+    struct Chromatogram  <: MScontainer
 Data structure used to retrieve chromatography data.
 """
 struct Chromatogram  <: MScontainer
@@ -63,7 +65,8 @@ end
 
 ### Methods
 """
-This type contains all the methods used for filtering the data.
+    abstract type MethodType  end
+Type containing all the methods used for filtering the data.
 """
 abstract type MethodType  end
 
@@ -71,6 +74,7 @@ abstract type MethodType  end
 # chromatogram
 
 """
+    struct BasePeak <: MethodType
 Structure for multiple dispatching to retrieve base peak chromatogram.
 """
 struct BasePeak <: MethodType
@@ -80,7 +84,8 @@ end
 
 
 """
-Structure for multiple dispatching to retrieve total ion current chromatogram.
+    struct TIC <: MethodType
+Dispatching to retrieve total ion current chromatogram.
 """
 struct TIC <: MethodType
    #field = "TIC"
@@ -89,6 +94,7 @@ end
 
 
 """
+    struct ∆MZ{argT <: Union{Real, AbstractVector{<:Real} }} <: MethodType
 Structure for multiple dispatching to retrieve extracted ion current chromatogram around an m/z ± ∆mz value given by arg = [mz, ∆mz]
 """
 struct ∆MZ{argT <: Union{Real, AbstractVector{<:Real} }} <: MethodType
@@ -99,6 +105,7 @@ end
 
 
 """
+    struct MZ{argT <: Union{Real, AbstractVector{<:Real} }} <: MethodType
 Structure for multiple dispatching to retrieve extracted ion current chromatogram around for m/z in the range arg = [mz1, mz2].
 """
 struct MZ{argT <: Union{Real, AbstractVector{<:Real} }} <: MethodType
@@ -109,6 +116,7 @@ end
 
 
 """
+    struct SG{argT <: Int} <: MethodType   #Savinsky & Golay filtering
 Structure for multiple dispatching to Savinsky & Golay filtering, providing the order, window size and derivative to be performed.  Defaults values are provided in functions calls.
 """
 struct SG{argT <: Int} <: MethodType   #Savinsky & Golay filtering
@@ -120,6 +128,7 @@ end
 
 
 """
+    struct TBPD{argT1 <: Symbol, argT2 <: Real}  <: MethodType
 Structure for multiple dispatching to Template Base Peak Detection centroiding, providing the shape of the template function, the resolution and threshold.  Defaults values are provided in functions calls.
 """
 struct TBPD{argT1 <: Symbol, argT2 <: Real}  <: MethodType
@@ -145,7 +154,7 @@ end
 ### Filters
 
 """
-    FilterType 
+    abstract type FilterType end
 This type contains  the structures for filtering the data.
 """
 abstract type FilterType end
@@ -161,50 +170,72 @@ struct RT{argT <: Union{Real, AbstractVector{<:Real},  AbstractVector{<:Abstract
 end
 
 """
-    IC{argT <: Union{Real, AbstractVector{<:Real} }}
-Structure for multiple dispatching to Template Base Peak Detection centroiding, providing the shape of the template function, the resolution and threshold.  Defaults values are provided in functions calls.
+    struct IC{argT <: Union{Real, AbstractVector{<:Real} }} <: FilterType
+Used for multiple dispatching to Template Base Peak Detection centroiding, providing the shape of the template function, the resolution and threshold.  Defaults values are provided in functions calls.
 """
 struct IC{argT <: Union{Real, AbstractVector{<:Real} }} <: FilterType
    arg::argT
    IC(arg::argT) where{argT} = new{argT}(arg)
 end
 
+"""
+    struct Level{argT <: Union{Int, AbstractVector{<:Int} }} <: FilterType
+Used to dispatch filters to MS level.
+"""
 struct Level{argT <: Union{Int, AbstractVector{<:Int} }} <: FilterType
    arg::argT
    #field = "level"
    Level(arg::argT) where{argT} = new{argT}(arg)
 end
 
+"""
+     Scan{argT <: Union{Int, AbstractVector{<:Int} }} <: FilterType
+Dispatch filter to scan num.
+"""
 struct Scan{argT <: Union{Int, AbstractVector{<:Int} }} <: FilterType
    arg::argT
    #field = "num"
    Scan(arg::argT) where{argT} = new{argT}(arg)
 end
 
+"""
+    struct Polarity{argT <: Union{String, AbstractVector{<:String} }} <: FilterType
+Dispatch filter to polarity.
+"""
 struct Polarity{argT <: Union{String, AbstractVector{<:String} }} <: FilterType
    arg::argT
    #field = "polarity"
    Polarity(arg::argT) where{argT} = new{argT}(arg)
 end
 
+"""
+    struct Activation_Method{argT <: Union{String, AbstractVector{<:String} }} <: FilterType
+Dispatch filter to activation methods
+"""
 struct Activation_Method{argT <: Union{String, AbstractVector{<:String} }} <: FilterType
    arg::argT
    #field = "activationMethod"
    Activation_Method(arg::argT) where{argT} = new{argT}(arg)
 end
 
+"""
+    struct Activation_Energy{argT <: Union{Real, AbstractVector{<:Real} }} <: FilterType
+Dispatch filter to activation energies.
+"""
 struct Activation_Energy{argT <: Union{Real, AbstractVector{<:Real} }} <: FilterType
    arg::argT
    #field = "collisionEnergy"
    Activation_Energy(arg::argT) where{argT} = new{argT}(arg)
 end
 
+
+"""
+    struct Precursor{argT <: Union{Real, AbstractVector{<:Real} }} <: FilterType
+Dispatch filter to precursor.
+"""
 struct Precursor{argT <: Union{Real, AbstractVector{<:Real} }} <: FilterType
    arg::argT
    #field = "precursorMz"
    Precursor(arg::argT) where{argT} = new{argT}(arg)
 end
 
-
-
-end # submodule

@@ -1,14 +1,10 @@
-"""
-Interface to the MScontainer data for filtering scans
-"""
-module msscans
 
 
 """
-    filter(scans::Vector{msJ.MSscan}, argument::msJ.Level{<:Int})
+    filter(scans::Vector{MSscan}, argument::Level{<:Int})
 Search for scans matching the argument MS level and returns a list of the corresponding indexes
 """
-function filter(scans::Vector{msJ.MSscan}, argument::msJ.Level{<:Int})
+function filter(scans::Vector{MSscan}, argument::Level{<:Int})
     subindex = Set{Int}()
     for elem in scans
         if elem.level == argument.arg
@@ -19,10 +15,10 @@ function filter(scans::Vector{msJ.MSscan}, argument::msJ.Level{<:Int})
 end
 
 """
-    filter(scans::Vector{msJ.MSscan}, argument::msJ.Level{<:AbstractVector})
+    filter(scans::Vector{MSscan}, argument::Level{<:AbstractVector})
 Search for scans matching the argument MS levels and returns a list of the corresponding indexes
 """
-function filter(scans::Vector{msJ.MSscan}, argument::msJ.Level{<:AbstractVector})
+function filter(scans::Vector{MSscan}, argument::Level{<:AbstractVector})
     subindex = Set{Int}()
     for i in argument.arg
         for elem in scans
@@ -35,10 +31,10 @@ function filter(scans::Vector{msJ.MSscan}, argument::msJ.Level{<:AbstractVector}
 end
 
 """
-    filter(scans::Vector{msJ.MSscan}, argument::msJ.Precursor{<:Real})
+    filter(scans::Vector{MSscan}, argument::Precursor{<:Real})
 Search for scans matching the argument precursor mz and returns a list of the corresponding indexes
 """
-function filter(scans::Vector{msJ.MSscan}, argument::msJ.Precursor{<:Real})
+function filter(scans::Vector{MSscan}, argument::Precursor{<:Real})
     subindex = Set{Int}()
     for elem in scans
         if elem.precursor == argument.arg
@@ -50,10 +46,10 @@ end
 
 
 """
-    filter(scans::Vector{msJ.MSscan}, argument::msJ.Precursor{<:AbstractVector})
+    filter(scans::Vector{MSscan}, argument::Precursor{<:AbstractVector})
 Search for scans matching the argument precursors mz and returns a list of the corresponding indexes
 """
-function filter(scans::Vector{msJ.MSscan}, argument::msJ.Precursor{<:AbstractVector})
+function filter(scans::Vector{MSscan}, argument::Precursor{<:AbstractVector})
     subindex = Set{Int}()
     for i in argument.arg
         for elem in scans
@@ -66,10 +62,10 @@ function filter(scans::Vector{msJ.MSscan}, argument::msJ.Precursor{<:AbstractVec
 end
 
 """
-    filter(scans::Vector{msJ.MSscan}, argument::msJ.Activation_Energy{<:Real})
+    filter(scans::Vector{MSscan}, argument::Activation_Energy{<:Real})
 Search for scans matching the argument activation energy and returns a list of the corresponding indexes
 """
-function filter(scans::Vector{msJ.MSscan}, argument::msJ.Activation_Energy{<:Real})
+function filter(scans::Vector{MSscan}, argument::Activation_Energy{<:Real})
     subindex = Set{Int}()
     for elem in scans
         if elem.collisionEnergy == argument.arg
@@ -80,11 +76,11 @@ function filter(scans::Vector{msJ.MSscan}, argument::msJ.Activation_Energy{<:Rea
 end
 
 """
-    filter(scans::Vector{msJ.MSscan}, argument::msJ.Activation_Energy{<:AbstractVector})
+    filter(scans::Vector{MSscan}, argument::Activation_Energy{<:AbstractVector})
 Search for scans matching the argument activation energies and returns a list of the corresponding indexes
 
 """
-function filter(scans::Vector{msJ.MSscan}, argument::msJ.Activation_Energy{<:AbstractVector})
+function filter(scans::Vector{MSscan}, argument::Activation_Energy{<:AbstractVector})
     subindex = Set{Int}()
     for i in argument.arg       
         for elem in scans
@@ -97,10 +93,10 @@ function filter(scans::Vector{msJ.MSscan}, argument::msJ.Activation_Energy{<:Abs
 end
 
 """
-    filter(scans::Vector{msJ.MSscan}, argument::msJ.Activation_Method{<:String})
+    filter(scans::Vector{MSscan}, argument::Activation_Method{<:String})
 Search for scans matching the argument activation method and returns a list of the corresponding indexes
 """
-function filter(scans::Vector{msJ.MSscan}, argument::msJ.Activation_Method{<:String})
+function filter(scans::Vector{MSscan}, argument::Activation_Method{<:String})
     subindex = Set{Int}()
     for elem in scans
         if elem.activationMethod == argument.arg
@@ -111,10 +107,10 @@ function filter(scans::Vector{msJ.MSscan}, argument::msJ.Activation_Method{<:Str
 end
 
 """
-    filter(scans::Vector{msJ.MSscan}, argument::msJ.Activation_Method{<:AbstractVector})
+    filter(scans::Vector{MSscan}, argument::Activation_Method{<:AbstractVector})
 Search for scans matching the argument activation methods and returns a list of the corresponding indexes
 """
-function filter(scans::Vector{msJ.MSscan}, argument::msJ.Activation_Method{<:AbstractVector})
+function filter(scans::Vector{MSscan}, argument::Activation_Method{<:AbstractVector})
     subindex = Set{Int}()
     for i in argument.arg
         for elem in scans
@@ -127,10 +123,10 @@ function filter(scans::Vector{msJ.MSscan}, argument::msJ.Activation_Method{<:Abs
 end
 
 """
-    filter(scans::Vector{msJ.MSscan}, argument::msJ.Polarity{<:AbstractVector})
+    filter(scans::Vector{MSscan}, argument::Polarity{<:AbstractVector})
 Search for scans matching the argument polarities and returns a list of the corresponding indexes
 """
-function filter(scans::Vector{msJ.MSscan}, argument::msJ.Polarity{<:AbstractVector})
+function filter(scans::Vector{MSscan}, argument::Polarity{<:AbstractVector})
     subindex = Set{Int}()
     for i in argument.arg
         for elem in scans
@@ -144,10 +140,10 @@ end
 
 
 """
-    filter(scans::Vector{msJ.MSscan}, argument::msJ.Polarity{<:String})
+    filter(scans::Vector{MSscan}, argument::Polarity{<:String})
 Search for scans matching the argument polarity and returns a list of the corresponding indexes
 """
-function filter(scans::Vector{msJ.MSscan}, argument::msJ.Polarity{<:String})
+function filter(scans::Vector{MSscan}, argument::Polarity{<:String})
     subindex = Set{Int}()
     for elem in scans
         if elem.polarity == argument.arg
@@ -159,10 +155,10 @@ end
 
 
 """
-    filter(scans::Vector{msJ.MSscan}, argument::msJ.Scan{<:Int})
+    filter(scans::Vector{MSscan}, argument::Scan{<:Int})
 Search for scans matching the argument scan num and returns a list of the corresponding indexes
 """
-function filter(scans::Vector{msJ.MSscan}, argument::msJ.Scan{<:Int})
+function filter(scans::Vector{MSscan}, argument::Scan{<:Int})
     subindex = Set{Int}()
     for elem in scans
         if elem.num == argument.arg
@@ -174,10 +170,10 @@ end
 
 
 """
-    filter(scans::Vector{msJ.MSscan}, argument::msJ.Scan{<:AbstractVector})
+    filter(scans::Vector{MSscan}, argument::Scan{<:AbstractVector})
 Search for scans matching the argument scan nums and returns a list of the corresponding indexes
 """
-function filter(scans::Vector{msJ.MSscan}, argument::msJ.Scan{<:AbstractVector})
+function filter(scans::Vector{MSscan}, argument::Scan{<:AbstractVector})
     subindex = Set{Int}()
     for i in argument.arg       
         for elem in scans
@@ -191,10 +187,10 @@ end
 
 
 """
-    filter(scans::Vector{msJ.MSscan}, argument::msJ.RT{<:Real}) 
+    filter(scans::Vector{MSscan}, argument::RT{<:Real}) 
 Search for scans matching the argument retention time and returns a list of the corresponding indexes
 """
-function filter(scans::Vector{msJ.MSscan}, argument::msJ.RT{<:Real}) 
+function filter(scans::Vector{MSscan}, argument::RT{<:Real}) 
     subindex = Set{Int}()
     rt = retention_time(scans)
     index = num2pnt(rt, argument.arg)
@@ -208,10 +204,10 @@ end
 
 
 """
-    filter(scans::Vector{msJ.MSscan}, argument::msJ.RT{<:AbstractVector})
+    filter(scans::Vector{MSscan}, argument::RT{<:AbstractVector})
 Search for scans matching the argument retention time in the specified range and returns a list of the corresponding indexes
 """
-function filter(scans::Vector{msJ.MSscan}, argument::msJ.RT{<:AbstractVector})
+function filter(scans::Vector{MSscan}, argument::RT{<:AbstractVector})
     subindex = Set{Int}()
     rt = retention_time(scans)
     for i =1:2:length(argument.arg)
@@ -228,10 +224,10 @@ end
 
 
 """
-    filter(scans::Vector{msJ.MSscan}, argument::msJ.RT{<:AbstractVector{<:AbstractVector} } )
+    filter(scans::Vector{MSscan}, argument::RT{<:AbstractVector{<:AbstractVector} } )
 Search for scans matching the argument retention time in the specified ranges and returns a list of the corresponding indexes
 """
-function filter(scans::Vector{msJ.MSscan}, argument::msJ.RT{<:AbstractVector{<:AbstractVector} } )
+function filter(scans::Vector{MSscan}, argument::RT{<:AbstractVector{<:AbstractVector} } )
     subindex = Set{Int}()
     rt = retention_time(scans)
     for el  in argument.arg
@@ -248,10 +244,10 @@ end
 
 
 """
-    filter(scans::Vector{msJ.MSscan}, argument::msJ.IC{<:AbstractVector})
+    filter(scans::Vector{MSscan}, argument::IC{<:AbstractVector})
 Search for scans matching the argument total ion current within the specified ranges and returns a list of the corresponding indexes
 """
-function filter(scans::Vector{msJ.MSscan}, argument::msJ.IC{<:AbstractVector})
+function filter(scans::Vector{MSscan}, argument::IC{<:AbstractVector})
     subindex = Set{Int}()
     for elem in scans
         if  argument.arg[1] <= elem.tic <= argument.arg[2]
@@ -266,10 +262,10 @@ end
 ### Extraction of the ion current according to the selected filters and method
 
 """
-    extracted_chromatogram(scans::Vector{msJ.MSscan}, indices::Vector{Int},method::msJ.MethodType)
+    extracted_chromatogram(scans::Vector{MSscan}, indices::Vector{Int},method::MethodType)
 Returns the extracted chromatogram for input Array of MSscan according to the selected method and for set of scan num as input
 """
-function extracted_chromatogram(scans::Vector{msJ.MSscan}, indices::Vector{Int},method::msJ.MethodType)
+function extracted_chromatogram(scans::Vector{MSscan}, indices::Vector{Int},method::MethodType)
     xrt = Vector{Float64}(undef,0)
     xic = Vector{Float64}(undef,0)
     if method isa BasePeak
@@ -315,10 +311,10 @@ end
 
 
 """
-    composite_spectra(scans::Vector{msJ.MSscan}, indices::Vector{Int}, stats::Bool)
+    composite_spectra(scans::Vector{MSscan}, indices::Vector{Int}, stats::Bool)
 Returns the average MSscans for input Array of MSscan and according to the input scan num. Calculation of variance is controlled by the stats Boolean variable.
 """
-function composite_spectra(scans::Vector{msJ.MSscan}, indices::Vector{Int}, stats::Bool)
+function composite_spectra(scans::Vector{MSscan}, indices::Vector{Int}, stats::Bool)
     if stats == false
         result = scans[indices[1]]
         for i = 2:length(indices)
@@ -334,8 +330,3 @@ function composite_spectra(scans::Vector{msJ.MSscan}, indices::Vector{Int}, stat
     end
 end
 
-
-
-
-
-end

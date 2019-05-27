@@ -1,17 +1,16 @@
 """
 Interface to the mzxml file format
 """
-module mzxml
 
 using LightXML, Codecs
 
 
 """
-    info_mzxml!(filename::String, info::Vector{String}, verbose::Bool=false)
+    info_mzxml(filename::String, info::Vector{String}, verbose::Bool=false)
 Returns the information content of an mzXML file into a string. Verbosity is controlled by the verbose Boolean variable set by default to false.
 
 """
-function info_mzxml!(filename::String, info::Vector{String}, verbose::Bool=false)
+function info_mzxml(filename::String, info::Vector{String}, verbose::Bool=false)
     filter = ""
     xdoc = parse_file(filename)
     xroot = root(xdoc)       
@@ -98,10 +97,10 @@ function info_mzxml!(filename::String, info::Vector{String}, verbose::Bool=false
 end
 
 """
-    load_mzxml!(filename::String)
-Open an mzxml file, and return the  
+    load_mzxml_all(filename::String)
+Load an entire an mzxml file, and return the  
 """
-function load_mzxml!(filename::String)
+function load_mzxml_all(filename::String)
     xdoc = parse_file(filename)
     xroot = root(xdoc)
     if name(xroot) != "mzXML"
@@ -126,6 +125,10 @@ function load_mzxml!(filename::String)
     return scans
 end
 
+"""
+    load_mzxml(filename::String, index::Int
+Load from an mzxml file the scan num that match the input index
+"""
 function load_mzxml(filename::String, index::Int)
     xdoc = parse_file(filename)
     xroot = root(xdoc)
@@ -664,5 +667,3 @@ function composite_spectra(filename::String, indices::Vector{Int}, stats::Bool)
 
 end
 
-
-end

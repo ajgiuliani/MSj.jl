@@ -1,13 +1,17 @@
 """
+Processing functions submodule. 
 """
-module process
-
 
 using Statistics     # used for Perasons correlation calculation
 using LsqFit         # used for curve fitting
 using DSP            # used for convolution
 
 
+
+# User Interface.
+# ---------------
+
+export smooth, centroid
 
 
 # Mass spectra
@@ -20,7 +24,7 @@ julia> smoothed_data = msJ.smooth(scans)
 msJ.MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
-function smooth(scan::msJ.MScontainer; method::msJ.MethodType=SG(5, 9, 0))
+function smooth(scan::MScontainer; method::MethodType=SG(5, 9, 0))
     if method isa msJ.SG
         return savitzky_golay_filtering(scan, method.order, method.window, method.derivative)
     end  
@@ -32,7 +36,7 @@ end
     savitzky_golay_filtering(scan::msJ.MScontainer, order::Int, window::Int, deriv::Int)
 Savinsky and Golay filtering of mz and int data within the MSscan(s) container.
 """
-function savitzky_golay_filtering(scan::msJ.MScontainer, order::Int, window::Int, deriv::Int)
+function savitzky_golay_filtering(scan::MScontainer, order::Int, window::Int, deriv::Int)
     if window % 2 != 1
         return ErrorException("Window has to be an odd number.")
     elseif window < 1
@@ -56,10 +60,10 @@ function savitzky_golay_filtering(scan::msJ.MScontainer, order::Int, window::Int
     pad = vcat(yfirst, scan.int, ylast)
     y = conv(coefs[end:-1:1], pad)[2 * half_window + 1 : end - 2 * half_window]
     
-    if scan isa msJ.MSscan
+    if scan isa MSscan
         return MSscan(scan.num, scan.rt, scan.tic, scan.mz, y, scan.level, scan.basePeakMz, scan.basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy)
     elseif scan isa MSscans
-        return msJ.MSscans(scan.num, scan.rt, scan.tic, scan.mz, y, scan.level, scan.basePeakMz, scan.basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy, scan.s)
+        return MSscans(scan.num, scan.rt, scan.tic, scan.mz, y, scan.level, scan.basePeakMz, scan.basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy, scan.s)
     end
 end
  
@@ -69,16 +73,16 @@ end
 Checks the file extension and calls the right function to load the mass spectra if it exists. Returns an array of individual mass spectra 
 # Examples
 ```julia-repl
-julia> reduced_data = msJ.find_peaks(scans)
-msJ.MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
+julia> reduced_data = find_peaks(scans)
+MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
-function centroid(scan::msJ.MScontainer; method::msJ.MethodType=TBPD(:gauss, 4500., 0.2) )
-    if method isa msJ.TBPD
+function centroid(scan::MScontainer; method::MethodType=TBPD(:gauss, 4500., 0.2) )
+    if method isa TBPD
         return tbpd(scan, method.shape, method.resolution, method.threshold)
-#    elseif method isa msJ.SNRA()
+#    elseif method isa SNRA()
 #        return snra(scan, method.threshold)
-#    elseif method isa msJ.CWT()
+#    elseif method isa CWT()
 #        return cwt(scan, method.threshold)
 #    else
 #        ErrorException("Unsupported method.")
@@ -91,7 +95,7 @@ end
     tbpd(scan::msJ.MScontainer, shape::Symbol,  R::Real, thres::Real)
 Template based beak detection algorithm
 """
-function tbpd(scan::msJ.MScontainer, shape::Symbol,  R::Real, thres::Real)   #template based peak detection
+function tbpd(scan::MScontainer, shape::Symbol,  R::Real, thres::Real)   #template based peak detection
     if shape == :gauss
         # Gaussian shape function
         # width            = p[1]
@@ -161,10 +165,10 @@ function tbpd(scan::msJ.MScontainer, shape::Symbol,  R::Real, thres::Real)   #te
     basePeakIntensity = maximum(peaks_int)
     basePeakMz = peaks_mz[ num2pnt(peaks_int, basePeakIntensity) ]
     
-    if scan isa msJ.MSscans
-        return msJ.MSscans(scan.num, scan.rt, sum(peaks_int), peaks_mz, peaks_int, scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy, peaks_s)
-    elseif scan isa msJ.MSscan
-        return msJ.MSscan(scan.num, scan.rt, sum(peaks_int), peaks_mz, peaks_int, scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy)
+    if scan isa MSscans
+        return MSscans(scan.num, scan.rt, sum(peaks_int), peaks_mz, peaks_int, scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy, peaks_s)
+    elseif scan isa MSscan
+        return MSscan(scan.num, scan.rt, sum(peaks_int), peaks_mz, peaks_int, scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy)
     end
 end
 
@@ -178,7 +182,3 @@ function cwt(scan::MScontainer)                                         # Contin
 end
 """
 
-
-
-
-end

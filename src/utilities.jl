@@ -2,17 +2,19 @@
 Utility functions to work on MScontainer data types.
 
 """
-module utilities
 
 using Interpolations
 using LinearAlgebra
 
 import Base: +, -, *, /
 
+    
 # User Interface.
 # --------------
 
-export avg    
+export avg, num2point
+
+
 
 # Overloaded Base function
 # ------------------------
@@ -397,6 +399,3 @@ function num2pnt(x::Vector{Float64}, val::Real)
     return ibest
 end
 
-
-
-end
