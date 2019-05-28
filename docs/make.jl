@@ -5,7 +5,7 @@ makedocs(
         # Use clean URLs, unless built as a "local" build
         prettyurls = !("local" in ARGS),
         canonical = "https://ajgiuliani.github.io/msJ.jl/dev/",
-        #assets = ["assets/favicon.ico"],
+        assets = ["assets/favicon.ico"],
         analytics = "UA-132913317-2",
     ),    
     #source  = "src",
