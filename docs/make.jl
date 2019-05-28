@@ -4,10 +4,10 @@ makedocs(
     format = Documenter.HTML(
         # Use clean URLs, unless built as a "local" build
         prettyurls = !("local" in ARGS),
-        #canonical = "https://juliadocs.github.io/Documenter.jl/stable/",
+        canonical = "https://ajgiuliani.github.io/msJ.jl/dev/",
         #assets = ["assets/favicon.ico"],
-        #analytics = "",
-    ),
+        analytics = "UA-132913317-2",
+    ),    
     #source  = "src",
     #build   = "build",
     clean   = false,
