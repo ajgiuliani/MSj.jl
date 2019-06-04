@@ -131,11 +131,11 @@ end
     struct TBPD{argT1 <: Symbol, argT2 <: Real}  <: MethodType
 Structure for multiple dispatching to Template Base Peak Detection centroiding, providing the shape of the template function, the resolution and threshold.  Defaults values are provided in functions calls.
 """
-struct TBPD{argT1 <: Symbol, argT2 <: Real}  <: MethodType
+struct TBPD{argT1 <: Symbol, argT2 <: Real, argT3 <: Real}   <: MethodType
     shape::argT1
     resolution::argT2
-    threshold::argT2
-    TBPD(shape::argT1, resolution::argT2, threshold::argT2) where{argT1, argT2} = new{argT1, argT2}(shape, resolution, threshold)
+    threshold::argT3
+    TBPD(shape::argT1, resolution::argT2, threshold::argT3) where{argT1, argT2, argT3} = new{argT1, argT2, argT3}(shape, resolution, threshold)
 end
 
 
