@@ -60,11 +60,15 @@ function savitzky_golay_filtering(scan::MScontainer, order::Int, window::Int, de
     pad = vcat(yfirst, scan.int, ylast)
     y = conv(coefs[end:-1:1], pad)[2 * half_window + 1 : end - 2 * half_window]
     
+    basePeakIntensity = ceil(maximum(y))
+    basePeakIndex = num2pnt(y, basePeakIntensity)
+    basePeakMz = scan.mz[basePeakIndex]
+    
     if scan isa MSscan
-        return MSscan(scan.num, scan.rt, scan.tic, scan.mz, y, scan.level, scan.basePeakMz, scan.basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy)
+        return MSscan(scan.num, scan.rt, scan.tic, scan.mz, y, scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy)
     elseif scan isa MSscans
 
-        return MSscans(scan.num, scan.rt, scan.tic, scan.mz, y, scan.level, scan.basePeakMz, scan.basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy, scan.s)
+        return MSscans(scan.num, scan.rt, scan.tic, scan.mz, y, scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy, scan.s)
     end
 end
  
