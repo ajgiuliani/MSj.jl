@@ -63,6 +63,7 @@ function savitzky_golay_filtering(scan::MScontainer, order::Int, window::Int, de
     if scan isa MSscan
         return MSscan(scan.num, scan.rt, scan.tic, scan.mz, y, scan.level, scan.basePeakMz, scan.basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy)
     elseif scan isa MSscans
+
         return MSscans(scan.num, scan.rt, scan.tic, scan.mz, y, scan.level, scan.basePeakMz, scan.basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy, scan.s)
     end
 end
@@ -79,7 +80,7 @@ MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5
 """
 function centroid(scan::MScontainer; method::MethodType=TBPD(:gauss, 4500., 0.2) )
     if method isa TBPD
-        return tbpd(scan, method.shape, method.resolution, method.threshold)
+        return tbpd(scan, method.shape, convert(Float64, method.resolution), convert(Float64,method.threshold))
 #    elseif method isa SNRA()
 #        return snra(scan, method.threshold)
 #    elseif method isa CWT()
