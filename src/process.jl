@@ -84,7 +84,18 @@ MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5
 """
 function centroid(scan::MScontainer; method::MethodType=TBPD(:gauss, 4500., 0.2) )
     if method isa TBPD
-        return tbpd(scan, method.shape, convert(Float64, method.resolution), convert(Float64,method.threshold))
+        #return tbpd(scan, method.shape, convert(Float64, method.resolution), convert(Float64,method.threshold))
+        ∆mz = 500.0 / method.resolution       # according to ∆mz / mz  = R, we take the value @ m/z 500
+        if method.shape == :gauss
+            return tbpd(scan, gauss, ∆mz, convert(Float64,method.threshold))
+        elseif method.shape == :lorentz
+            return tbpd(scan, lorentz, ∆mz, convert(Float64,method.threshold))
+        elseif method.shape == :voigt
+            return tbpd(scan, voigt, ∆mz, convert(Float64,method.threshold))
+        else
+            #ErrorException("Unsupported peak profile. Use :gauss, :lorentz or :voigt.")
+        end
+
 #    elseif method isa SNRA()
 #        return snra(scan, method.threshold)
 #    elseif method isa CWT()
@@ -95,33 +106,51 @@ function centroid(scan::MScontainer; method::MethodType=TBPD(:gauss, 4500., 0.2)
     
 end
 
+function gauss(x::Float64, p::Vector{Float64})
+    # Gaussian shape function
+    # width            = p[1]
+    # x0               = p[2]
+    # height           = p[3]
+    # background level = p[4]
+    # model(x, p) = p[4] + p[3] * exp(- ( (x-p[2])/p[1] )^2)
+    return  p[4] + p[3] * exp(- ( (x-p[2])/p[1] )^2)
+end
+
+function lorentz(x::Float64, p::Vector{Float64})
+    # Lorentzian shape function
+    # width            = p[1]
+    # x0               = p[2]
+    # height           = p[3]
+    # background level = p[4]
+    # model(x, p) = p[4] + (p[3] / ( p[1] * (x-p[2])^2) )
+    return p[4] + p[3]*π*p[1]/(π*p[1] + ( (x - p[2]) / p[1])^2)
+end
+
+function voigt(x::Float64, p::Vector{Float64})
+    # Lorentzian shape function
+    # width            = p[1]
+    # x0               = p[2]
+    # height           = p[3]
+    # background level = p[4]
+    # model(x, p) = p[4] + (p[3] / ( p[1] * (x-p[2])^2) )
+    gammaG = p[1] / (2.0 * sqrt(log(2.0)))
+    gammaL = p[1] / 2.0
+    Gamma = (gammaG^5 + 2.69269 * gammaG^4 * gammaL + 2.42843 * gammaG^3 * gammaL^2 + 4.47163 * gammaG^2 * gammaL^3 + 0.07842 * gammaG * gammaL^4 + gammaL^5)^(1/5)
+    eta = 1.36603 *(gammaL / Gamma) - 0.47719 * (gammaL / Gamma)^2 + 0.11116 * (gammaL / Gamma)^3
+
+    L(x,Gam,x0) = (Gam / π) / ((x-x0)^2 + Gam^2)
+    G(x,Gam,x0) = exp( -( (x-x0)^2) / (2.0 * Gam^2) ) / Gam * sqrt(2π)
+   return  p[4] + p[3]  * (eta * L(x,Gamma,p[2]) + (1 - eta) * G(x,Gamma,p[2])) 
+end
+
 
 """
     tbpd(scan::msJ.MScontainer, shape::Symbol,  R::Real, thres::Real)
 Template based beak detection algorithm
 """
-function tbpd(scan::MScontainer, shape::Symbol,  R::Real, thres::Real)   #template based peak detection
-    if shape == :gauss
-        # Gaussian shape function
-        # width            = p[1]
-        # x0               = p[2]
-        # height           = p[3]
-        # background level = p[4]
-        @. model(x, p) = p[4] + p[3] * exp(- ( (x-p[2])/p[1] )^2)
-        ∆mz = 500.0 / R                  # according to ∆mz / mz  = R, we take the value @ m/z 500
-#    elseif shape == :lorentz
-        # Lorentzian shape function
-        # width            = p[1]
-        # x0               = p[2]
-        # height           = p[3]
-        # background level = p[4]
-        #@. model(x, p) = p[4] + (p[3] / ( p[1] * (x-p[2])^2) )
-#    elseif shape == :voigt
-        # Voight shape function
-#    else
-#        ErrorException("Unsupported shape.")
-
-    end
+#function tbpd(scan::MScontainer, shape::Symbol,  R::Real, thres::Real)   #template based peak detection
+function tbpd(scan::MScontainer, model::Function,  ∆mz::Real, thres::Real)   #template based peak detection
+#    ∆mz = 500.0 / R                  # according to ∆mz / mz  = R, we take the value @ m/z 500
     box = num2pnt(scan.mz, scan.mz[1]+0.4) - 1        # taking a box of 0.5 width m/z
     correlation = zeros(length(scan.mz))
     maxi = maximum(scan.int)
@@ -131,7 +160,7 @@ function tbpd(scan::MScontainer, shape::Symbol,  R::Real, thres::Real)   #templa
         if level >=  maxi * thres / 100. 
             bkg = 0.0
             p0 = [∆mz, scan.mz[i], level, bkg]
-            ydata = model(scan.mz[i:i+box], p0)
+            ydata = [model(el, p0) for el in scan.mz[i:i+box]]
             val = Statistics.cor(scan.int[i:i+box], ydata)
         else
             val = 0.0
@@ -142,7 +171,7 @@ function tbpd(scan::MScontainer, shape::Symbol,  R::Real, thres::Real)   #templa
             correlation[i] = 0.0
         end
     end
-    
+
     peaks_mz = Vector{Float64}(undef,0)
     peaks_int = Vector{Float64}(undef,0)
     peaks_s = Vector{Float64}(undef,0)
