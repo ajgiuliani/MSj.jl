@@ -93,7 +93,7 @@ function centroid(scan::MScontainer; method::MethodType=TBPD(:gauss, 4500., 0.2)
         elseif method.shape == :voigt
             return tbpd(scan, voigt, ∆mz, convert(Float64,method.threshold))
         else
-            #ErrorException("Unsupported peak profile. Use :gauss, :lorentz or :voigt.")
+            ErrorException("Unsupported peak profile. Use :gauss, :lorentz or :voigt.")
         end
 
 #    elseif method isa SNRA()
@@ -106,6 +106,10 @@ function centroid(scan::MScontainer; method::MethodType=TBPD(:gauss, 4500., 0.2)
     
 end
 
+"""
+    gauss(x::Float64, p::Vector{Float64})
+Gaussian shape function used by the TBPD method
+"""
 function gauss(x::Float64, p::Vector{Float64})
     # Gaussian shape function
     # width            = p[1]
@@ -116,6 +120,10 @@ function gauss(x::Float64, p::Vector{Float64})
     return  p[4] + p[3] * exp(- ( (x-p[2])/p[1] )^2)
 end
 
+"""
+    lorentz(x::Float64, p::Vector{Float64})
+Cauchy-Lorentz shape function used by the TBPD method
+"""
 function lorentz(x::Float64, p::Vector{Float64})
     # Lorentzian shape function
     # width            = p[1]
@@ -126,13 +134,12 @@ function lorentz(x::Float64, p::Vector{Float64})
     return p[4] + p[3]*π*p[1]/(π*p[1] + ( (x - p[2]) / p[1])^2)
 end
 
+"""
+    voigt(x::Float64, p::Vector{Float64})
+Pseudo-Voigt profile function used by the TBPD method
+"""
 function voigt(x::Float64, p::Vector{Float64})
-    # Lorentzian shape function
-    # width            = p[1]
-    # x0               = p[2]
-    # height           = p[3]
-    # background level = p[4]
-    # model(x, p) = p[4] + (p[3] / ( p[1] * (x-p[2])^2) )
+    # pseudo-voigt profile
     gammaG = p[1] / (2.0 * sqrt(log(2.0)))
     gammaL = p[1] / 2.0
     Gamma = (gammaG^5 + 2.69269 * gammaG^4 * gammaL + 2.42843 * gammaG^3 * gammaL^2 + 4.47163 * gammaG^2 * gammaL^3 + 0.07842 * gammaG * gammaL^4 + gammaL^5)^(1/5)
@@ -140,7 +147,7 @@ function voigt(x::Float64, p::Vector{Float64})
 
     L(x,Gam,x0) = (Gam / π) / ((x-x0)^2 + Gam^2)
     G(x,Gam,x0) = exp( -( (x-x0)^2) / (2.0 * Gam^2) ) / Gam * sqrt(2π)
-   return  p[4] + p[3]  * (eta * L(x,Gamma,p[2]) + (1 - eta) * G(x,Gamma,p[2])) 
+   return  p[4] + p[3]  * ( eta * L(x,Gamma,p[2]) + (1 - eta) * G(x,Gamma,p[2]) ) 
 end
 
 
@@ -150,7 +157,6 @@ Template based beak detection algorithm
 """
 #function tbpd(scan::MScontainer, shape::Symbol,  R::Real, thres::Real)   #template based peak detection
 function tbpd(scan::MScontainer, model::Function,  ∆mz::Real, thres::Real)   #template based peak detection
-#    ∆mz = 500.0 / R                  # according to ∆mz / mz  = R, we take the value @ m/z 500
     box = num2pnt(scan.mz, scan.mz[1]+0.4) - 1        # taking a box of 0.5 width m/z
     correlation = zeros(length(scan.mz))
     maxi = maximum(scan.int)

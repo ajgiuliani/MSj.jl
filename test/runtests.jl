@@ -202,7 +202,14 @@ function tests()
        @test typeof(plot( cr, method = :relative )) == Plots.Plot{Plots.GRBackend}     #79
        @test typeof(plot( cr, method = :absolute )) == Plots.Plot{Plots.GRBackend}     #80
 
+       a = msJ.centroid(scans[1], method = msJ.TBPD(:voigt, 4500., 0.2))
+       @test length(a.int) == 700                                                      #81
 
+       a = msJ.centroid(scans[1], method = msJ.TBPD(:lorentz, 4500., 0.2))
+       @test length(a.int) == 664                                                      #82
+
+       a = msJ.centroid(scans[1], method = msJ.TBPD(:other, 4500., 0.2))
+       @test a.msg == "Unsupported peak profile. Use :gauss, :lorentz or :voigt."      #83
 
     end
 end

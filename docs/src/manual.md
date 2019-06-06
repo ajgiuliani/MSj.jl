@@ -168,6 +168,12 @@ The [`msfilter`](@ref) and [`chromatogram`](@ref) functions may takes arguments 
 | msJ.IC                | Ion current        | Vector{Real}                             | msfilter               |
 
 
+
+!!! note
+
+    The filtering function goes first through the argument and setup an array of scan num that match the conditions. Then it uses this array to calculate the average mass spectrum.  So this procedure needs two passes through the data, which is not very efficient. This is a point to make better in the future.
+ 
+
 When the argument is restricted to a single value, such as `msJ.Scan(1)`, filtering is performed on that specific value. If the argument is a vector then filtering involves all the values within the range.  Filtering on `msJ.scan([1,10])` means that the result will be obtained for scans ranging from 1 to 10.  The same applies for all `FilterType`with the exception of `msJ.∆MZ`, for which the first value of the vector represents the *mz* and the second value represents the spread ∆mz, so that filtering is operated for all *mz* value in the range [m/z - ∆mz , m/z + ∆mz].  The `msJ.RT`type may take a vector or vectors as argument, such `msJ.RT([ [1,10], [20, 30] ]).  In that case, mass spectra will be averaged in [1,10] and [20,30] range.
 
 
@@ -234,8 +240,17 @@ The TBPD method identifies features based on their similarity (as described by t
 ```julia
 centroid(scan, method = TBPD(:gauss, 4500., 0.2)
 ```
+Two other shape functions are available:
+- `:loretz` which uses a Cauchy-Lorentz function and
+- `:voigt` which implements a pseudo-voigt profile ([ Ida T, Ando M, Toraya H (2000). "Extended pseudo-Voigt function for approximating the Voigt profile". Journal of Applied Crystallography. 33 (6): 1311–1316](https://doi.org/10.1107%2Fs0021889800010219), [Wikipedia](https://en.wikipedia.org/wiki/Voigt_profile#Pseudo-Voigt_approximation))
+These profiles aim at compensating a known weakness of the TBPD algorithm [
+    Bauer C., Cramer R., Schuchhardt J. (2011) Evaluation of Peak-Picking Algorithms for Protein Mass Spectrometry. In: Hamacher M., Eisenacher M., Stephan C. (eds) Data Mining in Proteomics. Methods in Molecular Biology (Methods and Protocols), vol 696. Humana Press ](https://doi.org/10.1007/978-1-60761-987-1_22), and may be accessed as follow.
 
-Addition peak detection algorithm ill be added in the future.
+```julia
+centroid(scan, method = TBPD(:lorentz, 1000., 0.1)
+centroid(scan, method = TBPD(:voight, 1000., 0.1)
+```
+
 
 
 ## Plotting
