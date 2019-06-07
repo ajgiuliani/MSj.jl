@@ -46,8 +46,8 @@ function smooth(scans::Vector{MSscan}; method::MethodType=SG(5, 9, 0))
         sm_scans = Vector{MSscan}(undef, 0)
         for el in scans
             push!(sm_scans, savitzky_golay_filtering(el, method.order, method.window, method.derivative))
-            return sm_scans
         end
+        return sm_scans
     end  
 end
 
@@ -135,17 +135,17 @@ julia> reduced_data = find_peaks(scans)
 MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
-function centroid(scan::Vector{MSscan}; method::MethodType=TBPD(:gauss, 4500., 0.2) )
+function centroid(scans::Vector{MSscan}; method::MethodType=TBPD(:gauss, 4500., 0.2) )
     if method isa TBPD
         cent_scans = Vector{MSscan}(undef,0)
         for el in scans
             ∆mz = 500.0 / method.resolution       # according to ∆mz / mz  = R, we take the value @ m/z 500
             if method.shape == :gauss
-                push!(cent_scans, tbpd(scan, gauss, ∆mz, convert(Float64,method.threshold)))
+                push!(cent_scans, tbpd(el, gauss, ∆mz, convert(Float64,method.threshold)))
             elseif method.shape == :lorentz
-                push!(cent_scans, tbpd(scan, lorentz, ∆mz, convert(Float64,method.threshold)))
+                push!(cent_scans, tbpd(el, lorentz, ∆mz, convert(Float64,method.threshold)))
             elseif method.shape == :voigt
-                push!(cent_scans, tbpd(scan, voigt, ∆mz, convert(Float64,method.threshold)))
+                push!(cent_scans, tbpd(el, voigt, ∆mz, convert(Float64,method.threshold)))
             else
                 ErrorException("Unsupported peak profile. Use :gauss, :lorentz or :voigt.")
             end
