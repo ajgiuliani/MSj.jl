@@ -84,7 +84,6 @@ MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5
 """
 function centroid(scan::MScontainer; method::MethodType=TBPD(:gauss, 4500., 0.2) )
     if method isa TBPD
-        #return tbpd(scan, method.shape, convert(Float64, method.resolution), convert(Float64,method.threshold))
         ∆mz = 500.0 / method.resolution       # according to ∆mz / mz  = R, we take the value @ m/z 500
         if method.shape == :gauss
             return tbpd(scan, gauss, ∆mz, convert(Float64,method.threshold))
