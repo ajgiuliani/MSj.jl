@@ -13,6 +13,7 @@ include("Io.jl")
 include("msscans.jl")
 include("mzxml.jl")
 include("process.jl")
+include("extract.jl")
 include("utilities.jl")
 
 

@@ -211,6 +211,18 @@ function tests()
        a = msJ.centroid(scans[1], method = msJ.TBPD(:other, 4500., 0.2))
        @test a.msg == "Unsupported peak profile. Use :gauss, :lorentz or :voigt."      #83
 
+       s1 = msJ.extract(scans, msJ.Activation_Energy([18,35]))
+       @test length(s1) == 4                                                           #84
+
+       s1 = msJ.extract("test.mzXML", msJ.Activation_Energy(18))
+       @test length(s1) == 2                                                           #85
+
+       s1 = msJ.extract(scans, msJ.Scan(1))
+       @test length(s1) == 1                                                           #84
+
+       s1 = msJ.extract("test.mzXML", msJ.Scan(1))
+       @test length(s1) == 1                                                           #85
+
     end
 end
 tests()
