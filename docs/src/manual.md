@@ -236,8 +236,6 @@ sub_set = extract(scans)                            # extract a sub_set without 
 ```
 
 
-
-
 ## Processing
 ------------
 ### Smooth
