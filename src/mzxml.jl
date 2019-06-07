@@ -5,6 +5,9 @@ Interface to the mzxml file format
 using LightXML, Codecs
 
 
+
+
+
 """
     info_mzxml(filename::String, info::Vector{String}, verbose::Bool=false)
 Returns the information content of an mzXML file into a string. Verbosity is controlled by the verbose Boolean variable set by default to false.
