@@ -214,7 +214,7 @@ function tests()
        s1 = msJ.extract(scans, msJ.Activation_Energy([18,35]))
        @test length(s1) == 4                                                           #84
 
-       s1 = msJ.extract("test.mzXML", msJ.Scans([1,2]))
+       s1 = msJ.extract("test.mzXML", msJ.Activation_Energy(18))
        @test length(s1) == 2                                                           #85
 
     end
