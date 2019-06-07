@@ -30,6 +30,27 @@ function smooth(scan::MScontainer; method::MethodType=SG(5, 9, 0))
     end  
 end
 
+"""
+    smooth(scans::Vector{MSscan}; method::MethodType=SG(5, 9, 0))
+Smooth the intensity of the input data and returns a similar structure.
+# Examples
+```julia-repl
+julia> scans = load("filename")
+julia> smoothed_data = msJ.smooth(scans)
+6-element Array{msJ.MSscan,1}:
+ msJ.MSscan(1, 0.1384, 5.08195e6 .....
+```
+"""
+function smooth(scans::Vector{MSscan}; method::MethodType=SG(5, 9, 0))
+    if method isa msJ.SG
+        sm_scans = Vector{MSscan}(undef, 0)
+        for el in scans
+            push!(sm_scans, savitzky_golay_filtering(el, method.order, method.window, method.derivative))
+            return sm_scans
+        end
+    end  
+end
+
 
 
 """
@@ -105,6 +126,42 @@ function centroid(scan::MScontainer; method::MethodType=TBPD(:gauss, 4500., 0.2)
     
 end
 
+"""
+    centroid(scan::MScontainer; resolution::Symbol = :medium, R::Real = 4500., shape::Symbol = :gauss, threshold::Real = 0.2)
+Checks the file extension and calls the right function to load the mass spectra if it exists. Returns an array of individual mass spectra 
+# Examples
+```julia-repl
+julia> reduced_data = find_peaks(scans)
+MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
+```
+"""
+function centroid(scan::Vector{MSscan}; method::MethodType=TBPD(:gauss, 4500., 0.2) )
+    if method isa TBPD
+        cent_scans = Vector{MSscan}(undef,0)
+        for el in scans
+            ∆mz = 500.0 / method.resolution       # according to ∆mz / mz  = R, we take the value @ m/z 500
+            if method.shape == :gauss
+                push!(cent_scans, tbpd(scan, gauss, ∆mz, convert(Float64,method.threshold)))
+            elseif method.shape == :lorentz
+                push!(cent_scans, tbpd(scan, lorentz, ∆mz, convert(Float64,method.threshold)))
+            elseif method.shape == :voigt
+                push!(cent_scans, tbpd(scan, voigt, ∆mz, convert(Float64,method.threshold)))
+            else
+                ErrorException("Unsupported peak profile. Use :gauss, :lorentz or :voigt.")
+            end
+        end
+        return cent_scans
+#    elseif method isa SNRA()
+#        return snra(scan, method.threshold)
+#    elseif method isa CWT()
+#        return cwt(scan, method.threshold)
+#    else
+#        ErrorException("Unsupported method.")
+    end
+    
+end
+
+    
 """
     gauss(x::Float64, p::Vector{Float64})
 Gaussian shape function used by the TBPD method
