@@ -223,6 +223,12 @@ function tests()
        s1 = msJ.extract("test.mzXML", msJ.Scan(1))
        @test length(s1) == 1                                                           #87
 
+       bs = msJ.baseline_correction(scans, method = msJ.TopHat(1))
+       @test length(bs) == 6                                                           #88
+
+       bs = msJ.baseline_correction(scans[1], method = msJ.TopHat(1))
+       @test length(bs.int) == length(scans[1].int)                                    #89
+
     end
 end
 tests()

@@ -15,6 +15,7 @@ The functions below are exported:
 - [`msfilter`](@ref)
 - [`centroid`](@ref)
 - [`smooth`](@ref)
+- [`baseline_correction`](@ref)
 
 
 ## Data types
@@ -75,7 +76,7 @@ The [`msJ.MSscans`](@ref) structure is very similar to the [`msJ.MSscan`](@ref) 
 
 The [`info`](@ref) public function reads the content of a file, but without loading the mass spectrometry data, and returns a `Vector{String}`containing the number of scans, scans level and for MS/MS data, the precursor m/z, the activation method and energy. Additional information may be gained by setting `verbose = true`.
 ```julia-repl
-msJ.info(filename)
+info(filename)
 4-element Array{String,1}:
  "51 scans"
  "MS1+"
@@ -171,7 +172,7 @@ The [`msfilter`](@ref) and [`chromatogram`](@ref) functions may takes arguments 
 
 !!! note
 
-    The filtering function goes first through the argument and setup an array of scan num that match the conditions. Then it uses this array to calculate the average mass spectrum.  So this procedure needs two passes through the data, which is not very efficient. This is a point to make better in the future.
+    The filtering function goes first through the argument and setup an array of scan num that matches the conditions. Then it uses this array to calculate the average mass spectrum.  So this procedure needs two passes through the data, which is not very efficient. This is a point to make better in the future.
  
 
 When the argument is restricted to a single value, such as `msJ.Scan(1)`, filtering is performed on that specific value. If the argument is a vector then filtering involves all the values within the range.  Filtering on `msJ.scan([1,10])` means that the result will be obtained for scans ranging from 1 to 10.  The same applies for all `FilterType`with the exception of `msJ.∆MZ`, for which the first value of the vector represents the *mz* and the second value represents the spread ∆mz, so that filtering is operated for all *mz* value in the range [m/z - ∆mz , m/z + ∆mz].  The `msJ.RT`type may take a vector or vectors as argument, such `msJ.RT([ [1,10], [20, 30] ]).  In that case, mass spectra will be averaged in [1,10] and [20,30] range.
@@ -244,6 +245,16 @@ The [`smooth`](@ref) function is public and applies on `MSscan`or `MSscans` obje
 The function returns an `MScontainer` type identical to the input. 
 
 Other smoothing algorithms will be implemented in the future.
+
+### Base line correction
+------------------------
+Base line correction is performed using the [`baseline_correction`](@ref) function. This function as two methods and operate either on [`MScontainer`](@ref) or on Array of [`MSscan`](@ref) such as obtained after [importing data](## Importing data).
+```julia
+`baseline_correction(scans, method = msJ.TopHat(1))
+```
+The `method` argument allows choosing the algorithm. The default algorithm is the Top-Hat filter (see [Anne C Sauve and Terence P. Speed. Normalization, baseline correction and alignment of high-throughput mass spectrometry data. 2004.](https://pdfs.semanticscholar.org/c04c/afc9b2670edd1ea38f0f724cadbe2ec321e9.pdf). The region onto which the operation is performed is set using the `region`field of the [`msJ.TopHat`](@ref). 
+
+
 
 ### Peak picking
 ----------------

@@ -2,16 +2,16 @@
 Processing functions submodule. 
 """
 
-using Statistics     # used for Perasons correlation calculation
-using LsqFit         # used for curve fitting
-using DSP            # used for convolution
-
+using Statistics           # used for Perasons correlation calculation
+using LsqFit               # used for curve fitting
+using DSP                  # used for convolution
+using ImageMorphology      # used for baseline correction
 
 
 # User Interface.
 # ---------------
 
-export smooth, centroid
+export smooth, centroid, baseline_correction
 
 
 # Mass spectra
@@ -95,15 +95,15 @@ end
  
 
 """
-    centroid(scan::MScontainer; resolution::Symbol = :medium, R::Real = 4500., shape::Symbol = :gauss, threshold::Real = 0.2)
-Checks the file extension and calls the right function to load the mass spectra if it exists. Returns an array of individual mass spectra 
+    centroid(scan::MScontainer; method::MethodType=TBPD(:gauss, 1000., 0.2) )
+Peak picking algorithm taking a MSscan or MSscans object as input and returning an object of the same type containing the detected peaks. Default method is Threshold Base Peak Detection (TBPD), with a default gaussian peak profile with resolving power of 1000 and 0.2% base peak intensity threshold. Other peak shapes include `:lorentz` for the Cauchy-Lorentz shape and `:voigt` for the pseudo-Voigt profile.
 # Examples
 ```julia-repl
-julia> reduced_data = find_peaks(scans)
+julia> reduced_data = centroid(scans)
 MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
-function centroid(scan::MScontainer; method::MethodType=TBPD(:gauss, 4500., 0.2) )
+function centroid(scan::MScontainer; method::MethodType=TBPD(:gauss, 1000., 0.2) )
     if method isa TBPD
         ∆mz = 500.0 / method.resolution       # according to ∆mz / mz  = R, we take the value @ m/z 500
         if method.shape == :gauss
@@ -127,11 +127,12 @@ function centroid(scan::MScontainer; method::MethodType=TBPD(:gauss, 4500., 0.2)
 end
 
 """
-    centroid(scan::MScontainer; resolution::Symbol = :medium, R::Real = 4500., shape::Symbol = :gauss, threshold::Real = 0.2)
-Checks the file extension and calls the right function to load the mass spectra if it exists. Returns an array of individual mass spectra 
+    centroid(scans::Vector{MSscan}; method::MethodType=TBPD(:gauss, 1000., 0.2) )
+Peak picking algorithm taking an array of MSscan as input and returning an object of the same type containing the detected peaks. Default method is Threshold Base Peak Detection (TBPD), with a default gaussian peak profile with resolving power of 1000 and 0.2% base peak intensity threshold. Other peak shapes include `:lorentz` for the Cauchy-Lorentz shape and `:voigt` for the pseudo-Voigt profile.
 # Examples
 ```julia-repl
-julia> reduced_data = find_peaks(scans)
+julia> reduced_data = centroid(scans)
+6-element Array{msJ.MSscan,1}:
 MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
@@ -277,4 +278,49 @@ function cwt(scan::MScontainer)                                         # Contin
     error("Wavelets not implemented")
 end
 """
+
+
+"""
+    baseline_correction(scans::Vector{MSscan}; method::MethodType=TopHat(1) )
+Baseline correction taking a MSscan or MSscans object as input and returning an object of the same type with the mass spectra without their base line. Default method is TopHat, with a default region set to dimension 1.
+# Examples
+```julia-repl
+julia> reduced_data = baseline_correction(scans, msJ.TopHat(1))
+MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
+```
+"""
+function baseline_correction(scan::MScontainer; method::MethodType=TopHat(1) )
+    TIC = sum(tophat(scan.int, method.region))
+    basePeakIntensity = maximum(tophat(scan.int, method.region))
+    basePeakMz = scan.mz[num2pnt(scan.int,basePeakIntensity)]
+    if scan isa MSscans
+        return MSscans(scan.num, scan.rt, TIC, scan.mz, tophat(scan.int, method.region), scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy, peaks_s)
+    elseif scan isa MSscan
+        return MSscan(scan.num, scan.rt, TIC, scan.mz, tophat(scan.int, method.region), scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy)
+    end
+    return 
+end
+
+
+"""
+    baseline_correction(scans::Vector{MSscan}; method::MethodType=TopHat(1) )
+Baseline correction taking an array of MSscan as input and returning an object of the same type with mass spectra without their base line. Default method is TopHat, with a default region set to dimension 1.
+# Examples
+```julia-repl
+julia> reduced_data = baseline_correction(scans, msJ.TopHat(1))
+6-element Array{msJ.MSscan,1}:
+MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
+```
+"""
+function baseline_correction(scans::Vector{MSscan}; method::MethodType=TopHat(1) )
+    bl_scans = Vector{MSscan}(undef,0)
+    for scan in scans
+        TIC = sum(tophat(scan.int, method.region))
+        basePeakIntensity = maximum(tophat(scan.int, method.region))
+        basePeakMz = scan.mz[num2pnt(scan.int,basePeakIntensity)]
+        push!(bl_scans,  MSscan(scan.num, scan.rt, TIC, scan.mz, tophat(scan.int, method.region), scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy))
+    end
+    return bl_scans
+end
+
 
