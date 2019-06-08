@@ -55,10 +55,8 @@ function extract(filename::String, arguments::FilterType...)
 
     free(xdoc)
     indices = sort([ i for i in index])
-    if length(indices) >= 2
+    if length(indices) >= 1
         return buid_subset(filename, indices)
-    elseif length(indices) == 1
-        return load_mzxml(filename, indices[1])
     else
         ErrorException("No matching spectra.")
     end
@@ -99,10 +97,9 @@ function extract(scans::Vector{MSscan}, arguments::FilterType...)
     end
 
     indices = sort([ i for i in index])
-    if length(indices) >= 2
+    
+    if length(indices) >= 1
         return buid_subset(scans, indices)
-    elseif length(indices) == 1
-        return scans[indices[1] ]
     else
         ErrorException("No matching spectra found.")
     end

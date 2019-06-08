@@ -218,10 +218,10 @@ function tests()
        @test length(s1) == 2                                                           #85
 
        s1 = msJ.extract(scans, msJ.Scan(1))
-       @test length(s1) == 1                                                           #84
+       @test length(s1) == 1                                                           #86
 
        s1 = msJ.extract("test.mzXML", msJ.Scan(1))
-       @test length(s1) == 1                                                           #85
+       @test length(s1) == 1                                                           #87
 
     end
 end
