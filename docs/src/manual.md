@@ -13,6 +13,7 @@ The functions below are exported:
 - [`load`](@ref) 
 - [`chromatogram`](@ref)
 - [`msfilter`](@ref)
+- [`extract`](@ref)
 - [`centroid`](@ref)
 - [`smooth`](@ref)
 - [`baseline_correction`](@ref)
@@ -166,7 +167,7 @@ The [`msfilter`](@ref) and [`chromatogram`](@ref) functions may takes arguments 
 | msJ.Activation_Energy | Activation energy | Real, Vector{Real}                       | msfilter, chromatogram |
 | msJ.Precursor         | Precursor m/z     | Real, Vector{Real}                       | msfilter, chromatogram |
 | msJ.RT                |  Retention time   | Real, Vector{Real}, Vector{Vector{Real}} | msfilter               |
-| msJ.IC                | Ion current        | Vector{Real}                             | msfilter               |
+| msJ.IC                | Ion current       | Vector{Real}                             | msfilter               |
 
 
 
@@ -188,19 +189,19 @@ These filters may be combined together if necessary. For example, the input belo
 ```julia
 msfilter("filename", msJ.Precursor(1255.5),
                      msJ.Activation_Energy(18),
-	   	             msJ.Activation_Method("CID"),
-		             msJ.Level(2),
-		             msJ.RT( [1, 60] ),
-					 )
+                     msJ.Activation_Method("CID"),
+                     msJ.Level(2),
+                     msJ.RT( [1, 60] ),
+                     )
 ```
 
 Several filter types may also be combined for `chromatograms`:
 ```julia
 chromatogram("filename", msJ.Precursor(1255.5),
                          msJ.Activation_Energy(18),
-	   	                 msJ.Activation_Method("CID"),
-		                 msJ.Level(2),
-						 )
+                         msJ.Activation_Method("CID"),
+                         msJ.Level(2),
+                         )
 ```
 
 If the condition does not match any existing data, then an `ErrorException` is returned with the `"No matching spectra."` message.
@@ -259,19 +260,22 @@ The `method` argument allows choosing the algorithm. The default algorithm is th
 ### Peak picking
 ----------------
 Pick-picking is performed using the public [`centroid`](@ref) function. It operates on `MSscan`or `MSscans`type of data and return a similar type. It takes a method argument, set by default to the Template Base Peak Detection method: `msJ.TBPD`.
-The TBPD method identifies features based on their similarity (as described by the Pearson correlation coefficient) with a [template peak](https://doi.org/10.1007/978-1-60761-987-1_22). By default the `msJ.TBPD` method type uses a Gaussian function, with 4500 mass resolving power and a threshold level set to 0.2% as :
+
+#### Threshold base peak detection algorithm
+--------------------------------------------
+The TBPD method identifies features based on their similarity (as described by the Pearson correlation coefficient) with a [template peak](https://doi.org/10.1007/978-1-60761-987-1_22). By default the `msJ.TBPD` method type uses a Gaussian function, with 1000 mass resolving power and a threshold level set to 0.2% as :
 ```julia
-centroid(scan, method = TBPD(:gauss, 4500., 0.2)
+centroid(scan, method = TBPD(:gauss, 1000, 0.2)
 ```
 Two other shape functions are available:
 - `:loretz` which uses a Cauchy-Lorentz function and
-- `:voigt` which implements a pseudo-voigt profile ([ Ida T, Ando M, Toraya H (2000). "Extended pseudo-Voigt function for approximating the Voigt profile". Journal of Applied Crystallography. 33 (6): 1311–1316](https://doi.org/10.1107%2Fs0021889800010219), [Wikipedia](https://en.wikipedia.org/wiki/Voigt_profile#Pseudo-Voigt_approximation))
-These profiles aim at compensating a known weakness of the TBPD algorithm [
-    Bauer C., Cramer R., Schuchhardt J. (2011) Evaluation of Peak-Picking Algorithms for Protein Mass Spectrometry. In: Hamacher M., Eisenacher M., Stephan C. (eds) Data Mining in Proteomics. Methods in Molecular Biology (Methods and Protocols), vol 696. Humana Press ](https://doi.org/10.1007/978-1-60761-987-1_22), and may be accessed as follow.
+- `:voigt` which implements a pseudo-voigt profile ([Ida et al., J. Appl. Cryst. (2000)](https://doi.org/10.1107%2Fs0021889800010219), [Wikipedia](https://en.wikipedia.org/wiki/Voigt_profile#Pseudo-Voigt_approximation))
+
+The `:lorentz` profile fits better Fourrier Transform mass spectra. The `:voigt` shape is the result of the convolution of gaussi and Cauchy-Lorentz shape.
 
 ```julia
 centroid(scan, method = TBPD(:lorentz, 1000., 0.1)
-centroid(scan, method = TBPD(:voight, 1000., 0.1)
+centroid(scan, method = TBPD(:voight,  1000., 0.1)
 ```
 
 
