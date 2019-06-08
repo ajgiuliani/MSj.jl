@@ -151,6 +151,18 @@ struct CWT{argT <: Real}  <: MethodType
 end
 """
 
+
+
+"""
+    struct TopHat{argT <: Real} <: MethodType
+Structure for multiple dispatching to TopHat baseline correction. Region is used specify the dimention over which this operation performed
+"""
+struct TopHat{argT <: Real} <: MethodType
+    region::argT
+    TopHat(region::argT) where{argT} = new{argT}(region)
+end
+
+
 ### Filters
 
 """
