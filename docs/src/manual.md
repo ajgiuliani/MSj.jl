@@ -245,6 +245,16 @@ The function returns an `MScontainer` type identical to the input.
 
 Other smoothing algorithms will be implemented in the future.
 
+### Base line correction
+------------------------
+Base line correction is performed using the [`baseline_correction`](@ref) function. This function as two methods and operate either on [`MScontainer`](@ref) or on Array of [`MSscan`](@ref) such as obtained after [importing data](## Importing data).
+```julia
+`baseline_correction(scans, method = msJ.TopHat(1))
+```
+The `method` argument allows choosing the algorithm. The default algorithm is the Top-Hat filter (see [Anne C Sauve and Terence P. Speed. Normalization, baseline correction and alignment of high-throughput mass spectrometry data. 2004.](https://pdfs.semanticscholar.org/c04c/afc9b2670edd1ea38f0f724cadbe2ec321e9.pdf). The region onto which the operation is performed is set using the `region`field of the [`msJ.TopHat`](@ref). 
+
+
+
 ### Peak picking
 ----------------
 Pick-picking is performed using the public [`centroid`](@ref) function. It operates on `MSscan`or `MSscans`type of data and return a similar type. It takes a method argument, set by default to the Template Base Peak Detection method: `msJ.TBPD`.
