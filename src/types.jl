@@ -154,13 +154,23 @@ end
 
 
 """
-    struct TopHat{argT <: Real} <: MethodType
+    struct TopHat <: MethodType
 Structure for multiple dispatching to TopHat baseline correction. Region is used specify the dimention over which this operation performed
 """
-struct TopHat{argT <: Real} <: MethodType
+struct TopHat{argT <: Union{Int}} <: MethodType
     region::argT
     TopHat(region::argT) where{argT} = new{argT}(region)
 end
+
+"""
+    struct LOESS <: MethodType
+Structure for multiple dispatching to LOcally Weighted Error Sum of Squares regression (LOESS) baseline correction.
+"""
+struct LOESS{argT <: Union{Int}} <: MethodType
+    iter::argT
+    TopHat(iter::argT) where{argT} = new{argT}(iter)
+end
+
 
 
 ### Filters
