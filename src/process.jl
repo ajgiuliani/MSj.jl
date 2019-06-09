@@ -345,7 +345,6 @@ function baseline_correction(scan::MScontainer, method::LOESS{<:Int} )
     for j=1:iter 
         for i=1:n
             weight = delta .* w[:,i]
-            #weight = w[:,i]
             b = [sum(weight .* scan.int), sum(weight .* (scan.int .* scan.mz))]
             A = [sum(weight), sum(weight .* scan.mz), 
                  sum(weight .* scan.mz), sum(weight .* scan.mz.^2) ]
