@@ -77,7 +77,7 @@ function savitzky_golay_filtering(scan::MScontainer, order::Int, window::Int, de
     m = b * LinearAlgebra.pinv(b' * b)
     coefs = m[:,deriv + 1] * factorial(deriv)
     yfirst = scan.int[1]*ones(half_window)
-    ylast = scan.int[end]*ones(half_window-1)
+    ylast = scan.int[end]*ones(half_window)
     pad = vcat(yfirst, scan.int, ylast)
     y = conv(coefs[end:-1:1], pad)[2 * half_window + 1 : end - 2 * half_window]
     
@@ -281,15 +281,15 @@ end
 
 
 """
-    baseline_correction(scans::Vector{MSscan}; method::MethodType=TopHat(1) )
-Baseline correction taking a MSscan or MSscans object as input and returning an object of the same type with the mass spectra without their base line. Default method is TopHat, with a default region set to dimension 1.
+    baseline_correction(scans::Vector{MSscan}; method::TopHat() )
+Baseline correction taking a MSscan or MSscans object as input and returning an object of the same type with the mass spectra without their base line, using the TopHat method.
 # Examples
 ```julia-repl
-julia> reduced_data = baseline_correction(scans, msJ.TopHat(1))
+julia> reduced_data = baseline_correction(scans, msJ.TopHat())
 MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
-function baseline_correction(scan::MScontainer; method::MethodType=TopHat(1) )
+function baseline_correction(scan::MScontainer, method::TopHat{<:Int} )
     TIC = sum(tophat(scan.int, method.region))
     basePeakIntensity = maximum(tophat(scan.int, method.region))
     basePeakMz = scan.mz[num2pnt(scan.int,basePeakIntensity)]
@@ -303,8 +303,8 @@ end
 
 
 """
-    baseline_correction(scans::Vector{MSscan}; method::MethodType=TopHat(1) )
-Baseline correction taking an array of MSscan as input and returning an object of the same type with mass spectra without their base line. Default method is TopHat, with a default region set to dimension 1.
+    baseline_correction(scans::Vector{MSscan}; method::TopHat() )
+Baseline correction taking an array of MSscan as input and returning an object of the same type with mass spectra without their base line, using the TopHat method.
 # Examples
 ```julia-repl
 julia> reduced_data = baseline_correction(scans, msJ.TopHat(1))
@@ -312,7 +312,7 @@ julia> reduced_data = baseline_correction(scans, msJ.TopHat(1))
 MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
-function baseline_correction(scans::Vector{MSscan}; method::MethodType=TopHat(1) )
+function baseline_correction(scans::Vector{MSscan}, method::TopHat{<:Int} )
     bl_scans = Vector{MSscan}(undef,0)
     for scan in scans
         TIC = sum(tophat(scan.int, method.region))
@@ -323,4 +323,48 @@ function baseline_correction(scans::Vector{MSscan}; method::MethodType=TopHat(1)
     return bl_scans
 end
 
+
+"""
+    baseline_correction(scans::Vector{MSscan}; method::LOESS()  )
+Baseline correction taking a MSscan or MSscans object as input and returning an object of the same type with the mass spectra without their base line, using the LOESS (Locally Weighted Error Sum of Squares regression).
+# Examples
+```julia-repl
+julia> reduced_data = baseline_correction(scans, msJ.LOESS(3))
+MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
+```
+"""
+function baseline_correction(scan::MScontainer, method::LOESS{<:Int} )
+    iter = method.iter
+    n = length(scan.mz) 
+    r = Int(ceil( n / 2 ))
+    h = [sort(abs.(scan.mz .- scan.mz[i]))[r] for i=1:n ]
+    w = clamp.(abs.( ( scan.mz .- transpose(scan.mz)) ./ h), 0.0, 1.0)
+    w = (1 .- w.^3).^3
+    yest = zeros(n)
+    delta = ones(n)
+    for j=1:iter 
+        for i=1:n
+            weight = delta .* w[:,i]
+            b = [sum(weight .* scan.int), sum(weight .* (scan.int .* scan.mz))]
+            A = [sum(weight), sum(weight .* scan.mz), 
+                 sum(weight .* scan.mz), sum(weight .* scan.mz.^2) ]
+            A = reshape(A, 2, 2)
+            beta = LinearAlgebra.pinv(A) * b
+            baseline[i] = beta[1] + beta[2] * scan.mz[i]
+        end
+        residuals = scan.int - baseline
+        s = Statistics.median(abs.(residuals))
+        delta = clamp.(residuals ./ (6.0 .* s), -1, 1)
+        delta = (1 .- delta.^2).^2
+    end 
+    
+    TIC = sum(residuals)
+    basePeakIntensity = maximum(residuals)
+    basePeakMz = scan.mz[num2pnt(scan.int,basePeakIntensity)]
+    if scan isa MSscans
+        return MSscans(scan.num, scan.rt, TIC, scan.mz, residuals, scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy, peaks_s)
+    elseif scan isa MSscan
+        return MSscan(scan.num, scan.rt, TIC, scan.mz, residuals, scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy)
+    end
+end
 
