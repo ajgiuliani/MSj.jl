@@ -5,7 +5,7 @@ Processing functions submodule.
 using Statistics           # used for Perasons correlation calculation
 using LsqFit               # used for curve fitting
 using DSP                  # used for convolution
-using ImageMorphology      # used for baseline correction
+using ImageMorphology      # used for TopHat baseline correction
 
 
 # User Interface.
@@ -279,68 +279,105 @@ function cwt(scan::MScontainer)                                         # Contin
 end
 """
 
-
 """
-    baseline_correction(scans::Vector{MSscan}; method::TopHat() )
-Baseline correction taking a MSscan or MSscans object as input and returning an object of the same type with the mass spectra without their base line, using the TopHat method.
+    baseline_correction(scan::MScontainer; method::MethodType=TopHat(1) )
+Baseline correction taking a MSscan or MSscans object as input and returning an object of the same type as the input with the mass spectra corrected for their base line. Defaults method is TopHat(1). Other methods are available with `method = msJ.LOESS(3)`. See msJ.TopHat and msJ.LOESS `MethodType`
 # Examples
 ```julia-repl
-julia> reduced_data = baseline_correction(scans, msJ.TopHat())
+julia> reduced_data = baseline_correction(scan)
+MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
+julia> reduced_data = baseline_correction(scans, method = msJ.LOESS(1))
 MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
-function baseline_correction(scan::MScontainer, method::TopHat{<:Int} )
-    TIC = sum(tophat(scan.int, method.region))
-    basePeakIntensity = maximum(tophat(scan.int, method.region))
+function baseline_correction(scan::MScontainer; method::MethodType=TopHat(1) )
+    if method isa TopHat
+        return tophat_filter(scan, method.region)
+    elseif method isa LOESS
+        return loess(scan, method.iter)
+    end
+end
+
+"""
+    baseline_correction(scan::Vector{MSscan}; method::MethodType=TopHat(1) )
+Baseline correction taking a vector of MSscan as input and returning an object of the same type as the input with the mass spectra corrected for their base line. Defaults method is TopHat(1). Other methods are available with `method = msJ.LOESS(3)`. See msJ.TopHat and msJ.LOESS `MethodType`
+# Examples
+```julia-repl
+julia> reduced_data = baseline_correction(scan)
+MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
+julia> reduced_data = baseline_correction(scans, method = msJ.LOESS(1))
+6-element Array{msJ.MSscan,1}:
+MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
+```
+"""
+function baseline_correction(scans::Vector{MSscan}; method::MethodType=TopHat(1) )
+    if method isa TopHat
+        return tophat_filter(scans, method.region)
+    elseif method isa LOESS
+        return loess(scans, method.iter)
+    end
+end
+
+
+"""
+    tophat(scan::MScontainer, region::Int)
+Method taking a MScontainer object as input and returning an object of the same type with the mass spectra without their base line, using the TopHat filtering algorithm.
+"""
+function tophat_filter(scan::MScontainer, region::Int )
+    TIC = sum( tophat(scan.int, region) )
+    basePeakIntensity = maximum(tophat(scan.int, region))
     basePeakMz = scan.mz[num2pnt(scan.int,basePeakIntensity)]
     if scan isa MSscans
-        return MSscans(scan.num, scan.rt, TIC, scan.mz, tophat(scan.int, method.region), scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy, peaks_s)
+        return MSscans(scan.num, scan.rt, TIC, scan.mz, tophat(scan.int, region), scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy, peaks_s)
     elseif scan isa MSscan
-        return MSscan(scan.num, scan.rt, TIC, scan.mz, tophat(scan.int, method.region), scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy)
+        return MSscan(scan.num, scan.rt, TIC, scan.mz, tophat(scan.int, region), scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy)
     end
     return 
 end
 
 
 """
-    baseline_correction(scans::Vector{MSscan}; method::TopHat() )
-Baseline correction taking an array of MSscan as input and returning an object of the same type with mass spectra without their base line, using the TopHat method.
-# Examples
-```julia-repl
-julia> reduced_data = baseline_correction(scans, msJ.TopHat(1))
-6-element Array{msJ.MSscan,1}:
-MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
-```
+    tophat(scans::Vector{MSscan}, region::Int )
+Method taking an array of MSscan as input and returning an object of the same type with mass spectra without their base line, using the TopHat method.
 """
-function baseline_correction(scans::Vector{MSscan}, method::TopHat{<:Int} )
+function tophat_filter(scans::Vector{MSscan}, region::Int )
     bl_scans = Vector{MSscan}(undef,0)
     for scan in scans
-        TIC = sum(tophat(scan.int, method.region))
-        basePeakIntensity = maximum(tophat(scan.int, method.region))
+        TIC = sum(tophat(scan.int, region))
+        basePeakIntensity = maximum(tophat(scan.int, region))
         basePeakMz = scan.mz[num2pnt(scan.int,basePeakIntensity)]
-        push!(bl_scans,  MSscan(scan.num, scan.rt, TIC, scan.mz, tophat(scan.int, method.region), scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy))
+        push!(bl_scans,  MSscan(scan.num, scan.rt, TIC, scan.mz, tophat(scan.int, region), scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy))
+    end
+    return bl_scans
+end
+
+"""
+    loess(scan::MScontainer, iter::Int )
+Method  taking a MSscan or MSscans object as input and returning an object of the same type with the mass spectra without their base line, using the LOESS (Locally Weighted Error Sum of Squares regression).
+"""
+function loess(scans::Vector{MSscan}, iter::Int )
+    bl_scans = Vector{MSscan}(undef,0)
+    for scan in scans
+        push!(bl_scans, loess(scan, iter))
     end
     return bl_scans
 end
 
 
+
+
 """
-    baseline_correction(scans::Vector{MSscan}; method::LOESS()  )
-Baseline correction taking a MSscan or MSscans object as input and returning an object of the same type with the mass spectra without their base line, using the LOESS (Locally Weighted Error Sum of Squares regression).
-# Examples
-```julia-repl
-julia> reduced_data = baseline_correction(scans, msJ.LOESS(3))
-MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
-```
+    loess(scan::MScontainer, iter::Int )
+Method  taking a MSscan or MSscans object as input and returning an object of the same type with the mass spectra without their base line, using the LOESS (Locally Weighted Error Sum of Squares regression).
 """
-function baseline_correction(scan::MScontainer, method::LOESS{<:Int} )
-    iter = method.iter
+function loess(scan::MScontainer, iter::Int )
     n = length(scan.mz) 
     r = Int(ceil( n / 2 ))
     h = [sort(abs.(scan.mz .- scan.mz[i]))[r] for i=1:n ]
     w = clamp.(abs.( ( scan.mz .- transpose(scan.mz)) ./ h), 0.0, 1.0)
     w = (1 .- w.^3).^3
-    yest = zeros(n)
+    baseline = zeros(n)
+    res = zeros(n)
     delta = ones(n)
     for j=1:iter 
         for i=1:n
@@ -352,19 +389,19 @@ function baseline_correction(scan::MScontainer, method::LOESS{<:Int} )
             beta = LinearAlgebra.pinv(A) * b
             baseline[i] = beta[1] + beta[2] * scan.mz[i]
         end
-        residuals = scan.int - baseline
-        s = Statistics.median(abs.(residuals))
-        delta = clamp.(residuals ./ (6.0 .* s), -1, 1)
+        res = scan.int - baseline
+        s = Statistics.median(abs.(res))
+        delta = clamp.(res ./ (6.0 .* s), -1, 1)
         delta = (1 .- delta.^2).^2
     end 
-    
-    TIC = sum(residuals)
-    basePeakIntensity = maximum(residuals)
+    TIC = sum(res)
+    basePeakIntensity = maximum(res)
     basePeakMz = scan.mz[num2pnt(scan.int,basePeakIntensity)]
     if scan isa MSscans
-        return MSscans(scan.num, scan.rt, TIC, scan.mz, residuals, scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy, peaks_s)
+        return MSscans(scan.num, scan.rt, TIC, scan.mz, res, scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy, peaks_s)
     elseif scan isa MSscan
-        return MSscan(scan.num, scan.rt, TIC, scan.mz, residuals, scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy)
+        return MSscan(scan.num, scan.rt, TIC, scan.mz, res, scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy)
     end
 end
+
 
