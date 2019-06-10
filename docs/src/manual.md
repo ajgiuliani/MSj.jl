@@ -228,7 +228,7 @@ chromatogram("filename", method = msJ.∆MZ( [258, 1] ) )
 ### Extracting subsets
 ----------------------
 
-The [`extract`](@ref) returns a Vector of `MSscan`from either a file of from a Vector{MSscan} following a ['load'](@ref) command, which corresponds to the filter conditions. See the [filtering](##Filtering) part above.
+The [`extract`](@ref) returns a Vector of `MSscan`from either a file of from a Vector{MSscan} following a ['load'](@ref) command, which corresponds to the filter conditions. See the [filtering](Filtering) part above.
 
 ```julia
 sub_set = extract("filename")                     # extracting without any conditions returns a vector identical to the output 

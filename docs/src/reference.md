@@ -127,6 +127,13 @@ msJ.extracted_chromatogram(scans::Vector{MSscan}, indices::Vector{Int},method::M
 msJ.composite_spectra(scans::Vector{MSscan}, indices::Vector{Int}, stats::Bool)
 ```
 
+## Extracting subsets
+```@docs
+msJ.extract(filename::String, arguments::FilterType...)
+msJ.extract(scans::Vector{MSscan}, arguments::FilterType...)
+msJ.buid_subset(filename::String, indices::Vector{Int})
+msJ.buid_subset(scans::Vector{MSscan}, indices::Vector{Int})
+```
 
 ## Process
 ----------
@@ -137,7 +144,19 @@ msJ.composite_spectra(scans::Vector{MSscan}, indices::Vector{Int}, stats::Bool)
 msJ.smooth(scan::MScontainer; method::MethodType=SG(5, 9, 0))
 msJ.savitzky_golay_filtering(scan::MScontainer, order::Int, window::Int, deriv::Int)
 msJ.centroid(scan::MScontainer; method::MethodType=TBPD(:gauss, 4500., 0.2) )
+msJ.centroid(scans::Vector{MSscan}; method::MethodType=TBPD(:gauss, 4500., 0.2) )
+msJ.gauss(x::Float64, p::Vector{Float64})
+msJ.lorentz(x::Float64, p::Vector{Float64})
+msJ.voigt(x::Float64, p::Vector{Float64})
 msJ.tbpd(scan::MScontainer, shape::Symbol,  R::Real, thres::Real)
+msJ.baseline_correction(scan::MScontainer; method::MethodType=IPSA(51, 100) )
+msJ.baseline_correction(scans::Vector{MSscan}; method::MethodType=IPSA(51, 100) )
+msJ.tophat_filter(scan::MScontainer, region::Int )
+msJ.tophat_filter(scans::Vector{MSscan}, region::Int )
+msJ.loess(scans::Vector{MSscan}, iter::Int )
+msJ.loess(scan::MScontainer, iter::Int )
+msJ.ipsa(scan::MScontainer, width::Real, maxiter::Int)
+msJ.ipsa(scans::Vector{MSscan}, width::Real, maxiter::Int)
 ```
 
 
