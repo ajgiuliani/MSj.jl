@@ -280,8 +280,8 @@ end
 """
 
 """
-    baseline_correction(scan::MScontainer; method::MethodType=TopHat(1) )
-Baseline correction taking a MSscan or MSscans object as input and returning an object of the same type as the input with the mass spectra corrected for their base line. Defaults method is TopHat(1). Other methods are available with `method = msJ.LOESS(3)`. See msJ.TopHat and msJ.LOESS `MethodType`
+    baseline_correction(scan::MScontainer; method::MethodType=IPSA(51, 100) )
+Baseline correction taking a MSscan or MSscans object as input and returning an object of the same type as the input with the mass spectra corrected for their base line. Defaults method is IPSA(51, 100), where 51 is the width of Savinsky-Golay window and 100 is the maximum iteration. Other methods are available with `method = msJ.LOESS(3)`. See msJ.TopHat and msJ.LOESS `MethodType`.
 # Examples
 ```julia-repl
 julia> reduced_data = baseline_correction(scan)
@@ -290,17 +290,21 @@ julia> reduced_data = baseline_correction(scans, method = msJ.LOESS(1))
 MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
-function baseline_correction(scan::MScontainer; method::MethodType=TopHat(1) )
+function baseline_correction(scan::MScontainer; method::MethodType=IPSA(51, 100) )
     if method isa TopHat
         return tophat_filter(scan, method.region)
     elseif method isa LOESS
         return loess(scan, method.iter)
+    elseif method isa IPSA
+        return ipsa(scan, method.width, method.maxiter)
     end
 end
 
+
+
 """
-    baseline_correction(scan::Vector{MSscan}; method::MethodType=TopHat(1) )
-Baseline correction taking a vector of MSscan as input and returning an object of the same type as the input with the mass spectra corrected for their base line. Defaults method is TopHat(1). Other methods are available with `method = msJ.LOESS(3)`. See msJ.TopHat and msJ.LOESS `MethodType`
+    baseline_correction(scan::Vector{MSscan}; method::MethodType=IPSA(51, 100) )
+Baseline correction taking a vector of MSscan as input and returning an object of the same type as the input with the mass spectra corrected for their base line. Defaults method is IPSA(51, 100), where 51 is the width of Savinsky-Golay window and 100 is the maximum iteration. Other methods are available with `method = msJ.LOESS(3)`. See msJ.TopHat and msJ.LOESS `MethodType`.
 # Examples
 ```julia-repl
 julia> reduced_data = baseline_correction(scan)
@@ -310,13 +314,16 @@ julia> reduced_data = baseline_correction(scans, method = msJ.LOESS(1))
 MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
-function baseline_correction(scans::Vector{MSscan}; method::MethodType=TopHat(1) )
+function baseline_correction(scans::Vector{MSscan}; method::MethodType=IPSA(51, 100) )
     if method isa TopHat
         return tophat_filter(scans, method.region)
     elseif method isa LOESS
         return loess(scans, method.iter)
+    elseif method isa IPSA
+        return ipsa(scans, method.width, method.maxiter)
     end
 end
+
 
 
 """
@@ -351,6 +358,7 @@ function tophat_filter(scans::Vector{MSscan}, region::Int )
     return bl_scans
 end
 
+
 """
     loess(scan::MScontainer, iter::Int )
 Method  taking a MSscan or MSscans object as input and returning an object of the same type with the mass spectra without their base line, using the LOESS (Locally Weighted Error Sum of Squares regression).
@@ -362,8 +370,6 @@ function loess(scans::Vector{MSscan}, iter::Int )
     end
     return bl_scans
 end
-
-
 
 
 """
@@ -405,3 +411,74 @@ function loess(scan::MScontainer, iter::Int )
 end
 
 
+"""
+    ipsa(scan::MScontainer, width::Real, maxiter::Int)
+Method  taking a MSscan or MSscans object as input and returning an object of the same type with the mass spectra without their base line, using the iterative polynomial smoothing algorithm (IPSA) baseline correction.
+"""
+function ipsa(scan::MScontainer, width::Real, maxiter::Int)
+    if iseven(width) 
+        width -= 1
+    end
+    #step 1
+    eps = 1e-07
+    input = zeros( length(scan.int) )
+    res = zeros( length(scan.int) )
+    #step 2
+    bkg = SG(scan.int, 0, width,0)
+    bkg_old = zeros(length(scan.int))
+    res = scan.int - bkg
+    # step 3
+    eratio_old = 0.0
+    # step 4
+    counter = 1
+    while true
+
+        for i = 1:length(input)
+            if scan.int[i] < bkg[i]
+                input[i] = scan.int[i]
+            else
+                input[i] = bkg[i]
+            end
+        end
+        bkg = SG(input, 0, width,0)
+        res = scan.int - bkg ;
+        eratio = norm(bkg - bkg_old) / norm(bkg)
+
+        if (abs(eratio - eratio_old)) < eps
+            break
+        elseif counter > maxiter
+            break
+        end
+        counter += 1
+        eratio_old = eratio
+        bkg_old = bkg
+    end
+    
+    basePeakIntensity = ceil(maximum(res))
+    basePeakIndex = num2pnt(res, basePeakIntensity)
+    basePeakMz = scan.mz[basePeakIndex]
+
+    if scan isa MSscan
+        return MSscan(scan.num, scan.rt, scan.tic, scan.mz, res, scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy)
+    elseif scan isa MSscans
+
+        return MSscans(scan.num, scan.rt, scan.tic, scan.mz, res, scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy, scan.s)
+    end
+
+end
+
+
+"""
+    ipsa(scan::MScontainer, width::Real, maxiter::Int)
+Method  taking a MSscan or MSscans object as input and returning an object of the same type with the mass spectra without their base line, using the iterative polynomial smoothing algorithm (IPSA) baseline correction.
+"""
+function ipsa(scans::Vector{MSscan}, width::Real, maxiter::Int)
+    if iseven(width) 
+        width -= 1
+    end
+    bl_scans = Vector{MSscan}(undef,0)
+    for scan in scans
+        push!(bl_scans, ipsa(scan, width, maxiter))
+    end
+    return bl_scans
+end
