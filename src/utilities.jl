@@ -5,6 +5,7 @@ Utility functions to work on MScontainer data types.
 
 using Interpolations
 using LinearAlgebra
+using DSP
 
 import Base: +, -, *, /
 
@@ -12,7 +13,7 @@ import Base: +, -, *, /
 # User Interface.
 # --------------
 
-export avg, num2point
+export avg, num2pnt
 
 
 
@@ -397,5 +398,33 @@ function num2pnt(x::Vector{Float64}, val::Real)
         end
     end
     return ibest
+end
+
+
+function SG(int::Vector{Float64}, order::Int, window::Int, deriv::Int)
+    if window % 2 != 1
+        return ErrorException("Window has to be an odd number.")
+    elseif window < 1
+        return ErrorException("window has to be a positive number.")
+    elseif window < order + 2
+        return ErrorException("window is too small for the order.")
+    end
+    order_range = range(1, length=(order+1))
+    half_window = Int( (window-1) / 2 )
+
+    b = zeros(window, order+1)
+
+    for i = 0:order
+        b[:,i+1] = [x for x = -half_window:half_window].^(i)
+    end
+    
+    m = b * LinearAlgebra.pinv(b' * b)
+    coefs = m[:,deriv + 1] * factorial(deriv)
+    yfirst = int[1]*ones(half_window)
+    ylast = int[end]*ones(half_window)
+    pad = vcat(yfirst, int, ylast)
+    y = conv(coefs[end:-1:1], pad)[2 * half_window + 1 : end - 2 * half_window]
+    
+    return y
 end
 
