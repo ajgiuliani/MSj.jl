@@ -154,22 +154,34 @@ end
 
 
 """
-    struct TopHat <: MethodType
+    TopHat{argT <: Int} <: MethodType
 Structure for multiple dispatching to TopHat baseline correction. Region is used specify the dimention over which this operation performed
 """
-struct TopHat{argT <: Union{Int}} <: MethodType
+struct TopHat{argT <: Int} <: MethodType
     region::argT
     TopHat(region::argT) where{argT} = new{argT}(region)
 end
 
 """
-    struct LOESS <: MethodType
+    LOESS{argT <: Int} <: MethodType
 Structure for multiple dispatching to LOcally Weighted Error Sum of Squares regression (LOESS) baseline correction.
 """
-struct LOESS{argT <: Union{Int}} <: MethodType
+struct LOESS{argT <: Int} <: MethodType
     iter::argT
-    TopHat(iter::argT) where{argT} = new{argT}(iter)
+    LOESS(iter::argT) where{argT} = new{argT}(iter)
 end
+
+
+"""
+    struct IPSA{argT1 <: Int, argT2 <: Real} <: MethodType
+Structure for multiple dispatching to iterative polynomial smoothing algorithm (IPSA) baseline correction.
+"""
+struct IPSA{argT1 <: Int, argT2 <: Int} <: MethodType
+    width::argT1
+    maxiter::argT2
+    IPSA(width::argT1,maxiter::argT2) where{argT1, argT2} = new{argT1, argT2}(width, maxiter)
+end
+
 
 
 
