@@ -229,6 +229,18 @@ function tests()
        bs = msJ.baseline_correction(scans[1], method = msJ.TopHat(1))
        @test length(bs.int) == length(scans[1].int)                                    #89
 
+       bs = msJ.baseline_correction( centroid(scans), method = msJ.LOESS(3))
+       @test length(bs) == 6                                                           #90
+
+       bs = msJ.baseline_correction(centroid(scans[1]), method = msJ.LOESS(3))
+       @test length(bs.int) == length(centroid(scans[1]).int)                          #91
+
+       bs = msJ.baseline_correction(scans, method = msJ.IPSA(51,100))
+       @test length(bs) == 6                                                           #91
+
+       bs = msJ.baseline_correction(scans[1], method = msJ.IPSA(51,100))
+       @test length(bs.int) == length(scans[1].int)                                    #93
+
     end
 end
 tests()
