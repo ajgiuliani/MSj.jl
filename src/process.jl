@@ -176,14 +176,14 @@ Pseudo-Voigt profile function used by the TBPD method
 """
 function voigt(x::Float64, p::Vector{Float64})
     # pseudo-voigt profile
-    gammaG = p[1] / (2.0 * sqrt(log(2.0)))
-    gammaL = p[1] / 2.0
-    Gamma = (gammaG^5 + 2.69269 * gammaG^4 * gammaL + 2.42843 * gammaG^3 * gammaL^2 + 4.47163 * gammaG^2 * gammaL^3 + 0.07842 * gammaG * gammaL^4 + gammaL^5)^(1/5)
-    eta = 1.36603 *(gammaL / Gamma) - 0.47719 * (gammaL / Gamma)^2 + 0.11116 * (gammaL / Gamma)^3
+    γg = p[1] / (2.0 * sqrt(log(2.0)))
+    γl = p[1] / 2.0
+    γ = (γg^5 + 2.69269 * γg^4 * γl + 2.42843 * γg^3 * γl^2 + 4.47163 * γg^2 * γl^3 + 0.07842 * γg * γl^4 + γl^5)^(1/5)
+    η = 1.36603 *(γl / γ) - 0.47719 * (γl / γ)^2 + 0.11116 * (γl / γ)^3
 
-    L(x,Gam,x0) = (Gam / π) / ((x-x0)^2 + Gam^2)
-    G(x,Gam,x0) = exp( -( (x-x0)^2) / (2.0 * Gam^2) ) / Gam * sqrt(2π)
-   return  p[4] + p[3]  * ( eta * L(x,Gamma,p[2]) + (1 - eta) * G(x,Gamma,p[2]) ) 
+    L(x, Γ,x0) = (Γ / π) / ((x-x0)^2 + Γ^2)
+    G(x,Γ,x0) = exp( -( (x-x0)^2) / (2.0 * Γ^2) ) / (Γ * sqrt(2π))
+   return  p[4] + p[3]  * ( η * L(x,γ,p[2]) + (1 - η) * G(x,γ,p[2]) ) 
 end
 
 
