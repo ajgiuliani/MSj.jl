@@ -58,28 +58,7 @@ end
 Savinsky and Golay filtering of mz and int data within the MSscan(s) container.
 """
 function savitzky_golay_filtering(scan::MScontainer, order::Int, window::Int, deriv::Int)
-    if window % 2 != 1
-        return ErrorException("Window has to be an odd number.")
-    elseif window < 1
-        return ErrorException("window has to be a positive number.")
-    elseif window < order + 2
-        return ErrorException("window is too small for the order.")
-    end
-    order_range = range(1, length=(order+1))
-    half_window = Int( (window-1) / 2 )
-
-    b = zeros(window, order+1)
-
-    for i = 0:order
-        b[:,i+1] = [x for x = -half_window:half_window].^(i)
-    end
-    
-    m = b * LinearAlgebra.pinv(b' * b)
-    coefs = m[:,deriv + 1] * factorial(deriv)
-    yfirst = scan.int[1]*ones(half_window)
-    ylast = scan.int[end]*ones(half_window)
-    pad = vcat(yfirst, scan.int, ylast)
-    y = conv(coefs[end:-1:1], pad)[2 * half_window + 1 : end - 2 * half_window]
+    y = savitzky_golay(scan.int, order, window, deriv)
     
     basePeakIntensity = ceil(maximum(y))
     basePeakIndex = num2pnt(y, basePeakIntensity)
@@ -424,7 +403,7 @@ function ipsa(scan::MScontainer, width::Real, maxiter::Int)
     input = zeros( length(scan.int) )
     res = zeros( length(scan.int) )
     #step 2
-    bkg = SG(scan.int, 0, width,0)
+    bkg = savitzky_golay(scan.int, 0, width,0)
     bkg_old = zeros(length(scan.int))
     res = scan.int - bkg
     # step 3
@@ -440,7 +419,7 @@ function ipsa(scan::MScontainer, width::Real, maxiter::Int)
                 input[i] = bkg[i]
             end
         end
-        bkg = SG(input, 0, width,0)
+        bkg = savitzky_golay(input, 0, width,0)
         res = scan.int - bkg ;
         eratio = norm(bkg - bkg_old) / norm(bkg)
 

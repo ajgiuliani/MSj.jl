@@ -401,7 +401,7 @@ function num2pnt(x::Vector{Float64}, val::Real)
 end
 
 
-function SG(int::Vector{Float64}, order::Int, window::Int, deriv::Int)
+function savitzky_golay(int::Vector{Float64}, order::Int, window::Int, deriv::Int)
     if window % 2 != 1
         return ErrorException("Window has to be an odd number.")
     elseif window < 1
