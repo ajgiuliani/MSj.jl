@@ -203,7 +203,7 @@ function tests()
        @test typeof(plot( cr, method = :absolute )) == Plots.Plot{Plots.GRBackend}     #80
 
        a = msJ.centroid(scans[1], method = msJ.TBPD(:voigt, 4500., 0.2))
-       @test length(a.int) == 700                                                      #81
+       @test length(a.int) == 696                                                      #81
 
        a = msJ.centroid(scans[1], method = msJ.TBPD(:lorentz, 4500., 0.2))
        @test length(a.int) == 664                                                      #82
@@ -236,7 +236,7 @@ function tests()
        @test length(bs.int) == length(centroid(scans[1]).int)                          #91
 
        bs = msJ.baseline_correction(scans, method = msJ.IPSA(51,100))
-       @test length(bs) == 6                                                           #91
+       @test length(bs) == 6                                                           #92
 
        bs = msJ.baseline_correction(scans[1], method = msJ.IPSA(51,100))
        @test length(bs.int) == length(scans[1].int)                                    #93
