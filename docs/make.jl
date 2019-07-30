@@ -4,7 +4,7 @@ makedocs(
     format = Documenter.HTML(
         # Use clean URLs, unless built as a "local" build
         prettyurls = !("local" in ARGS),
-        canonical = "https://ajgiuliani.github.io/msJ.jl/dev/",
+        canonical = "https://ajgiuliani.github.io/msJ.jl/stable/",
         assets = ["assets/favicon.ico"],
         analytics = "UA-132913317-2",
     ),    
@@ -30,7 +30,7 @@ makedocs(
 deploydocs(
     repo = "github.com/ajgiuliani/msJ.jl.git",
     target = "build",
-    devbranch = "release",
-    devurl = "dev",
-    versions = ["stable" => "v^", "v#.#", devurl => devurl]
+    #devbranch = "release",
+    #devurl = "dev",
+    #versions = ["stable" => "v^", "v#.#", devurl => devurl]
 )
