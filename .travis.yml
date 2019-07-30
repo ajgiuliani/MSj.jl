@@ -6,8 +6,6 @@ os:
   - osx
   
 julia:
-  - nightly
-  - 1.2
   - 1.1
   - 1.0
   
@@ -16,10 +14,6 @@ notifications:
 
 codecov: true
 coveralls: true
-
-script:
-  - julia --project -e 'using Pkg; Pkg.build(); Pkg.test(; coverage=true)';
-
 
 after_success:
 - julia -e 'using Pkg; cd(Pkg.dir("msJ")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
