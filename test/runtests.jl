@@ -1,4 +1,3 @@
-import Pkg; Pkg.add("Test")
 using msJ, Test
 using Plots
 
