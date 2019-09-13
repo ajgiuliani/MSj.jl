@@ -281,62 +281,6 @@ end
 
 
 
-"""
-    baseline_correction(scan::Vector{MSscan}; method::MethodType=IPSA(51, 100) )
-Baseline correction taking a vector of MSscan as input and returning an object of the same type as the input with the mass spectra corrected for their base line. Defaults method is IPSA(51, 100), where 51 is the width of Savinsky-Golay window and 100 is the maximum iteration. Other methods are available with `method = msJ.LOESS(3)`. See msJ.TopHat and msJ.LOESS `MethodType`.
-# Examples
-```julia-repl
-julia> reduced_data = baseline_correction(scan)
-MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
-julia> reduced_data = baseline_correction(scans, method = msJ.LOESS(1))
-6-element Array{msJ.MSscan,1}:
-MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
-```
-"""
-function baseline_correction(scans::Vector{MSscan}; method::MethodType=IPSA(51, 100) )
-    if method isa TopHat
-        return tophat_filter(scans, method.region)
-    elseif method isa LOESS
-        return loess(scans, method.iter)
-    elseif method isa IPSA
-        return ipsa(scans, method.width, method.maxiter)
-    end
-end
-
-
-
-"""
-    tophat(scan::MScontainer, region::Int)
-Method taking a MScontainer object as input and returning an object of the same type with the mass spectra without their base line, using the TopHat filtering algorithm.
-"""
-function tophat_filter(scan::MScontainer, region::Int )
-    TIC = sum( tophat(scan.int, region) )
-    basePeakIntensity = maximum(tophat(scan.int, region))
-    basePeakMz = scan.mz[num2pnt(scan.int,basePeakIntensity)]
-    if scan isa MSscans
-        return MSscans(scan.num, scan.rt, TIC, scan.mz, tophat(scan.int, region), scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy, peaks_s)
-    elseif scan isa MSscan
-        return MSscan(scan.num, scan.rt, TIC, scan.mz, tophat(scan.int, region), scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy)
-    end
-    return 
-end
-
-
-"""
-    tophat(scans::Vector{MSscan}, region::Int )
-Method taking an array of MSscan as input and returning an object of the same type with mass spectra without their base line, using the TopHat method.
-"""
-function tophat_filter(scans::Vector{MSscan}, region::Int )
-    bl_scans = Vector{MSscan}(undef,0)
-    for scan in scans
-        TIC = sum(tophat(scan.int, region))
-        basePeakIntensity = maximum(tophat(scan.int, region))
-        basePeakMz = scan.mz[num2pnt(scan.int,basePeakIntensity)]
-        push!(bl_scans,  MSscan(scan.num, scan.rt, TIC, scan.mz, tophat(scan.int, region), scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy))
-    end
-    return bl_scans
-end
-
 
 """
     loess(scan::MScontainer, iter::Int )
@@ -461,3 +405,36 @@ function ipsa(scans::Vector{MSscan}, width::Real, maxiter::Int)
     end
     return bl_scans
 end
+
+"""
+    tophat(scan::MScontainer, region::Int)
+Method taking a MScontainer object as input and returning an object of the same type with the mass spectra without their base line, using the TopHat filtering algorithm.
+"""
+function tophat_filter(scan::MScontainer, region::Int )
+    TIC = sum( tophat(scan.int, region) )
+    basePeakIntensity = maximum(tophat(scan.int, region))
+    basePeakMz = scan.mz[num2pnt(scan.int,basePeakIntensity)]
+    if scan isa MSscans
+        return MSscans(scan.num, scan.rt, TIC, scan.mz, tophat(scan.int, region), scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy, peaks_s)
+    elseif scan isa MSscan
+        return MSscan(scan.num, scan.rt, TIC, scan.mz, tophat(scan.int, region), scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy)
+    end
+    return 
+end
+
+
+"""
+    tophat(scans::Vector{MSscan}, region::Int )
+Method taking an array of MSscan as input and returning an object of the same type with mass spectra without their base line, using the TopHat method.
+"""
+function tophat_filter(scans::Vector{MSscan}, region::Int )
+    bl_scans = Vector{MSscan}(undef,0)
+    for scan in scans
+        TIC = sum(tophat(scan.int, region))
+        basePeakIntensity = maximum(tophat(scan.int, region))
+        basePeakMz = scan.mz[num2pnt(scan.int,basePeakIntensity)]
+        push!(bl_scans,  MSscan(scan.num, scan.rt, TIC, scan.mz, tophat(scan.int, region), scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy))
+    end
+    return bl_scans
+end
+
