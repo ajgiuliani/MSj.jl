@@ -5,7 +5,7 @@ Processing functions submodule.
 using Statistics           # used for Perasons correlation calculation
 using LsqFit               # used for curve fitting
 using DSP                  # used for convolution
-using ImageMorphology      # used for TopHat baseline correction
+#using ImageMorphology      # used for TopHat baseline correction
 
 
 # User Interface.
@@ -406,6 +406,23 @@ function ipsa(scans::Vector{MSscan}, width::Real, maxiter::Int)
     return bl_scans
 end
 
+
+"""
+    tophat(scans::Vector{MSscan}, region::Int )
+Method taking an array of MSscan as input and returning an object of the same type with mass spectra without their base line, using the TopHat method.
+"""
+function tophat_filter(scans::Vector{MSscan}, region::Int )
+    bl_scans = Vector{MSscan}(undef,0)
+    for scan in scans
+        TIC = sum(tophat(scan.int, region))
+        basePeakIntensity = maximum(tophat(scan.int, region))
+        basePeakMz = scan.mz[num2pnt(scan.int,basePeakIntensity)]
+        push!(bl_scans,  MSscan(scan.num, scan.rt, TIC, scan.mz, tophat(scan.int, region), scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy))
+    end
+    return bl_scans
+end
+
+
 """
     tophat(scan::MScontainer, region::Int)
 Method taking a MScontainer object as input and returning an object of the same type with the mass spectra without their base line, using the TopHat filtering algorithm.
@@ -423,18 +440,55 @@ function tophat_filter(scan::MScontainer, region::Int )
 end
 
 
-"""
-    tophat(scans::Vector{MSscan}, region::Int )
-Method taking an array of MSscan as input and returning an object of the same type with mass spectra without their base line, using the TopHat method.
-"""
-function tophat_filter(scans::Vector{MSscan}, region::Int )
-    bl_scans = Vector{MSscan}(undef,0)
-    for scan in scans
-        TIC = sum(tophat(scan.int, region))
-        basePeakIntensity = maximum(tophat(scan.int, region))
-        basePeakMz = scan.mz[num2pnt(scan.int,basePeakIntensity)]
-        push!(bl_scans,  MSscan(scan.num, scan.rt, TIC, scan.mz, tophat(scan.int, region), scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy))
-    end
-    return bl_scans
+
+function tophat(input::AbstractArray, region::Int)
+    return input - opening(input, region)
 end
 
+function opening(input::AbstractArray, region::Int)
+    return dilatation(erosion(input, region), region)
+end
+
+
+function erosion(input::AbstractArray, region::Int)
+    output = deepcopy(input)
+    dimension = region
+    if dimension == 1
+        half_dim = 1
+    else
+        half_dim = Int(dimension / 2.0)
+    end
+
+    for i =1:length(input)
+        if i > half_dim && i < length(input) - half_dim
+            @views output[i] = minimum(input[i-half_dim : i+half_dim ])
+        elseif i <= half_dim
+            @views output[i] = minimum(input[1 : i+half_dim])
+        elseif i >= length(input) - half_dim
+            @views output[i] = minimum(input[i-half_dim : end])
+        end
+    end
+    return output
+end
+
+
+function dilatation(input::AbstractArray, region::Int)
+    output = deepcopy(input)
+    dimension = region
+    if dimension == 1
+        half_dim = 1
+    else
+        half_dim = Int(dimension / 2.0)
+    end
+   
+    for i =1:length(input)
+        if i > half_dim && i < length(input) - half_dim
+            @views output[i] = maximum(input[i-half_dim : i+half_dim ])
+        elseif i <= half_dim
+            @views output[i] = maximum(input[1 : i+half_dim])
+        elseif i >= length(input) - half_dim
+            @views output[i] = maximum(input[i-half_dim : end])
+        end
+    end
+    return output
+end
