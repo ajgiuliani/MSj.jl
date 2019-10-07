@@ -427,4 +427,3 @@ function savitzky_golay(int::Vector{Float64}, order::Int, window::Int, deriv::In
     
     return y
 end
-
