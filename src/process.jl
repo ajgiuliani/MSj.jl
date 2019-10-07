@@ -95,8 +95,9 @@ function centroid(scan::MScontainer; method::MethodType=TBPD(:gauss, 1000., 0.2)
             ErrorException("Unsupported peak profile. Use :gauss, :lorentz or :voigt.")
         end
 
-#    elseif method isa SNRA()
-#        return snra(scan, method.threshold)
+    elseif method isa SNRA
+        ∆mz = 500.0 / method.resolution       # according to mz / ∆mz  = R, we take the value @ m/z 500
+        return snra(scan, method.threshold, method.resolution)
 #    elseif method isa CWT()
 #        return cwt(scan, method.threshold)
 #    else
@@ -131,8 +132,8 @@ function centroid(scans::Vector{MSscan}; method::MethodType=TBPD(:gauss, 4500., 
             end
         end
         return cent_scans
-#    elseif method isa SNRA()
-#        return snra(scan, method.threshold)
+    elseif method isa SNRA()
+        return snra(scan, method.threshold)
 #    elseif method isa CWT()
 #        return cwt(scan, method.threshold)
 #    else
@@ -248,6 +249,12 @@ function tbpd(scan::MScontainer, model::Function,  ∆mz::Real, thres::Real)   #
     end
 end
 
+function snra(scan::MScontainer, threshold::Real, resolution::Real)    # Signal to Noise Ration Analysi
+    
+end
+
+
+    
 """
 function snra(scan::MScontainer)                                        # Signal to Noise Ration Analysis
     error("SNR not implemented")
@@ -269,7 +276,8 @@ julia> reduced_data = baseline_correction(scans, method = msJ.LOESS(1))
 MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
-function baseline_correction(scan::MScontainer; method::MethodType=IPSA(51, 100) )
+#function baseline_correction(scan::MScontainer; method::MethodType=IPSA(51, 100) )
+function baseline_correction(scan::MScontainer; method::MethodType=TopHat(100) )
     if method isa TopHat
         return tophat_filter(scan, method.region)
     elseif method isa LOESS
@@ -408,7 +416,7 @@ end
 
 
 """
-    tophat(scans::Vector{MSscan}, region::Int )
+    tophat_filter(scans::Vector{MSscan}, region::Int )
 Method taking an array of MSscan as input and returning an object of the same type with mass spectra without their base line, using the TopHat method.
 """
 function tophat_filter(scans::Vector{MSscan}, region::Int )
@@ -424,7 +432,7 @@ end
 
 
 """
-    tophat(scan::MScontainer, region::Int)
+    tophat_filter(scan::MScontainer, region::Int)
 Method taking a MScontainer object as input and returning an object of the same type with the mass spectra without their base line, using the TopHat filtering algorithm.
 """
 function tophat_filter(scan::MScontainer, region::Int )
@@ -440,55 +448,40 @@ function tophat_filter(scan::MScontainer, region::Int )
 end
 
 
+morpholaplace(input::AbstractArray, region::Int) = dilatation(input, region) + erosion(input, region)
 
-function tophat(input::AbstractArray, region::Int)
-    return input - opening(input, region)
-end
-
-function opening(input::AbstractArray, region::Int)
-    return dilatation(erosion(input, region), region)
-end
+morphogradient(input::AbstractArray, region::Int) = dilatation(input, region) - erosion(input, region)
 
 
-function erosion(input::AbstractArray, region::Int)
+tophat(input::AbstractArray, region::Int) = input - opening(input, region)
+bothat(input::AbstractArray, region::Int) = closing(input, region) - input
+
+
+opening(input::AbstractArray, region::Int) = dilatation(erosion(input, region), region)
+closing(input::AbstractArray, region::Int) = erosion(dilatation(input, region), region)
+
+erosion(input::AbstractArray, region::Int) = extremefilt(input, minimum, region)
+dilatation(input::AbstractArray, region::Int) = extremefilt(input, maximum, region)
+
+function extremefilt(input::AbstractArray, minmax::Function, region::Int)
     output = deepcopy(input)
-    dimension = region
-    if dimension == 1
+    if region == 1
         half_dim = 1
     else
-        half_dim = Int(dimension / 2.0)
+        half_dim = Int(region / 2.0)
     end
-
+    
     for i =1:length(input)
         if i > half_dim && i < length(input) - half_dim
-            @views output[i] = minimum(input[i-half_dim : i+half_dim ])
+            @views output[i] = minmax(input[i-half_dim : i+half_dim ])
         elseif i <= half_dim
-            @views output[i] = minimum(input[1 : i+half_dim])
+            @views output[i] = minmax(input[1 : i+half_dim])
         elseif i >= length(input) - half_dim
-            @views output[i] = minimum(input[i-half_dim : end])
+            @views output[i] = minmax(input[i-half_dim : end])
         end
     end
     return output
 end
 
 
-function dilatation(input::AbstractArray, region::Int)
-    output = deepcopy(input)
-    dimension = region
-    if dimension == 1
-        half_dim = 1
-    else
-        half_dim = Int(dimension / 2.0)
-    end
-   
-    for i =1:length(input)
-        if i > half_dim && i < length(input) - half_dim
-            @views output[i] = maximum(input[i-half_dim : i+half_dim ])
-        elseif i <= half_dim
-            @views output[i] = maximum(input[1 : i+half_dim])
-        elseif i >= length(input) - half_dim
-            @views output[i] = maximum(input[i-half_dim : end])
-        end
-    end
-    return output
-end
+          
