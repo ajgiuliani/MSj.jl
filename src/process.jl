@@ -82,9 +82,10 @@ julia> reduced_data = centroid(scans)
 MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
-function centroid(scan::MScontainer; method::MethodType=TBPD(:gauss, 1000., 0.2) )
+#function centroid(scan::MScontainer; method::MethodType=TBPD(:gauss, 1000., 0.2) )
+function centroid(scan::MScontainer; method::MethodType=SNRA(1., 10.) )
     if method isa TBPD
-        ∆mz = 500.0 / method.resolution       # according to ∆mz / mz  = R, we take the value @ m/z 500
+        ∆mz = 500.0 / method.resolution       # according to mz / ∆mz  = R, we take the value @ m/z 500
         if method.shape == :gauss
             return tbpd(scan, gauss, ∆mz, convert(Float64,method.threshold))
         elseif method.shape == :lorentz
@@ -96,8 +97,8 @@ function centroid(scan::MScontainer; method::MethodType=TBPD(:gauss, 1000., 0.2)
         end
 
     elseif method isa SNRA
-        ∆mz = 500.0 / method.resolution       # according to mz / ∆mz  = R, we take the value @ m/z 500
-        return snra(scan, method.threshold, method.resolution)
+        return snra(scan, method.threshold, method.region)
+        
 #    elseif method isa CWT()
 #        return cwt(scan, method.threshold)
 #    else
@@ -116,9 +117,10 @@ julia> reduced_data = centroid(scans)
 MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
-function centroid(scans::Vector{MSscan}; method::MethodType=TBPD(:gauss, 4500., 0.2) )
+#function centroid(scans::Vector{MSscan}; method::MethodType=TBPD(:gauss, 4500., 0.2) )
+function centroid(scans::Vector{MSscan}; method::MethodType=SNRA(1., 10) )
+    cent_scans = Vector{MSscan}(undef,0)
     if method isa TBPD
-        cent_scans = Vector{MSscan}(undef,0)
         for el in scans
             ∆mz = 500.0 / method.resolution       # according to ∆mz / mz  = R, we take the value @ m/z 500
             if method.shape == :gauss
@@ -132,14 +134,56 @@ function centroid(scans::Vector{MSscan}; method::MethodType=TBPD(:gauss, 4500., 
             end
         end
         return cent_scans
-    elseif method isa SNRA()
-        return snra(scan, method.threshold)
+    elseif method isa SNRA
+        for el in scans
+            push!(cent_scans, snra(el, method.threshold, method.region))
+        end
+        return cent_scans
 #    elseif method isa CWT()
 #        return cwt(scan, method.threshold)
 #    else
 #        ErrorException("Unsupported method.")
     end
     
+end
+
+
+function snra(scan::MScontainer, thres::Real, region::Int)
+    # declaration
+    peaks_mz = Vector{Float64}(undef,0)
+    peaks_int = Vector{Float64}(undef,0)
+    peaks_s = Vector{Float64}(undef,0)
+    
+    noise  = msJ.opening(scan.int, region);
+    SNR = scan.int ./ noise;
+        
+    maxi = maximum(scan.int)    
+    for i = 2:length(scan.mz)
+        #if signal[i] ./ maximum(signal) >= 0.01
+        if scan.int[i] >=  maxi * thres / 100. 
+            if SNR[i] > SNR[i-1] && SNR[i] > SNR[i+1]
+                push!(peaks_int, (scan.int[i] - noise[i]))
+                push!(peaks_mz, scan.mz[i])
+                if scan isa MSscans
+                    push!(peaks_s, scan.s[i])
+                end
+            end
+        end
+    end
+    if size(peaks_int, 1) == 0
+        basePeakIntensity = NaN
+        basePeakMz = NaN
+    else
+        basePeakIntensity = maximum(peaks_int)
+        basePeakMz = peaks_mz[ num2pnt(peaks_int, basePeakIntensity) ]
+    end
+    
+    if scan isa MSscans
+        return MSscans(scan.num, scan.rt, sum(peaks_int), peaks_mz, peaks_int, scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy, peaks_s)
+    elseif scan isa MSscan
+        return MSscan(scan.num, scan.rt, sum(peaks_int), peaks_mz, peaks_int, scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy)
+    end
+
 end
 
     
@@ -247,10 +291,6 @@ function tbpd(scan::MScontainer, model::Function,  ∆mz::Real, thres::Real)   #
     elseif scan isa MSscan
         return MSscan(scan.num, scan.rt, sum(peaks_int), peaks_mz, peaks_int, scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy)
     end
-end
-
-function snra(scan::MScontainer, threshold::Real, resolution::Real)    # Signal to Noise Ration Analysi
-    
 end
 
 
@@ -449,13 +489,10 @@ end
 
 
 morpholaplace(input::AbstractArray, region::Int) = dilatation(input, region) + erosion(input, region)
-
 morphogradient(input::AbstractArray, region::Int) = dilatation(input, region) - erosion(input, region)
 
-
 tophat(input::AbstractArray, region::Int) = input - opening(input, region)
-bothat(input::AbstractArray, region::Int) = closing(input, region) - input
-
+bottomhat(input::AbstractArray, region::Int) = closing(input, region) - input
 
 opening(input::AbstractArray, region::Int) = dilatation(erosion(input, region), region)
 closing(input::AbstractArray, region::Int) = erosion(dilatation(input, region), region)

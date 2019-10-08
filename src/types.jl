@@ -139,12 +139,14 @@ struct TBPD{argT1 <: Symbol, argT2 <: Real, argT3 <: Real}   <: MethodType
 end
 
 
-"""
-struct SNRA{argT <: Real}  <: MethodType
-    threshold::argT
-    SNRA(threshold::argT) where{argT} = new{argT}(threshold)
+
+struct SNRA{argT1 <: Real, argT2 <: Int}  <: MethodType
+    threshold::argT1
+    region::argT2
+    SNRA(threshold::argT1, region::argT2) where{argT1, argT2} = new{argT1, argT2}(threshold, region)
 end
 
+"""
 struct CWT{argT <: Real}  <: MethodType
     threshold::argT
     CWT(threshold::argT) where{argT} = new{argT}(threshold)
