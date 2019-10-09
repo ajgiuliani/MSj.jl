@@ -191,7 +191,7 @@ end
     gauss(x::Float64, p::Vector{Float64})
 Gaussian shape function used by the TBPD method
 """
-function gauss(x::Float64, p::Vector{Float64})
+function gauss(x::Float64, p::AbstractArray)
     # Gaussian shape function
     # width            = p[1]
     # x0               = p[2]
@@ -205,7 +205,7 @@ end
     lorentz(x::Float64, p::Vector{Float64})
 Cauchy-Lorentz shape function used by the TBPD method
 """
-function lorentz(x::Float64, p::Vector{Float64})
+function lorentz(x::Float64, p::AbstractArray)
     # Lorentzian shape function
     # width            = p[1]
     # x0               = p[2]
@@ -219,7 +219,7 @@ end
     voigt(x::Float64, p::Vector{Float64})
 Pseudo-Voigt profile function used by the TBPD method
 """
-function voigt(x::Float64, p::Vector{Float64})
+function voigt(x::Float64, p::AbstractArray)
     # pseudo-voigt profile
     γg = p[1] / (2.0 * sqrt(log(2.0)))
     γl = p[1] / 2.0
