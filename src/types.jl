@@ -14,6 +14,7 @@ abstract type MScontainer  end
 """
     struct MSscan <: MScontainer
 Data structure used to store individual mass spectrometry scans organized following the structure of mzXML files.
+
 """
 struct MSscan <: MScontainer
     num::Int                          # num
@@ -139,12 +140,16 @@ struct TBPD{argT1 <: Symbol, argT2 <: Real, argT3 <: Real}   <: MethodType
 end
 
 
-
+"""
+    struct SNRA{argT1 <: Real, argT2 <: Int}  <: MethodType
+Structure for multiple dispatching to Signal to Noise Ratio Analysis centroiding, providing the threshold value and the size of the region.  Defaults values are provided in functions calls.
+"""
 struct SNRA{argT1 <: Real, argT2 <: Int}  <: MethodType
     threshold::argT1
     region::argT2
     SNRA(threshold::argT1, region::argT2) where{argT1, argT2} = new{argT1, argT2}(threshold, region)
 end
+
 
 """
 struct CWT{argT <: Real}  <: MethodType
