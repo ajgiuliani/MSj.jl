@@ -233,11 +233,11 @@ function tests()
        @test length(bs.int) == length(scans[1].int)                                    #90
 
        c = msJ.centroid(scans, method = msJ.TBPD(:gauss, 4500., 0.2)) ;
-       bs = msJ.baseline_correction( centroid(c), method = msJ.LOESS(3))
+       bs = msJ.baseline_correction( c, method = msJ.LOESS(3))
        @test length(bs) == 6                                                           #91
 
-       bs = msJ.baseline_correction(centroid(c[1]), method = msJ.LOESS(3))
-       @test length(bs.int) == length(centroid(c[1]).int)                              #92
+       bs = msJ.baseline_correction(c[1], method = msJ.LOESS(3))
+       @test length(bs.int) == length(c[1].int)                              #92
 
        bs = msJ.baseline_correction(scans, method = msJ.IPSA(51,100))
        @test length(bs) == 6                                                           #93
