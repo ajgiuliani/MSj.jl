@@ -7,13 +7,16 @@ os:
   
 julia:
   - nightly
-  - 1.2
   - 1.1
   - 1.0
   
 notifications:
   email: true
 
+matrix:
+  allow_failures:
+  - julia: nightly
+  
 codecov: true
 coveralls: true
 
