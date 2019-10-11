@@ -2,10 +2,6 @@
 Module for extracting subsets from a Vector{MSscan} according to specific conditions
 """
 
-using Unicode, LightXML, Codecs
-
-
-
 # User Interface.
 # ---------------
 
