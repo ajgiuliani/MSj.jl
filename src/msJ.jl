@@ -12,7 +12,6 @@ using Interpolations       # used for interpolation
 using LinearAlgebra        # used for matrix operation 
 using LightXML, Codecs     # used for mzXML file import
 using Unicode              # used for file io
-using Plots, RecipesBase   # used for plotting
 
 
 import Base: +, -, *, /
