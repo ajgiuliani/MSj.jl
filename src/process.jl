@@ -83,7 +83,7 @@ MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5
 ```
 """
 #function centroid(scan::MScontainer; method::MethodType=TBPD(:gauss, 1000., 0.2) )
-function centroid(scan::MScontainer; method::MethodType=SNRA(1., 10.) )
+function centroid(scan::MScontainer; method::MethodType=SNRA(1., 10) )
     if method isa TBPD
         ∆mz = 500.0 / method.resolution       # according to mz / ∆mz  = R, we take the value @ m/z 500
         if method.shape == :gauss
@@ -264,8 +264,28 @@ function tbpd(scan::MScontainer, model::Function,  ∆mz::Real, thres::Real)   #
     peaks_s = Vector{Float64}(undef,0)
 
     diff_prev = 0.0
-    diff      = 0.0 
-
+    diff      = 0.0
+    
+    for i = 2:length(correlation)
+        if correlation[i] > correlation[i-1] && correlation[i] > correlation[i+1]
+            max_value = maximum( scan.int[i:i+2] )
+            max_index = num2pnt(scan.int, max_value)
+            push!(peaks_mz, scan.mz[max_index])
+            push!(peaks_int, scan.int[max_index])
+            if scan isa MSscans
+                push!(peaks_s, scan.s[max_index])
+            end
+          """
+            push!(peaks_mz, scan.mz[i])
+            push!(peaks_int, scan.int[i])
+            if scan isa MSscans
+                push!(peaks_s, scan.s[i])
+            end
+          """
+        end
+    end
+    
+    """
     # rough numerical differentiation of correlation vector to find its maximum
     for i =2:length(correlation)-2
         diff = (-correlation[i-1] +correlation[i+1]) / 2.0 
@@ -282,7 +302,8 @@ function tbpd(scan::MScontainer, model::Function,  ∆mz::Real, thres::Real)   #
         end       
         diff_prev = diff
     end
-
+    """
+    
     basePeakIntensity = maximum(peaks_int)
     basePeakMz = peaks_mz[ num2pnt(peaks_int, basePeakIntensity) ]
     
@@ -325,6 +346,22 @@ function baseline_correction(scan::MScontainer; method::MethodType=TopHat(100) )
     elseif method isa IPSA
         return ipsa(scan, method.width, method.maxiter)
     end
+end
+
+
+
+function baseline_correction(scans::Vector{MSscan}; method::MethodType=TopHat(100) )
+    bl_scans = Vector{MSscan}(undef,0)
+    for el in scans
+        if method isa TopHat
+            push!(bl_scans, tophat_filter(el, method.region))            
+        elseif method isa LOESS
+            push!(bl_scans, loess(el, method.iter))
+        elseif method isa IPSA
+            push!(bl_scans, ipsa(el, method.width, method.maxiter))
+        end       
+    end
+    return bl_scans
 end
 
 
