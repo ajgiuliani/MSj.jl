@@ -257,11 +257,11 @@ baseline_correction(scans, method = msJ.IPSA(51, 100))
 ```
 The `method` argument allows choosing the algorithm. 
 
+#### Top Hat
+This filter is based Top Hat transform used in image processing ([wikipedia](https://en.wikipedia.org/wiki/Top-hat_transform), [Sauve et al. (2004)](https://pdfs.semanticscholar.org/c04c/afc9b2670edd1ea38f0f724cadbe2ec321e9.pdf). The region onto which the operation is performed is set using the `region`field of the [`msJ.TopHat`](@ref). This filter removes every structure from the input which are smaller in size than the structuring element. Usually a region of 100 points is enough.This filter is fast and works quite well on large and complex backgrounds.
+
 #### Iterative polynomial smoothing algorithm (IPSA)
 The default algorithm is the IPSA for iterative polynomial smoothing algorithm ([Wang et al. (2017)](https://doi.org/10.1177/0003702816670915). This iterative algorithm use a zero ordre Savinsly and Golay smoothing to estimate a background. Then a new input, constructed by taking the minimum of either the original spectrum or the background, is smooth again. The process is repeated until the maximum iteration is reached or when the background does not change much. The termination criteria has been changed from the original paper.
-
-#### Top Hat
-This filter is based Top Hat transform used in image processing ([wikipedia](https://en.wikipedia.org/wiki/Top-hat_transform), [Sauve et al. (2004)](https://pdfs.semanticscholar.org/c04c/afc9b2670edd1ea38f0f724cadbe2ec321e9.pdf). The region onto which the operation is performed is set using the `region`field of the [`msJ.TopHat`](@ref). This implementation uses the tophat finction from the `ImageMorphology` Julia package. This filter is fast and works quite well on large background and complex but it seems that the intensity are affected.
 
 ##### Locally weighted error sum of squares regression (LOESS)
 The LOESS family of algorithm is based on non-parametric linear [local regression](https://en.wikipedia.org/wiki/Local_regression) where the regression is weighted to reduced the influence of more distant data. We use here the iterative robust estimation procedure where the weights are updated with a bisquare function of the median of the residuals.
@@ -270,10 +270,18 @@ This algorithm takes the number of iteration to be performed. Usually 3 iteratio
 
 ### Peak picking
 ----------------
-Pick-picking is performed using the public [`centroid`](@ref) function. It operates on `MSscan`or `MSscans`type of data and return a similar type. It takes a method argument, set by default to the Template Base Peak Detection method: `msJ.TBPD`.
+Pick-picking is performed using the public [`centroid`](@ref) function. It operates on `MSscan`or `MSscans`type of data and return a similar type. It takes a method argument, set by default to the Signal to Noise Analysis method: `msJ.SNRA`.
+```julia
+centroid(scan)
+```
 
-#### Threshold base peak detection algorithm
---------------------------------------------
+#### Signal to Noise Ratio Analysis (SNRA)
+Signal to noise ratio analysis is a very general approach, which relies on the definition of noise. Here, we use TopHat filter to define the noise. Then the signal to noise ratio is calculated. Peaks are found by searching for a local maximum for which the signal to noise ratio is above the threshold. By defaults the `msJ.SNRA` uses a threshold = 1.0 and a structuring element of 10 points.
+```julia
+centroid(scan, method = SNRA(1., 10)
+```
+
+#### Threshold base peak detection algorithm (TBPD)
 The TBPD method identifies features based on their similarity (as described by the Pearson correlation coefficient) with a [template peak](https://doi.org/10.1007/978-1-60761-987-1_22). By default the `msJ.TBPD` method type uses a Gaussian function, with 1000 mass resolving power and a threshold level set to 0.2% as :
 ```julia
 centroid(scan, method = TBPD(:gauss, 1000, 0.2)

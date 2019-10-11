@@ -26,28 +26,17 @@ scans = load("../../test/test.mzXML")
 As expected, the `scans` variable contains an array of 6 `MSscans`. The fields of the individual scans may be accessed by:
 
 ```@example 1
-println("scan num      : ", scans[1].num)
-```
-```@example 1
-println("Polarity      : ", scans[1].polarity)
-```
-```@example 1
-println("retention time: ", scans[1].rt)
-```
-```@example 1
-println("MS level      : ", scans[1].level)
-```
-```@example 1
-println("Base peak m/z : ", scans[1].basePeakMz)
-```
-```@example 1
-println("Base peak int.: ", scans[1].basePeakIntensity)
+@show scanscans[1].num ;
+@show scans[1].polarity ;
+@show scans[1].level
+@show scans[1].basePeakMz
+@show scans[1].basePeakIntensity
 ```
 
 The mass spectrum is stored in two arrays:
 ```julia
-mz_2  =  scans[2].mz
-int_2 =  scans[2].int ; nothing
+mz_2  =  scans[2].mz ;
+int_2 =  scans[2].int ;
 ```
 
 Getting chromatograms is straightforward using the [`chromatogram`](@ref) method:
@@ -72,9 +61,7 @@ p2 = plot(MS1_TIC, label = " MS1_TIC")
 p3 = plot(CID_TIC, label = "CID_TIC")
 p4 = plot(mz902_TIC, label = "mz902_TIC")
 
-plot(p1, p2, p3, p4, layout = (4,1))
-#savefig("chromatograms.png"); nothing # hide
-savefig("chromatograms.png"); nothing # hide
+plot(p1, p2, p3, p4, layout = (4,1));
 ```
 ![](chromatograms.png)
 
@@ -92,8 +79,7 @@ p5 = plot(ms1, label = "MS", color = :blue)
 p6 = plot(ms2_CID, label = "CID", color = :green)
 p7 = plot(ms2_PQD, label = "PQD", color = :purple)
 p8 = plot(ms2_1255, label = "mz 1255", color = :orange)
-plot(p5, p6, p7, p8, layout = (4,1), size = (800,600))
-savefig("ms.png"); nothing # hide
+plot(p5, p6, p7, p8, layout = (4,1), size = (800,600));
 ```
 ![](ms.png)
 
