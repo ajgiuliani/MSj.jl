@@ -2,13 +2,6 @@
 Utility functions to work on MScontainer data types.
 
 """
-
-using Interpolations
-using LinearAlgebra
-using DSP
-
-import Base: +, -, *, /
-
     
 # User Interface.
 # --------------
