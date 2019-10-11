@@ -237,7 +237,7 @@ function tests()
        @test length(bs) == 6                                                           #91
 
        bs = msJ.baseline_correction(c[1], method = msJ.LOESS(3))
-       @test length(bs.int) == length(c[1].int)                              #92
+       @test length(bs.int) == length(c[1].int)                                        #92
 
        bs = msJ.baseline_correction(scans, method = msJ.IPSA(51,100))
        @test length(bs) == 6                                                           #93
