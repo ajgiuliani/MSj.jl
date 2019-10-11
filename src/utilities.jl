@@ -394,7 +394,15 @@ function num2pnt(x::Vector{Float64}, val::Real)
 end
 
 
-function savitzky_golay(int::Vector{Float64}, order::Int, window::Int, deriv::Int)
+"""
+    savitzky_golay(int::Vector{Float64}, order::Int, window::Int, deriv::Int)
+Savinsky and Golay filter removes high frequency noise from data. Parameters:
+    int::AbstractArray
+    order::Int   order of the polynomial
+    window::Int  length of the window, has to be an odd number
+    deriv::Int   the order of the derivative to be computed. Default = 0 leads to smoothing only.
+"""
+function savitzky_golay(int::AbstractArray, order::Int, window::Int, deriv::Int)
     if window % 2 != 1
         return ErrorException("Window has to be an odd number.")
     elseif window < 1
@@ -420,3 +428,89 @@ function savitzky_golay(int::Vector{Float64}, order::Int, window::Int, deriv::In
     
     return y
 end
+
+
+"""
+    morpholaplace(input::AbstractArray, region::Int)
+Perfoms morphological Laplacian of the input array, as defined by the addition of the dilatation and the erosion of the input array.
+"""
+morpholaplace(input::AbstractArray, region::Int) = dilatation(input, region) + erosion(input, region)
+
+
+"""
+    morphogradient(input::AbstractArray, region::Int)
+Perfoms morphological Gradient of the input array, defined by the difference between the dilatation and the erosion of the input array.
+"""
+morphogradient(input::AbstractArray, region::Int) = dilatation(input, region) - erosion(input, region)
+
+
+"""
+    tophat(input::AbstractArray, region::Int)
+Performs the Top Hat of the input Array, defined by the difference between the input and its morphological opening.
+"""
+tophat(input::AbstractArray, region::Int) = input - opening(input, region)
+
+
+"""
+    bottomhat(input::AbstractArray, region::Int)
+Performs the Bottom Hat of the input Array, defined by the difference between the morphological closing of the input and the input.
+"""
+bottomhat(input::AbstractArray, region::Int) = closing(input, region) - input
+
+
+"""
+    opening(input::AbstractArray, region::Int)
+Performs the morphological opening of the input Array, which is the dilatation of the erosion of the input
+"""
+opening(input::AbstractArray, region::Int) = dilatation(erosion(input, region), region)
+
+
+"""
+    closing(input::AbstractArray, region::Int
+Performs the morphological closing of the input Array, which is defined as the erosion of the dilatation of the input.
+"""
+closing(input::AbstractArray, region::Int) = erosion(dilatation(input, region), region)
+
+
+
+"""
+    erosion(input::AbstractArray, region::Int)
+Performs the morphological erosion of the input, which is the minimum-filtering over the structuring element region.
+"""
+erosion(input::AbstractArray, region::Int) = extremefilt(input, minimum, region)
+
+
+
+"""
+    dilatation(input::AbstractArray, region::Int)
+Performs the morphological dilatation of the input, which is the maximum-filtering over the structuring element region
+"""
+dilatation(input::AbstractArray, region::Int) = extremefilt(input, maximum, region)
+
+
+"""
+    extremefilt(input::AbstractArray, minmax::Function, region::Int)
+Return the erosion or the dilation of the input over the region, which the size of the structuring element.
+"""
+function extremefilt(input::AbstractArray, minmax::Function, region::Int)
+    output = deepcopy(input)
+    if region == 1
+        half_dim = 1
+    else
+        half_dim = Int(region / 2.0)
+    end
+    
+    for i =1:length(input)
+        if i > half_dim && i < length(input) - half_dim
+            @views output[i] = minmax(input[i-half_dim : i+half_dim ])
+        elseif i <= half_dim
+            @views output[i] = minmax(input[1 : i+half_dim])
+        elseif i >= length(input) - half_dim
+            @views output[i] = minmax(input[i-half_dim : end])
+        end
+    end
+    return output
+end
+
+
+          
