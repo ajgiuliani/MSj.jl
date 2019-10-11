@@ -4,9 +4,6 @@ Main module for `msJ.jl`-- A Julia package to load and process mass spectrometry
 """
 module msJ
 
-using DataFrames
-using DataFramesMeta
-
 
 include("types.jl")
 include("Io.jl")
