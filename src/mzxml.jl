@@ -2,10 +2,6 @@
 Interface to the mzxml file format
 """
 
-using LightXML, Codecs
-
-
-
 
 
 """
