@@ -58,6 +58,12 @@ function extract(filename::String, arguments::FilterType...)
     end
 end
 
+
+
+"""
+    buid_subset(filename::String, indices::Vector{Int})
+Returns a Vector of MSscan from the input file according to the scan num (indices).
+"""
 function buid_subset(filename::String, indices::Vector{Int})
     sub_set = Vector{MSscan}(undef,0)   
     for i = 1:length(indices)
