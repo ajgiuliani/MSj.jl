@@ -2,12 +2,6 @@
 Processing functions submodule. 
 """
 
-using Statistics           # used for Perasons correlation calculation
-using LsqFit               # used for curve fitting
-using DSP                  # used for convolution
-#using ImageMorphology      # used for TopHat baseline correction
-
-
 # User Interface.
 # ---------------
 
@@ -108,8 +102,9 @@ function centroid(scan::MScontainer; method::MethodType=SNRA(1., 10) )
 end
 
 """
-    centroid(scans::Vector{MSscan}; method::MethodType=TBPD(:gauss, 1000., 0.2) )
-Peak picking algorithm taking an array of MSscan as input and returning an object of the same type containing the detected peaks. Default method is Threshold Base Peak Detection (TBPD), with a default gaussian peak profile with resolving power of 1000 and 0.2% base peak intensity threshold. Other peak shapes include `:lorentz` for the Cauchy-Lorentz shape and `:voigt` for the pseudo-Voigt profile.
+    centroid(scans::Vector{MSscan}; method::MethodType=SNRA(1., 10) )
+Peak picking algorithm taking an array of MSscan as input and returning an object of the same type containing the detected peaks. Default method is Signal to Noise Ration Analysis (SNRA) with a default threshold of 1.0.
+Threshold Base Peak Detection (TBPD), with a default gaussian peak profile with resolving power of 1000 and 0.2% base peak intensity threshold. Other peak shapes include `:lorentz` for the Cauchy-Lorentz shape and `:voigt` for the pseudo-Voigt profile.
 # Examples
 ```julia-repl
 julia> reduced_data = centroid(scans)
