@@ -68,15 +68,14 @@ end
  
 
 """
-    centroid(scan::MScontainer; method::MethodType=TBPD(:gauss, 1000., 0.2) )
-Peak picking algorithm taking a MSscan or MSscans object as input and returning an object of the same type containing the detected peaks. Default method is Threshold Base Peak Detection (TBPD), with a default gaussian peak profile with resolving power of 1000 and 0.2% base peak intensity threshold. Other peak shapes include `:lorentz` for the Cauchy-Lorentz shape and `:voigt` for the pseudo-Voigt profile.
+    centroid(scan::MScontainer; method::MethodType=MethodType=SNRA(1., 10) )
+Peak picking algorithm taking a MSscan or MSscans object as input and returning an object of the same type containing the detected peaks.  Available algorithm are : Signal to Noise Ratio (SNR) and Template Based Peak Detection (TBPD). Default method is Signal to Noise Ratio Analysis (SNRA), with default threshold = 1.0 and region = 10.
 # Examples
 ```julia-repl
-julia> reduced_data = centroid(scans)
+julia> centroid(scans)
 MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
-#function centroid(scan::MScontainer; method::MethodType=TBPD(:gauss, 1000., 0.2) )
 function centroid(scan::MScontainer; method::MethodType=SNRA(1., 10) )
     if method isa TBPD
         ∆mz = 500.0 / method.resolution       # according to mz / ∆mz  = R, we take the value @ m/z 500
@@ -103,8 +102,7 @@ end
 
 """
     centroid(scans::Vector{MSscan}; method::MethodType=SNRA(1., 10) )
-Peak picking algorithm taking an array of MSscan as input and returning an object of the same type containing the detected peaks. Default method is Signal to Noise Ration Analysis (SNRA) with a default threshold of 1.0.
-Threshold Base Peak Detection (TBPD), with a default gaussian peak profile with resolving power of 1000 and 0.2% base peak intensity threshold. Other peak shapes include `:lorentz` for the Cauchy-Lorentz shape and `:voigt` for the pseudo-Voigt profile.
+Peak picking algorithm taking an array of MSscan as input and returning an object of the same type containing the detected peaks. Available algorithm are : Signal to Noise Ratio (SNR) and Template Based Peak Detection (TBPD). Default method is Signal to Noise Ratio Analysis (SNRA), with default threshold = 1.0 and region = 10.
 # Examples
 ```julia-repl
 julia> reduced_data = centroid(scans)
@@ -142,7 +140,10 @@ function centroid(scans::Vector{MSscan}; method::MethodType=SNRA(1., 10) )
     
 end
 
-
+"""
+    snra(scan::MScontainer, thres::Real, region::Int
+Signal to Noise Ratio Analysis method returning the m/z and intensity of the peaks detected.
+"""
 function snra(scan::MScontainer, thres::Real, region::Int)
     # declaration
     peaks_mz = Vector{Float64}(undef,0)
@@ -154,7 +155,6 @@ function snra(scan::MScontainer, thres::Real, region::Int)
         
     maxi = maximum(scan.int)    
     for i = 2:length(scan.mz)
-        #if signal[i] ./ maximum(signal) >= 0.01
         if scan.int[i] >=  maxi * thres / 100. 
             if SNR[i] > SNR[i-1] && SNR[i] > SNR[i+1]
                 push!(peaks_int, (scan.int[i] - noise[i]))
@@ -183,53 +183,8 @@ end
 
     
 """
-    gauss(x::Float64, p::Vector{Float64})
-Gaussian shape function used by the TBPD method
-"""
-function gauss(x::Float64, p::AbstractArray)
-    # Gaussian shape function
-    # width            = p[1]
-    # x0               = p[2]
-    # height           = p[3]
-    # background level = p[4]
-    # model(x, p) = p[4] + p[3] * exp(- ( (x-p[2])/p[1] )^2)
-    return  p[4] + p[3] * exp(- ( (x-p[2])/p[1] )^2)
-end
-
-"""
-    lorentz(x::Float64, p::Vector{Float64})
-Cauchy-Lorentz shape function used by the TBPD method
-"""
-function lorentz(x::Float64, p::AbstractArray)
-    # Lorentzian shape function
-    # width            = p[1]
-    # x0               = p[2]
-    # height           = p[3]
-    # background level = p[4]
-    # model(x, p) = p[4] + (p[3] / ( p[1] * (x-p[2])^2) )
-    return p[4] + p[3]*π*p[1]/(π*p[1] + ( (x - p[2]) / p[1])^2)
-end
-
-"""
-    voigt(x::Float64, p::Vector{Float64})
-Pseudo-Voigt profile function used by the TBPD method
-"""
-function voigt(x::Float64, p::AbstractArray)
-    # pseudo-voigt profile
-    γg = p[1] / (2.0 * sqrt(log(2.0)))
-    γl = p[1] / 2.0
-    γ = (γg^5 + 2.69269 * γg^4 * γl + 2.42843 * γg^3 * γl^2 + 4.47163 * γg^2 * γl^3 + 0.07842 * γg * γl^4 + γl^5)^(1/5)
-    η = 1.36603 *(γl / γ) - 0.47719 * (γl / γ)^2 + 0.11116 * (γl / γ)^3
-
-    L(x, Γ,x0) = (1/ (π *  Γ)) / ((x-x0)^2 + Γ^2)
-    G(x,Γ,x0) = exp( -( (x-x0)^2) /  Γ^2 ) / (Γ * sqrt(π))
-   return  p[4] + p[3]  * ( η * L(x,γ,p[2]) + (1 - η) * G(x,γ,p[2]) ) 
-end
-
-
-"""
     tbpd(scan::msJ.MScontainer, shape::Symbol,  R::Real, thres::Real)
-Template based beak detection algorithm
+Template based beak detection algorithm returning the m/z and intensity of the peaks detected
 """
 #function tbpd(scan::MScontainer, shape::Symbol,  R::Real, thres::Real)   #template based peak detection
 function tbpd(scan::MScontainer, model::Function,  ∆mz::Real, thres::Real)   #template based peak detection
@@ -280,25 +235,6 @@ function tbpd(scan::MScontainer, model::Function,  ∆mz::Real, thres::Real)   #
         end
     end
     
-    """
-    # rough numerical differentiation of correlation vector to find its maximum
-    for i =2:length(correlation)-2
-        diff = (-correlation[i-1] +correlation[i+1]) / 2.0 
-        if diff < 0.0
-            if diff_prev > 0.0
-                max_value = maximum( scan.int[i-3:i+3] )
-                max_index = num2pnt(scan.int, max_value)
-                push!(peaks_mz, scan.mz[max_index])
-                push!(peaks_int, scan.int[max_index])
-                if scan isa MSscans
-                    push!(peaks_s, scan.s[max_index])
-                end
-            end
-        end       
-        diff_prev = diff
-    end
-    """
-    
     basePeakIntensity = maximum(peaks_int)
     basePeakMz = peaks_mz[ num2pnt(peaks_int, basePeakIntensity) ]
     
@@ -310,29 +246,73 @@ function tbpd(scan::MScontainer, model::Function,  ∆mz::Real, thres::Real)   #
 end
 
 
-    
 """
-function snra(scan::MScontainer)                                        # Signal to Noise Ration Analysis
-    error("SNR not implemented")
+    gauss(x::Float64, p::Vector{Float64})
+Gaussian shape function used by the TBPD method
+"""
+function gauss(x::Float64, p::AbstractArray)
+    # Gaussian shape function
+    # width            = p[1]
+    # x0               = p[2]
+    # height           = p[3]
+    # background level = p[4]
+    # model(x, p) = p[4] + p[3] * exp(- ( (x-p[2])/p[1] )^2)
+    return  p[4] + p[3] * exp(- ( (x-p[2])/p[1] )^2)
 end
 
+"""
+    lorentz(x::Float64, p::Vector{Float64})
+Cauchy-Lorentz shape function used by the TBPD method
+"""
+function lorentz(x::Float64, p::AbstractArray)
+    # Lorentzian shape function
+    # width            = p[1]
+    # x0               = p[2]
+    # height           = p[3]
+    # background level = p[4]
+    # model(x, p) = p[4] + (p[3] / ( p[1] * (x-p[2])^2) )
+    return p[4] + p[3]*π*p[1]/(π*p[1] + ( (x - p[2]) / p[1])^2)
+end
+
+"""
+    voigt(x::Float64, p::Vector{Float64})
+Pseudo-Voigt profile function used by the TBPD method
+"""
+function voigt(x::Float64, p::AbstractArray)
+    # pseudo-voigt profile
+    γg = p[1] / (2.0 * sqrt(log(2.0)))
+    γl = p[1] / 2.0
+    γ = (γg^5 + 2.69269 * γg^4 * γl + 2.42843 * γg^3 * γl^2 + 4.47163 * γg^2 * γl^3 + 0.07842 * γg * γl^4 + γl^5)^(1/5)
+    η = 1.36603 *(γl / γ) - 0.47719 * (γl / γ)^2 + 0.11116 * (γl / γ)^3
+
+    L(x, Γ,x0) = (1/ (π *  Γ)) / ((x-x0)^2 + Γ^2)
+    G(x,Γ,x0) = exp( -( (x-x0)^2) /  Γ^2 ) / (Γ * sqrt(π))
+   return  p[4] + p[3]  * ( η * L(x,γ,p[2]) + (1 - η) * G(x,γ,p[2]) ) 
+end
+
+
+    
+"""
 function cwt(scan::MScontainer)                                         # Continuous Wavelet Transform 
     error("Wavelets not implemented")
 end
 """
 
+
 """
-    baseline_correction(scan::MScontainer; method::MethodType=IPSA(51, 100) )
-Baseline correction taking a MSscan or MSscans object as input and returning an object of the same type as the input with the mass spectra corrected for their base line. Defaults method is IPSA(51, 100), where 51 is the width of Savinsky-Golay window and 100 is the maximum iteration. Other methods are available with `method = msJ.LOESS(3)`. See msJ.TopHat and msJ.LOESS `MethodType`.
+    baseline_correction(scan::MScontainer; method::MethodType=TopHat(100) )
+Baseline correction taking a MSscan or MSscans object as input and returning an object of the same type as the input with the mass spectra corrected for their base line. Available algorithms are Top Hat, Locally Weighted Error Sum of Squares regression (LOESS) and Iterative Polynomial Smoothing Algorithm (IPSA). The default method is TopHat with a structuring element width of 100 points.
 # Examples
 ```julia-repl
 julia> reduced_data = baseline_correction(scan)
 MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 julia> reduced_data = baseline_correction(scans, method = msJ.LOESS(1))
 MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
+julia> reduced_data = baseline_correction(scans, method = msJ.IPSA(51,100))
+6-element Array{msJ.MSscan,1}:
+MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
-#function baseline_correction(scan::MScontainer; method::MethodType=IPSA(51, 100) )
 function baseline_correction(scan::MScontainer; method::MethodType=TopHat(100) )
     if method isa TopHat
         return tophat_filter(scan, method.region)
@@ -344,7 +324,22 @@ function baseline_correction(scan::MScontainer; method::MethodType=TopHat(100) )
 end
 
 
-
+"""
+    baseline_correction(scans::Vector{MSscan}; method::MethodType=TopHat(100) )
+Baseline correction taking a Vector of MSscan as input and returning a Vector of MSscan with the mass spectra corrected for their base line. Available algorithms are Top Hat, Locally Weighted Error Sum of Squares regression (LOESS) and Iterative Polynomial Smoothing Algorithm (IPSA). The default method is TopHat with a structuring element width of 100 points.
+# Examples
+```julia-repl
+julia> reduced_data = baseline_correction(scans)
+6-element Array{msJ.MSscan,1}:
+MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
+julia> reduced_data = baseline_correction(scans, method = msJ.LOESS(1))
+6-element Array{msJ.MSscan,1}:
+MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
+julia> reduced_data = baseline_correction(scans, method = msJ.IPSA(51,100))
+6-element Array{msJ.MSscan,1}:
+MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
+```
+"""
 function baseline_correction(scans::Vector{MSscan}; method::MethodType=TopHat(100) )
     bl_scans = Vector{MSscan}(undef,0)
     for el in scans
@@ -520,37 +515,3 @@ function tophat_filter(scan::MScontainer, region::Int )
 end
 
 
-morpholaplace(input::AbstractArray, region::Int) = dilatation(input, region) + erosion(input, region)
-morphogradient(input::AbstractArray, region::Int) = dilatation(input, region) - erosion(input, region)
-
-tophat(input::AbstractArray, region::Int) = input - opening(input, region)
-bottomhat(input::AbstractArray, region::Int) = closing(input, region) - input
-
-opening(input::AbstractArray, region::Int) = dilatation(erosion(input, region), region)
-closing(input::AbstractArray, region::Int) = erosion(dilatation(input, region), region)
-
-erosion(input::AbstractArray, region::Int) = extremefilt(input, minimum, region)
-dilatation(input::AbstractArray, region::Int) = extremefilt(input, maximum, region)
-
-function extremefilt(input::AbstractArray, minmax::Function, region::Int)
-    output = deepcopy(input)
-    if region == 1
-        half_dim = 1
-    else
-        half_dim = Int(region / 2.0)
-    end
-    
-    for i =1:length(input)
-        if i > half_dim && i < length(input) - half_dim
-            @views output[i] = minmax(input[i-half_dim : i+half_dim ])
-        elseif i <= half_dim
-            @views output[i] = minmax(input[1 : i+half_dim])
-        elseif i >= length(input) - half_dim
-            @views output[i] = minmax(input[i-half_dim : end])
-        end
-    end
-    return output
-end
-
-
-          
