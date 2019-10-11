@@ -2,9 +2,6 @@
 Module for importing and exporting data. Dispatch to specific methods according to the file extension.
 """
 
-using Unicode
-
-
 
 # User Interface.
 # ---------------
