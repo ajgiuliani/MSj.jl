@@ -366,10 +366,10 @@ end
 ### Utility functions
 
 """
-    add_ion_current(x::Vector{Float64}, y::Vector{Float64}, a::Float64, b::Float64)
+    add_ion_current(x::AbstractArray, y::AbstractArray, a::Real, b::Real)
 Returns sum the ion current (int) within the m/z range defined by the a and b input values.
 """
-function add_ion_current(x::Vector{Float64}, y::Vector{Float64}, a::Float64, b::Float64)
+function add_ion_current(x::AbstractArray, y::AbstractArray, a::Real, b::Real)
     ia = num2pnt(x, a)
     ib = num2pnt(x, b)
     return sum( y[ia:ib] )
@@ -377,10 +377,10 @@ end
 
 
 """
-    num2pnt(x::Vector{Float64}, val::Real)
+    num2pnt(x::AbstractArray, val::Real)
 General purpose utility function used to retrieve the index of an array for which the value is closest to the input.
 """
-function num2pnt(x::Vector{Float64}, val::Real)
+function num2pnt(x::AbstractArray, val::Real)
     ibest = 1
     dxbest = abs(x[ibest] - val)
     for i in eachindex(x)
