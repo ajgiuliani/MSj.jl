@@ -8,7 +8,6 @@ os:
 julia:
   - 1.3
   - 1.2
->>>>>>> dev
   - 1.0
 
 notifications:
@@ -18,7 +17,6 @@ matrix:
   allow_failures:
   - julia: 1.3
   
->>>>>>> dev
 codecov: true
 coveralls: true
 
