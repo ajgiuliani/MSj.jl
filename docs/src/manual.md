@@ -13,8 +13,10 @@ The functions below are exported:
 - [`load`](@ref) 
 - [`chromatogram`](@ref)
 - [`msfilter`](@ref)
+- [`extract`](@ref)
 - [`centroid`](@ref)
 - [`smooth`](@ref)
+- [`baseline_correction`](@ref)
 
 
 ## Data types
@@ -75,7 +77,7 @@ The [`msJ.MSscans`](@ref) structure is very similar to the [`msJ.MSscan`](@ref) 
 
 The [`info`](@ref) public function reads the content of a file, but without loading the mass spectrometry data, and returns a `Vector{String}`containing the number of scans, scans level and for MS/MS data, the precursor m/z, the activation method and energy. Additional information may be gained by setting `verbose = true`.
 ```julia-repl
-msJ.info(filename)
+info(filename)
 4-element Array{String,1}:
  "51 scans"
  "MS1+"
@@ -165,13 +167,13 @@ The [`msfilter`](@ref) and [`chromatogram`](@ref) functions may takes arguments 
 | msJ.Activation_Energy | Activation energy | Real, Vector{Real}                       | msfilter, chromatogram |
 | msJ.Precursor         | Precursor m/z     | Real, Vector{Real}                       | msfilter, chromatogram |
 | msJ.RT                |  Retention time   | Real, Vector{Real}, Vector{Vector{Real}} | msfilter               |
-| msJ.IC                | Ion current        | Vector{Real}                             | msfilter               |
+| msJ.IC                | Ion current       | Vector{Real}                             | msfilter               |
 
 
 
 !!! note
 
-    The filtering function goes first through the argument and setup an array of scan num that match the conditions. Then it uses this array to calculate the average mass spectrum.  So this procedure needs two passes through the data, which is not very efficient. This is a point to make better in the future.
+    The filtering function goes first through the argument and setup an array of scan num that matches the conditions. Then it uses this array to calculate the average mass spectrum.  So this procedure needs two passes through the data, which is not very efficient. This is a point to make better in the future.
  
 
 When the argument is restricted to a single value, such as `msJ.Scan(1)`, filtering is performed on that specific value. If the argument is a vector then filtering involves all the values within the range.  Filtering on `msJ.scan([1,10])` means that the result will be obtained for scans ranging from 1 to 10.  The same applies for all `FilterType`with the exception of `msJ.∆MZ`, for which the first value of the vector represents the *mz* and the second value represents the spread ∆mz, so that filtering is operated for all *mz* value in the range [m/z - ∆mz , m/z + ∆mz].  The `msJ.RT`type may take a vector or vectors as argument, such `msJ.RT([ [1,10], [20, 30] ]).  In that case, mass spectra will be averaged in [1,10] and [20,30] range.
@@ -187,19 +189,19 @@ These filters may be combined together if necessary. For example, the input belo
 ```julia
 msfilter("filename", msJ.Precursor(1255.5),
                      msJ.Activation_Energy(18),
-	   	             msJ.Activation_Method("CID"),
-		             msJ.Level(2),
-		             msJ.RT( [1, 60] ),
-					 )
+                     msJ.Activation_Method("CID"),
+                     msJ.Level(2),
+                     msJ.RT( [1, 60] ),
+                     )
 ```
 
 Several filter types may also be combined for `chromatograms`:
 ```julia
 chromatogram("filename", msJ.Precursor(1255.5),
                          msJ.Activation_Energy(18),
-	   	                 msJ.Activation_Method("CID"),
-		                 msJ.Level(2),
-						 )
+                         msJ.Activation_Method("CID"),
+                         msJ.Level(2),
+                         )
 ```
 
 If the condition does not match any existing data, then an `ErrorException` is returned with the `"No matching spectra."` message.
@@ -223,6 +225,18 @@ chromatogram("filename", method = msJ.MZ( [257, 259] ) )
 chromatogram("filename", method = msJ.∆MZ( [258, 1] ) ) 
 ```
 
+### Extracting subsets
+----------------------
+
+The [`extract`](@ref) returns a Vector of `MSscan`from either a file of from a Vector{MSscan} following a ['load'](@ref) command, which corresponds to the filter conditions. See the [filtering](Filtering) part above.
+
+```julia
+sub_set = extract("filename")                     # extracting without any conditions returns a vector identical to the output 
+sub_set = extract("filename", msJ.Level(2) )      # extract MS/MS spectra
+scans = load("test.mzxml")                          # load mass spectra
+sub_set = extract(scans)                            # extract a sub_set without conditions returns the original data
+```
+
 
 ## Processing
 ------------
@@ -233,22 +247,54 @@ The function returns an `MScontainer` type identical to the input.
 
 Other smoothing algorithms will be implemented in the future.
 
+
+### Base line correction
+------------------------
+Base line correction is performed using the [`baseline_correction`](@ref) function. This function as two methods and operates either on [`MScontainer`](@ref) or on Array of [`MSscan`](@ref) such as obtained after [importing data](Importing data).
+```julia
+baseline_correction(scans)
+baseline_correction(scans, method = msJ.IPSA(51, 100))
+```
+The `method` argument allows choosing the algorithm. 
+
+#### Top Hat
+This filter is based Top Hat transform used in image processing ([wikipedia](https://en.wikipedia.org/wiki/Top-hat_transform), [Sauve et al. (2004)](https://pdfs.semanticscholar.org/c04c/afc9b2670edd1ea38f0f724cadbe2ec321e9.pdf). The region onto which the operation is performed is set using the `region`field of the [`msJ.TopHat`](@ref). This filter removes every structure from the input which are smaller in size than the structuring element. Usually a region of 100 points is enough.This filter is fast and works quite well on large and complex backgrounds.
+
+#### Iterative polynomial smoothing algorithm (IPSA)
+The default algorithm is the IPSA for iterative polynomial smoothing algorithm ([Wang et al. (2017)](https://doi.org/10.1177/0003702816670915). This iterative algorithm use a zero ordre Savinsly and Golay smoothing to estimate a background. Then a new input, constructed by taking the minimum of either the original spectrum or the background, is smooth again. The process is repeated until the maximum iteration is reached or when the background does not change much. The termination criteria has been changed from the original paper.
+
+##### Locally weighted error sum of squares regression (LOESS)
+The LOESS family of algorithm is based on non-parametric linear [local regression](https://en.wikipedia.org/wiki/Local_regression) where the regression is weighted to reduced the influence of more distant data. We use here the iterative robust estimation procedure where the weights are updated with a bisquare function of the median of the residuals.
+This algorithm takes the number of iteration to be performed. Usually 3 iteration is enough. This algorithm is slow and is not recommended. The implementation will be improved in future versions.
+
+
 ### Peak picking
 ----------------
-Pick-picking is performed using the public [`centroid`](@ref) function. It operates on `MSscan`or `MSscans`type of data and return a similar type. It takes a method argument, set by default to the Template Base Peak Detection method: `msJ.TBPD`.
-The TBPD method identifies features based on their similarity (as described by the Pearson correlation coefficient) with a [template peak](https://doi.org/10.1007/978-1-60761-987-1_22). By default the `msJ.TBPD` method type uses a Gaussian function, with 4500 mass resolving power and a threshold level set to 0.2% as :
+Pick-picking is performed using the public [`centroid`](@ref) function. It operates on `MSscan`or `MSscans`type of data and return a similar type. It takes a method argument, set by default to the Signal to Noise Analysis method: `msJ.SNRA`.
 ```julia
-centroid(scan, method = TBPD(:gauss, 4500., 0.2)
+centroid(scan)
+```
+
+#### Signal to Noise Ratio Analysis (SNRA)
+Signal to noise ratio analysis is a very general approach, which relies on the definition of noise. Here, we use TopHat filter to define the noise. Then the signal to noise ratio is calculated. Peaks are found by searching for a local maximum for which the signal to noise ratio is above the threshold. By defaults the `msJ.SNRA` uses a threshold = 1.0 and a structuring element of 10 points.
+```julia
+centroid(scan, method = SNRA(1., 10)
+```
+
+#### Threshold base peak detection algorithm (TBPD)
+The TBPD method identifies features based on their similarity (as described by the Pearson correlation coefficient) with a [template peak](https://doi.org/10.1007/978-1-60761-987-1_22). By default the `msJ.TBPD` method type uses a Gaussian function, with 1000 mass resolving power and a threshold level set to 0.2% as :
+```julia
+centroid(scan, method = TBPD(:gauss, 1000, 0.2)
 ```
 Two other shape functions are available:
 - `:loretz` which uses a Cauchy-Lorentz function and
-- `:voigt` which implements a pseudo-voigt profile ([ Ida T, Ando M, Toraya H (2000). "Extended pseudo-Voigt function for approximating the Voigt profile". Journal of Applied Crystallography. 33 (6): 1311–1316](https://doi.org/10.1107%2Fs0021889800010219), [Wikipedia](https://en.wikipedia.org/wiki/Voigt_profile#Pseudo-Voigt_approximation))
-These profiles aim at compensating a known weakness of the TBPD algorithm [
-    Bauer C., Cramer R., Schuchhardt J. (2011) Evaluation of Peak-Picking Algorithms for Protein Mass Spectrometry. In: Hamacher M., Eisenacher M., Stephan C. (eds) Data Mining in Proteomics. Methods in Molecular Biology (Methods and Protocols), vol 696. Humana Press ](https://doi.org/10.1007/978-1-60761-987-1_22), and may be accessed as follow.
+- `:voigt` which implements a pseudo-voigt profile ([Ida et al., J. Appl. Cryst. (2000)](https://doi.org/10.1107%2Fs0021889800010219), [Wikipedia](https://en.wikipedia.org/wiki/Voigt_profile#Pseudo-Voigt_approximation))
+
+The `:lorentz` profile fits better Fourrier Transform mass spectra. The `:voigt` shape is the result of the convolution of gaussi and Cauchy-Lorentz shape.
 
 ```julia
 centroid(scan, method = TBPD(:lorentz, 1000., 0.1)
-centroid(scan, method = TBPD(:voight, 1000., 0.1)
+centroid(scan, method = TBPD(:voight,  1000., 0.1)
 ```
 
 

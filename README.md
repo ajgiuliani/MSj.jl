@@ -11,7 +11,6 @@
 [![](https://img.shields.io/badge/docs-dev-blue.svg)](https://ajgiuliani.github.io/msJ.jl/dev/)
 
 
-
 ## Installation
 This package is unregistered. It can be installed either with the Julia package manager.
 From the Julia REPL, type `]` to enter the Pkg REPL mode and run:

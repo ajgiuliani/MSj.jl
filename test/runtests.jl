@@ -189,7 +189,7 @@ function tests()
         @test a.num == 1                                                               #73
 
        a = msJ.centroid(scans[1], method = msJ.TBPD(:gauss, 4500., 0.2))               #74
-       @test length(a.int) == 703
+       @test length(a.int) == 976
 
        @test typeof(plot(scans[1], method = :relative)) == Plots.Plot{Plots.GRBackend} #75
        @test typeof(plot(scans[1], method = :absolute)) == Plots.Plot{Plots.GRBackend} #76
@@ -203,13 +203,63 @@ function tests()
        @test typeof(plot( cr, method = :absolute )) == Plots.Plot{Plots.GRBackend}     #80
 
        a = msJ.centroid(scans[1], method = msJ.TBPD(:voigt, 4500., 0.2))
-       @test length(a.int) == 700                                                      #81
+       @test length(a.int) == 961                                                      #81
 
        a = msJ.centroid(scans[1], method = msJ.TBPD(:lorentz, 4500., 0.2))
-       @test length(a.int) == 664                                                      #82
+       @test length(a.int) == 969                                                      #82
 
        a = msJ.centroid(scans[1], method = msJ.TBPD(:other, 4500., 0.2))
        @test a.msg == "Unsupported peak profile. Use :gauss, :lorentz or :voigt."      #83
+
+       a = msJ.centroid(scans[1], method = msJ.SNRA(1., 100))
+       @test length(a.int) == 109                                                      #84
+
+       s1 = msJ.extract(scans, msJ.Activation_Energy([18,35]))
+       @test length(s1) == 4                                                           #85
+
+       s1 = msJ.extract("test.mzXML", msJ.Activation_Energy(18))
+       @test length(s1) == 2                                                           #86
+
+       s1 = msJ.extract(scans, msJ.Scan(1))
+       @test length(s1) == 1                                                           #87
+
+       s1 = msJ.extract("test.mzXML", msJ.Scan(1))
+       @test length(s1) == 1                                                           #88
+
+       bs = msJ.baseline_correction(scans, method = msJ.TopHat(1))
+       @test length(bs) == 6                                                           #89
+
+       bs = msJ.baseline_correction(scans[1], method = msJ.TopHat(1))
+       @test length(bs.int) == length(scans[1].int)                                    #90
+
+       c = msJ.centroid(scans, method = msJ.TBPD(:gauss, 4500., 0.2)) ;
+       bs = msJ.baseline_correction( c, method = msJ.LOESS(3))
+       @test length(bs) == 6                                                           #91
+
+       bs = msJ.baseline_correction(c[1], method = msJ.LOESS(3))
+       @test length(bs.int) == length(c[1].int)                                        #92
+
+       bs = msJ.baseline_correction(scans, method = msJ.IPSA(51,100))
+       @test length(bs) == 6                                                           #93
+
+       bs = msJ.baseline_correction(scans[1], method = msJ.IPSA(51,100))
+       @test length(bs.int) == length(scans[1].int)                                    #94
+
+       a = msJ.smooth(scans, method = msJ.SG(5,9,0))
+       @test length(a) == 6                                                            #95
+
+       c = msJ.centroid(scans, method = msJ.TBPD(:lorentz, 4500., 0.2)) ;
+       d = msJ.centroid(scans, method = msJ.TBPD(:voigt, 4500., 0.2)) ;
+       @test length(c) == length(d)                                                    #96
+
+       a = msJ.centroid(scans[3], method = msJ.SNRA(1., 100))
+       @test length(a.int) == 0                                                        #97
+
+       bs = msJ.baseline_correction(scans[1], method = msJ.IPSA(50,100))
+       @test length(bs.int) == length(scans[1].int)                                    #98
+
+       cr = msJ.chromatogram(scans, method = msJ.BasePeak() )
+       @test length(cr.rt) == 6                                                        #99
 
     end
 end

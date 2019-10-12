@@ -14,6 +14,7 @@ abstract type MScontainer  end
 """
     struct MSscan <: MScontainer
 Data structure used to store individual mass spectrometry scans organized following the structure of mzXML files.
+
 """
 struct MSscan <: MScontainer
     num::Int                          # num
@@ -140,16 +141,56 @@ end
 
 
 """
-struct SNRA{argT <: Real}  <: MethodType
-    threshold::argT
-    SNRA(threshold::argT) where{argT} = new{argT}(threshold)
+    struct SNRA{argT1 <: Real, argT2 <: Int}  <: MethodType
+Structure for multiple dispatching to Signal to Noise Ratio Analysis centroiding, providing the threshold value and the size of the region.  Defaults values are provided in functions calls.
+"""
+struct SNRA{argT1 <: Real, argT2 <: Int}  <: MethodType
+    threshold::argT1
+    region::argT2
+    SNRA(threshold::argT1, region::argT2) where{argT1, argT2} = new{argT1, argT2}(threshold, region)
 end
 
+
+"""
 struct CWT{argT <: Real}  <: MethodType
     threshold::argT
     CWT(threshold::argT) where{argT} = new{argT}(threshold)
 end
 """
+
+
+
+"""
+    TopHat{argT <: Int} <: MethodType
+Structure for multiple dispatching to TopHat baseline correction. Region is used specify the dimention over which this operation performed
+"""
+struct TopHat{argT <: Int} <: MethodType
+    region::argT
+    TopHat(region::argT) where{argT} = new{argT}(region)
+end
+
+"""
+    LOESS{argT <: Int} <: MethodType
+Structure for multiple dispatching to LOcally Weighted Error Sum of Squares regression (LOESS) baseline correction.
+"""
+struct LOESS{argT <: Int} <: MethodType
+    iter::argT
+    LOESS(iter::argT) where{argT} = new{argT}(iter)
+end
+
+
+"""
+    struct IPSA{argT1 <: Int, argT2 <: Real} <: MethodType
+Structure for multiple dispatching to iterative polynomial smoothing algorithm (IPSA) baseline correction.
+"""
+struct IPSA{argT1 <: Int, argT2 <: Int} <: MethodType
+    width::argT1
+    maxiter::argT2
+    IPSA(width::argT1,maxiter::argT2) where{argT1, argT2} = new{argT1, argT2}(width, maxiter)
+end
+
+
+
 
 ### Filters
 

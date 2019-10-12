@@ -2,9 +2,6 @@
 Module for importing and exporting data. Dispatch to specific methods according to the file extension.
 """
 
-using Unicode
-
-
 
 # User Interface.
 # ---------------
@@ -204,15 +201,15 @@ end
 Returns the average mass spectrum container (MSscans) along with the sample standard deviation of the intensities with stats=true (default) for all the mass spectra within file. The data may be filtered by level, precursor mass, activation methods, etc, using the arguments msJ.Level(N), msJ.Precursor(mz), msJ.Activation_Method("method"), or any combination of these arguments.
 # Examples
 ```julia-repl
-julia> spectrum = msJ.msJ.msfilter("test.mzxml")
+julia> spectrum = msfilter("test.mzxml")
 msJ.MSscans([1, 2, 3 ....
-julia> spectrum = msJ.msJ.msfilter("test.mzxml", msJ.Level(1) )
+julia> spectrum = msfilter("test.mzxml", msJ.Level(1) )
 msJ.MSscans([1, 4, 7, 10,
-julia> spectrum = msJ.msJ.msfilter("test.mzxml", msJ.Precursor(1255.5) )
+julia> spectrum = msfilter("test.mzxml", msJ.Precursor(1255.5) )
 msJ.MSscans([2, 5, 8, 11, ...
-julia> spectrum = msJ.msJ.msfilter("test.mzxml", msJ.Activation_Method("PQD") )
+julia> spectrum = msfilter("test.mzxml", msJ.Activation_Method("PQD") )
 msJ.MSscans([3, 6, 9, 12, 15,
-julia> spectrum = msJ.msJ.msfilter("test.mzxml", msJ.Activation_Method("PQD"), msJ.Polarity("+"), msJ.RT([10,20]))
+julia> spectrum = msfilter("test.mzxml", msJ.Activation_Method("PQD"), msJ.Polarity("+"), msJ.RT([10,20]))
 msJ.MSscans([9, 12, 15, 18], ...
 ```
 """

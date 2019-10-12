@@ -7,9 +7,8 @@ julia> plot(chr)
 """
 module plots
 
+using Plots, RecipesBase   # used for plotting
 
-using Plots
-using RecipesBase
 
 using msJ:MScontainer
 using msJ:Chromatogram
