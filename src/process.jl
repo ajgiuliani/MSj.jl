@@ -361,19 +361,6 @@ end
     loess(scan::MScontainer, iter::Int )
 Method  taking a MSscan or MSscans object as input and returning an object of the same type with the mass spectra without their base line, using the LOESS (Locally Weighted Error Sum of Squares regression).
 """
-function loess(scans::Vector{MSscan}, iter::Int )
-    bl_scans = Vector{MSscan}(undef,0)
-    for scan in scans
-        push!(bl_scans, loess(scan, iter))
-    end
-    return bl_scans
-end
-
-
-"""
-    loess(scan::MScontainer, iter::Int )
-Method  taking a MSscan or MSscans object as input and returning an object of the same type with the mass spectra without their base line, using the LOESS (Locally Weighted Error Sum of Squares regression).
-"""
 function loess(scan::MScontainer, iter::Int )
     n = length(scan.mz) 
     r = Int(ceil( n / 2 ))
@@ -466,36 +453,6 @@ function ipsa(scan::MScontainer, width::Real, maxiter::Int)
 end
 
 
-"""
-    ipsa(scan::MScontainer, width::Real, maxiter::Int)
-Method  taking a MSscan or MSscans object as input and returning an object of the same type with the mass spectra without their base line, using the iterative polynomial smoothing algorithm (IPSA) baseline correction.
-"""
-function ipsa(scans::Vector{MSscan}, width::Real, maxiter::Int)
-    if iseven(width) 
-        width -= 1
-    end
-    bl_scans = Vector{MSscan}(undef,0)
-    for scan in scans
-        push!(bl_scans, ipsa(scan, width, maxiter))
-    end
-    return bl_scans
-end
-
-
-"""
-    tophat_filter(scans::Vector{MSscan}, region::Int )
-Method taking an array of MSscan as input and returning an object of the same type with mass spectra without their base line, using the TopHat method.
-"""
-function tophat_filter(scans::Vector{MSscan}, region::Int )
-    bl_scans = Vector{MSscan}(undef,0)
-    for scan in scans
-        TIC = sum(tophat(scan.int, region))
-        basePeakIntensity = maximum(tophat(scan.int, region))
-        basePeakMz = scan.mz[num2pnt(scan.int,basePeakIntensity)]
-        push!(bl_scans,  MSscan(scan.num, scan.rt, TIC, scan.mz, tophat(scan.int, region), scan.level, basePeakMz, basePeakIntensity, scan.precursor, scan.polarity, scan.activationMethod, scan.collisionEnergy))
-    end
-    return bl_scans
-end
 
 
 """
