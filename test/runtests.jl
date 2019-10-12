@@ -245,6 +245,22 @@ function tests()
        bs = msJ.baseline_correction(scans[1], method = msJ.IPSA(51,100))
        @test length(bs.int) == length(scans[1].int)                                    #94
 
+       a = msJ.smooth(scans, method = msJ.SG(5,9,0))
+       @test length(a) == 6                                                            #95
+
+       c = msJ.centroid(scans, method = msJ.TBPD(:lorentz, 4500., 0.2)) ;
+       d = msJ.centroid(scans, method = msJ.TBPD(:voigt, 4500., 0.2)) ;
+       @test length(c) == length(d)                                                    #96
+
+       a = msJ.centroid(scans[3], method = msJ.SNRA(1., 100))
+       @test length(a.int) == 0                                                        #97
+
+       bs = msJ.baseline_correction(scans[1], method = msJ.IPSA(50,100))
+       @test length(bs.int) == length(scans[1].int)                                    #98
+
+       cr = msJ.chromatogram(scans, method = msJ.BasePeak() )
+       @test length(cr.rt) == 6                                                        #99
+
     end
 end
 tests()
