@@ -59,36 +59,36 @@ function tests()
         cr = msJ.chromatogram(scans, msJ.Polarity(["+"]),msJ.Scan([2,3]),msJ.Precursor([1255.5, 902.33]),msJ.Activation_Energy([18, 35]),msJ.Activation_Method(["CID", "PQD"]),msJ.Level([2, 3]) )
         @test (cr.rt, cr.ic) == ([0.7307, 2.1379], [9727.2, 11.3032])                  #26
         
-        ms = msJ.msfilter("test.mzXML")
+        ms = msJ.average("test.mzXML")
         @test length(ms.num) == 6                                                      #27
         
-        ms = msJ.msfilter("test.mzXML", msJ.Polarity("+"),msJ.Scan(2),msJ.Precursor(1255.5),msJ.Activation_Energy(18),msJ.Activation_Method("CID"),msJ.RT(1),msJ.IC([0, 1e4]))
+        ms = msJ.average("test.mzXML", msJ.Polarity("+"),msJ.Scan(2),msJ.Precursor(1255.5),msJ.Activation_Energy(18),msJ.Activation_Method("CID"),msJ.RT(1),msJ.IC([0, 1e4]))
         @test ms isa msJ.MSscan                                                        #28
         @test ms.num == 2                                                              #29
                 
-        ms = msJ.msfilter(scans)
+        ms = msJ.average(scans)
         @test length(ms.num) == 6                                                      #30
         
-        ms = msJ.msfilter(scans, msJ.Polarity("+"),msJ.Scan(2),msJ.Precursor(1255.5),msJ.Activation_Energy(18),msJ.Activation_Method("CID"),msJ.RT(1),msJ.IC([0, 1e4]))
+        ms = msJ.average(scans, msJ.Polarity("+"),msJ.Scan(2),msJ.Precursor(1255.5),msJ.Activation_Energy(18),msJ.Activation_Method("CID"),msJ.RT(1),msJ.IC([0, 1e4]))
         @test ms isa msJ.MSscan                                                        #31
         @test ms.num == 2                                                              #32
         
-        ms = msJ.msfilter(scans, msJ.Polarity(["+"]),msJ.Scan([2,3]),msJ.Precursor([1255.5, 902.33]),msJ.Activation_Energy([18, 35]),msJ.Activation_Method(["CID", "PQD"]),msJ.RT([1,2]),msJ.IC([0, 1e4]))
+        ms = msJ.average(scans, msJ.Polarity(["+"]),msJ.Scan([2,3]),msJ.Precursor([1255.5, 902.33]),msJ.Activation_Energy([18, 35]),msJ.Activation_Method(["CID", "PQD"]),msJ.RT([1,2]),msJ.IC([0, 1e4]))
         @test ms isa msJ.MSscans                                                       #33
         @test ms.num == [2, 3]                                                         #34
 
-        ms = msJ.msfilter("test.mzXML", msJ.RT( [[1,2], [2,3]] ), stats = false )
+        ms = msJ.average("test.mzXML", msJ.RT( [[1,2], [2,3]] ), stats = false )
         @test ms isa msJ.MSscans                                                       #35
         @test ms.num == [2, 3, 4]                                                      #36
 
-        ms = msJ.msfilter("test.mzXML", msJ.Polarity(["+"]),msJ.Scan([2,3]),msJ.Precursor([1255.5, 902.33]),msJ.Activation_Method(["CID", "PQD"]),msJ.RT([1,2]),msJ.IC([0, 1e4]))   #msJ.Activation_Energy([18., 35.]),
+        ms = msJ.average("test.mzXML", msJ.Polarity(["+"]),msJ.Scan([2,3]),msJ.Precursor([1255.5, 902.33]),msJ.Activation_Method(["CID", "PQD"]),msJ.RT([1,2]),msJ.IC([0, 1e4]))   #msJ.Activation_Energy([18., 35.]),
         @test ms isa msJ.MSscans                                                       #37
         @test ms.num == [2, 3]                                                         #38
 
         cr = msJ.chromatogram("test.mzXML", msJ.Polarity(["+"]),msJ.Scan([2,3]),msJ.Precursor([1255.5, 902.33]),msJ.Activation_Method(["CID", "PQD"]),msJ.Level([2, 3]) )   #msJ.Activation_Energy([18.0, 35.0]),
         @test length(cr.rt) == 2                                                       #39
 
-        ms = msJ.msfilter(scans, msJ.RT( [[1,2], [2,3]] ), stats = false )
+        ms = msJ.average(scans, msJ.RT( [[1,2], [2,3]] ), stats = false )
         @test ms isa msJ.MSscans                                                       #40
         @test ms.num == [2, 3, 4]                                                      #41
 

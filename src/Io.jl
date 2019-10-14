@@ -195,9 +195,46 @@ function chromatogram(filename::String, filters::FilterType...; method::MethodTy
 
 end
 
+"""
+    chromatogram(scans::Vector{MSscan}, filters::FilterType...; method::MethodType=TIC())
+Returns the retention time and the total ion current by default for all the mass spectra within the Array of mass spectrum container MSscan. Alternatively, other options may be supplied such as method = msJ.BasePeak, which returs the base peak intensity, method = msJ.∆MZ([500,5]), which returns the ion current for the range mz = 500 ± 5, or method = msJ.MZ([200,1000]) which return the ion current in the range from m/z 200 to m/z 1000.  The data may be filtered by ms level, precursor mass, activation methods, etc, using the arguments msJ.Level(N), msJ.Precursor(mz), msJ.Activation_Method("method")...
+# Examples
+```julia-repl
+julia> rt, ic = msJ.chromatogram("test.mzxml")
+([0.1384  …  60.4793], [4.74795e6  …  17.4918])
+julia> rt, ic = msJ.chromatogram("test.mzxml", method = msJ.BasePeak() )
+([0.1384  …  60.4793], [102558.0  …  1.23181])
+julia> rt, ic = msJ.chromatogram("test.mzxml", method = msJ.∆MZ([500,5]) )
+([0.1384  …  60.4793], [46036.6  …  14.2529])
+julia> rt, ic = msJ.chromatogram("test.mzxml", method = msJ.MZ([200,1000]))
+([0.1384  …  60.4793], [4.74795e6  …  17.4918])
+```
+"""
+function chromatogram(scans::Vector{MSscan}, filters::FilterType...; method::MethodType=TIC())
+    # Ranges of mz value used to compute the tic from
+    xrt = Vector{Float64}(undef,0)
+    xic = Vector{Float64}(undef,0)
+    index = Set( i for i in 1:length(scans) )
+
+    for el in filters
+        subindex = filter(scans, el)
+        index = intersect(index, subindex)
+    end
+
+    indices = sort([ i for i in index])
+    if length(indices) != 0
+        return extracted_chromatogram(scans, indices, method)
+    else
+        ErrorException("No matching spectra.")
+    end    
+end
+
+
+
+
 
 """
-    msfilter(filename::String, arguments::FilterType...; stats::Bool=true)
+    average(filename::String, arguments::FilterType...; stats::Bool=true)
 Returns the average mass spectrum container (MSscans) along with the sample standard deviation of the intensities with stats=true (default) for all the mass spectra within file. The data may be filtered by level, precursor mass, activation methods, etc, using the arguments msJ.Level(N), msJ.Precursor(mz), msJ.Activation_Method("method"), or any combination of these arguments.
 # Examples
 ```julia-repl
@@ -213,7 +250,7 @@ julia> spectrum = msfilter("test.mzxml", msJ.Activation_Method("PQD"), msJ.Polar
 msJ.MSscans([9, 12, 15, 18], ...
 ```
 """
-function msfilter(filename::String, arguments::FilterType...; stats::Bool=true)
+function average(filename::String, arguments::FilterType...; stats::Bool=true)
     index = Set{Int}()
     extension = split(filename, ".")[end]
     
@@ -252,45 +289,8 @@ function msfilter(filename::String, arguments::FilterType...; stats::Bool=true)
 end
 
 
-
 """
-    chromatogram(scans::Vector{MSscan}, filters::FilterType...; method::MethodType=TIC())
-Returns the retention time and the total ion current by default for all the mass spectra within the Array of mass spectrum container MSscan. Alternatively, other options may be supplied such as method = msJ.BasePeak, which returs the base peak intensity, method = msJ.∆MZ([500,5]), which returns the ion current for the range mz = 500 ± 5, or method = msJ.MZ([200,1000]) which return the ion current in the range from m/z 200 to m/z 1000.  The data may be filtered by ms level, precursor mass, activation methods, etc, using the arguments msJ.Level(N), msJ.Precursor(mz), msJ.Activation_Method("method")...
-# Examples
-```julia-repl
-julia> rt, ic = msJ.chromatogram("test.mzxml")
-([0.1384  …  60.4793], [4.74795e6  …  17.4918])
-julia> rt, ic = msJ.chromatogram("test.mzxml", method = msJ.BasePeak() )
-([0.1384  …  60.4793], [102558.0  …  1.23181])
-julia> rt, ic = msJ.chromatogram("test.mzxml", method = msJ.∆MZ([500,5]) )
-([0.1384  …  60.4793], [46036.6  …  14.2529])
-julia> rt, ic = msJ.chromatogram("test.mzxml", method = msJ.MZ([200,1000]))
-([0.1384  …  60.4793], [4.74795e6  …  17.4918])
-```
-"""
-function chromatogram(scans::Vector{MSscan}, filters::FilterType...; method::MethodType=TIC())
-    # Ranges of mz value used to compute the tic from
-    xrt = Vector{Float64}(undef,0)
-    xic = Vector{Float64}(undef,0)
-    index = Set( i for i in 1:length(scans) )
-
-    for el in filters
-        subindex = filter(scans, el)
-        index = intersect(index, subindex)
-    end
-
-    indices = sort([ i for i in index])
-    if length(indices) != 0
-        return extracted_chromatogram(scans, indices, method)
-    else
-        ErrorException("No matching spectra.")
-    end    
-end
-
-
-
-"""
-    msfilter(scans::Vector{MSscan}, arguments::FilterType...; stats::Bool=true)
+    average(scans::Vector{MSscan}, arguments::FilterType...; stats::Bool=true)
 Returns the average mass spectrum container (MSscans) along with the sample standard deviation of the intensities with stats=true (default) for all the mass spectra within the Array of mass spectrum container MSscan.. The data may be filtered by level, precursor mass, activation methods, etc, using the arguments msJ.Level(N), msJ.Precursor(mz), msJ.Activation_Method("method"), or any combination of these arguments.
 # Examples
 ```julia-repl
@@ -306,7 +306,7 @@ julia> spectrum = msfilter("test.mzxml", msJ.Activation_Method("PQD"), msJ.Polar
 msJ.MSscans([9, 12, 15, 18], ...
 ```
 """
-function msfilter(scans::Vector{MSscan}, arguments::FilterType...; stats::Bool=true)
+function average(scans::Vector{MSscan}, arguments::FilterType...; stats::Bool=true)
     index = Set( i for i in 1:length(scans) )
     
     for el in arguments
