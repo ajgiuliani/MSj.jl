@@ -165,8 +165,8 @@ The [`msfilter`](@ref) and [`chromatogram`](@ref) functions may takes arguments 
 | msJ.Polarity          | Polarity          | String, Vector{String}                   | msfilter, chromatogram |
 | msJ.Activation_Method | Activation method | String, Vector{String}                   | msfilter, chromatogram |
 | msJ.Activation_Energy | Activation energy | Real, Vector{Real}                       | msfilter, chromatogram |
-| msJ.Precursor         | Precursor m/z     | Real, Vector{Real}                       | msfilter, chromatogram |
-| msJ.RT                |  Retention time   | Real, Vector{Real}, Vector{Vector{Real}} | msfilter               |
+| msJ.Precursor         | Precursor _m/z_   | Real, Vector{Real}                       | msfilter, chromatogram |
+| msJ.RT                | Retention time    | Real, Vector{Real}, Vector{Vector{Real}} | msfilter               |
 | msJ.IC                | Ion current       | Vector{Real}                             | msfilter               |
 
 
