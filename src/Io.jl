@@ -6,7 +6,7 @@ Module for importing and exporting data. Dispatch to specific methods according 
 # User Interface.
 # ---------------
 
-export info, load, chromatogram, msfilter
+export info, load, chromatogram, average
 
 
 
