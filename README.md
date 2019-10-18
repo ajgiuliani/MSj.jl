@@ -15,7 +15,7 @@
 This package is unregistered. It can be installed either with the Julia package manager.
 From the Julia REPL, type `]` to enter the Pkg REPL mode and run:
 ```julia
-(v1.1) pkg> add https://github.com/ajgiuliani/msJ.jl
+(v1.2) pkg> add https://github.com/ajgiuliani/msJ.jl
 ```
 or using the package API:
 
@@ -30,8 +30,6 @@ Documentation has been made with [Documenter.jl](https://github.com/JuliaDocs/Do
 
 ## Project Status
 The package is developed for Julia 1.0 and above on Linux and OSX. It should be working on Windows as well.
-
-This project is at the early development stage. It is made from a collection of functions I am using to treat my mass spectrometry data in `Julia`.
 
 
 ## Other packages
