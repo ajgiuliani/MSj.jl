@@ -1,4 +1,5 @@
 using Documenter, msJ
+using DocumenterLaTeX
 
 makedocs(
     format = Documenter.HTML(
@@ -19,8 +20,8 @@ makedocs(
 
     pages = [
         "Home"           => "index.md",
-        "Manual"         => "manual.md",
         "Tutorial"       => "tutorial.md",
+        "Manual"         => "manual.md",
         "Reference"      => "reference.md",
         "Miscellaneous"  => "misc.md",
     ],
