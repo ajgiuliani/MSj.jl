@@ -1,3 +1,4 @@
+
 Tutorial
 ========
 
@@ -5,82 +6,183 @@ Tutorial
 using Plots
 ```
 
-The msJ package intends to provide an access to the common open source mass spectrometry file format.
+The msJ package intends to provide an access to the common open source mass spectrometry file format using [Julia](https://julialang.org/).
 
-# Loading mass spectrometry data
-For this example, the mzXML file from the test folder of the package will be used. First, the [`info`](@ref) function may be used to see what's inside the file.
+# The Julia language
+Julia is an open source programming language designed for scientific and technical computing. This section will give a very brief introduction to the Julia language. 
 
-```@example 1
-using msJ
-info("../../test/test.mzXML")
+!!! note: see also
 
-```
-From the output, we learn that the file contains MS scans in the positive ion mode, MS/MS scans also in positive mode, where the precursor m/z 1255.5 is activated under CID conditions with 18 collision energy and the m/Z 902.33 precursor is activated using the PQD method with the activation energy set to 35.
+    The [Julia](https://julialang.org/) language home page  
+	Introduction to Julia [Wikibook](https://en.wikibooks.org/wiki/Introducing_Julia)
+	
+## Installation
+Julia binaries are available for various platforms and can be downloaded [here](https://julialang.org/downloads).  Plateform specific instructions may be found [here](https://julialang.org/downloads/platform.html).
 
-Then, the data can be loaded into a variable that we call `scans`.
+## Executing Julia code
+Julia code can be executed interactively using the REPL as follow:
 
-```@example 1
-scans = load("../../test/test.mzXML")
-```
-
-As expected, the `scans` variable contains an array of 6 `MSscans`. The fields of the individual scans may be accessed by:
-
-```@example 1
-@show scanscans[1].num ;
-@show scans[1].polarity ;
-@show scans[1].level
-@show scans[1].basePeakMz
-@show scans[1].basePeakIntensity
+```jldoctest
+julia> println("Hello")
+Hello
 ```
 
-The mass spectrum is stored in two arrays:
-```julia
-mz_2  =  scans[2].mz ;
-int_2 =  scans[2].int ;
+The `println("Hello")` line can be put in a file, such as `hello.jl` and executed as a script, which will produce the same output.
+```jldoctest; output = false
+$ julia hello.jl
 ```
 
-Getting chromatograms is straightforward using the [`chromatogram`](@ref) method:
-```@example 1
-full_TIC   = chromatogram(scans)
+You can also put `#!/usr/local/bin/julia` in the first line of the `hello.jl` file, make it executable (` chmod +x hello.jl`) and execute it like any other executable.
+
+Finally, Julia scripts can be executed within Jupyter Notebooks, see the dedicated section [`Jupyter notebooks`](@ref).
+
+
+## Types
+Julia is a strongly typed language. Julia has the following predefined types (from [the julia wikibook](https://en.wikibooks.org/wiki/Introducing_Julia/Types#Type_hierarchy)):
+![](assets/Type-hierarchy-for-julia-numbers.png)
+
+In Julia types are organized in a hierarchy with a tree structure. The root of the tree is the `Any` type.  The `Number` type is a direct child of `Any` and possesses two subtypes: `Complex` and `Real`. The `Real` type has three types: `Integer`, `AbstractFloat`, `Irrational` and `Rational`. The hierarchy can checked using building functions:
+```@jldoctest
+julia> subtypes(Number)
 ```
-```@example 1
-MS1_TIC    = chromatogram(scans, msJ.Level(1))
-```
-```@example 1
-CID_TIC    = chromatogram(scans, msJ.Activation_Method("CID"))
-```
-```@example 1
-mz902_TIC  = chromatogram(scans, msJ.Precursor(902.33))
+```@jldoctest
+julia> showtypetree(Number)
 ```
 
-The individual extracted chromatogram may be plotted. First we need to import the `Julia` package for plotting. Then, we can make a figure with the chromatograms:
-```@example 1
-using Plots ;
-p1 = plot(full_TIC, label = "full tic")
-p2 = plot(MS1_TIC, label = " MS1_TIC")
-p3 = plot(CID_TIC, label = "CID_TIC")
-p4 = plot(mz902_TIC, label = "mz902_TIC")
-
-plot(p1, p2, p3, p4, layout = (4,1));
+## Creating vectors and matrices
+A vector is created as follow
+```@jldoctest
+julia> A = [1 2 3]                  # vector
+julia> A = range(1, 10, step = 2)   # linearly spaced
+julia> A = range(1, 10, length = 5) # linearly spaced
+julia> A = rand(10)                 # random with 10 elements
+julia> A = j:k:n                    # from j to n with step size k
 ```
-![](chromatograms.png)
-
-Average mass spectra may be obtained using the proper [`msfilter`](@ref) functions:
-```@example 1
-ms1 = msfilter(scans, msJ.Level(1))
-ms2_CID = msfilter(scans, msJ.Activation_Method("CID"))
-ms2_PQD = msfilter(scans, msJ.Activation_Method("PQD"))
-ms2_1255 = msfilter(scans, msJ.Precursor(1255.5))
+and similarly for matrices
+```@jldoctest
+julia> A = [1 2; 3 4]               # matrix
+julia> A = rand(2, 2)               # random 2x2 matrix
 ```
 
-and then plotted similarly:
-```@example 1
-p5 = plot(ms1, label = "MS", color = :blue)
-p6 = plot(ms2_CID, label = "CID", color = :green)
-p7 = plot(ms2_PQD, label = "PQD", color = :purple)
-p8 = plot(ms2_1255, label = "mz 1255", color = :orange)
-plot(p5, p6, p7, p8, layout = (4,1), size = (800,600));
+Vector and matrices can be manipulated as follow:
+```@jldoctest
+julia> transpose(A)                 # Return the transpose of A
+julia> A[:]                         # Flatten matrix A (convert matrix to vector)
+julia> A[2,2]                       # Accessing element at row 2 and colomun 2
+julia> A[1:4, :]                    # Accessing specific rows 1 to 4
 ```
-![](ms.png)
 
-The average mass spectrum for CID (green) and for the m/z 1255.5 precursor ion (orange) are identical, which is not surprising.
+Vector and matrix may be preallocated like this:
+```@jldoctest
+julia> A = rand(10)                 # a vector / matrix
+julia> B = similar(A)               # an emply vector / matrix similar to A
+```
+
+## Operations
+The following present a few example of operations:
+```@jldoctest
+julia> dot(A,B)                     # dot product between A and B 
+julia> A .* B                       # Element wise multiplication
+julia> A * B                        # Matrix multiplcation
+julia> norm(A)                      # Euclidian norm
+julia> sum(A, dims = 1)             # sum over each column
+julia> sum(A, dims = 2)             # sum over each rows
+```
+
+## Loops
+A loop in Julia can be done like this:
+```@jldoctest
+julia> for i in 1:N
+julia>   #do something
+julia> end
+```
+While loops my be achiçved like this:
+```@jldoctest
+julia> while i <= N
+julia>   #do something
+julia> end
+```
+and if / else flow like this:
+```@jldoctest
+julia> if i < N
+julia>   #do something
+julia> else 
+julia>   #do something else
+julia> end
+```
+
+## Functions and methods
+A function is defined like this:
+```@jldoctest
+julia> function f(x)
+julia>   return x^2
+julia> end
+```
+which can be simplified as:
+```@jldoctest
+julia> f(x) = x^2
+```
+
+Broadcasting a function over a collection or an Array is achieved like this:
+```@jldoctest
+julia> f(x) = x^2
+julia> x = 1:10
+julia> f.(x)
+```
+
+In Julia, functions that modify their arguments are named `!`, such as:
+```@jldoctest
+julia> function f!(out, x)
+julia>   out = x.^2
+julia> end
+julia> x = rand(10)
+julia> y = similar(x)
+julia> f!(y, x)
+```
+
+
+## Importing and using Packages
+Julia code is organized into files, modules and packages. A file using the `.jl` extension contains julia code.
+Related functions and variable may be gathered in `modules`.  One or more modules may be organized into `packages`. Packages may be installed like hits:
+```@jldoctest
+julia> using A_package
+```
+Or like this if it is not installed:
+```@jldoctest
+julia> using Pkg                      # using the Package manager package
+julia> Pkg.add("A_package")
+julia> using A_package
+```
+Now every public function from A_package is available directly. Private functions have to be called like this: 
+```@jldoctest
+julia> A_package.a_private_function()        # Calling private functions
+julia> a_public_function()                   # Calling a public function
+```
+The same is true for the variables defined in the packages.
+
+
+
+# Jupyter notebooks
+[Jupyter](https://jupyter.org/) notebooks are web based documents that may contains both codes, figures and other textual elements (such as equations, links, ...).  Jupyter notebook may be installed easily :
+```jldoctest
+julia> using Pkg
+julia> Pkg.add("IJulia")
+```
+When IJulia is installed, then a notebook may be launch like this:
+```jldoctest
+julia> using IJulia
+julia> notebook()
+```
+The `notebook()` function should launch a web browser from which a new notebook  may be started. On each entry of the notebook code, Markdown or text may be inserted. Each line of code may be executed and will eventually return a result.
+In the following, the tutorials are given in Jupyter notebook form.
+
+# Example 1: Loading and plotting mass spectrometry data
+This tutorial shows how to use how to import data and how to plot mass spectra.
+[Notebook](notebooks/example1.ipynb)
+
+# Example 2: Filtering and averaging
+This notebook shows how to filter and average data.
+[Notebook](notebooks/example2.ipynb)
+
+# Example 3: Data treatment for UV spectroscopy
+
