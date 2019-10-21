@@ -11,10 +11,9 @@ The msJ package intends to provide an access to the common open source mass spec
 # The Julia language
 Julia is an open source programming language designed for scientific and technical computing. This section will give a very brief introduction to the Julia language. 
 
-!!! note: see also
+!!! note
 
-    The [Julia](https://julialang.org/) language home page  
-	Introduction to Julia [Wikibook](https://en.wikibooks.org/wiki/Introducing_Julia)
+    See also the [Julia](https://julialang.org/) language home page, the [Wikibook](https://en.wikibooks.org/wiki/Introducing_Julia) introduction to Julia or [Julia by example](https://juliabyexample.helpmanual.io).
 	
 ## Installation
 Julia binaries are available for various platforms and can be downloaded [here](https://julialang.org/downloads).  Plateform specific instructions may be found [here](https://julialang.org/downloads/platform.html).
@@ -33,14 +32,38 @@ $ julia hello.jl
 
 You can also put `#!/usr/local/bin/julia` in the first line of the `hello.jl` file, make it executable (` chmod +x hello.jl`) and execute it like any other executable.
 
-Finally, Julia scripts can be executed within Jupyter Notebooks, see the dedicated section [`Jupyter notebooks`](@ref).
+Finally, Julia scripts can be executed within Jupyter Notebooks, see the dedicated section [Jupyter notebooks](@ref).
 
 
 ## Types
-Julia is a strongly typed language. Julia has the following predefined types (from [the julia wikibook](https://en.wikibooks.org/wiki/Introducing_Julia/Types#Type_hierarchy)):
-![](assets/Type-hierarchy-for-julia-numbers.png)
-
-In Julia types are organized in a hierarchy with a tree structure. The root of the tree is the `Any` type.  The `Number` type is a direct child of `Any` and possesses two subtypes: `Complex` and `Real`. The `Real` type has three types: `Integer`, `AbstractFloat`, `Irrational` and `Rational`.
+Julia is a strongly typed language ( see [the julia wikibook](https://en.wikibooks.org/wiki/Introducing_Julia/Types#Type_hierarchy)) In Julia types are organized in a hierarchy with a tree structure. The root of the tree is the `Any` type.  The `Number` type is a direct child of `Any` and possesses two subtypes: `Complex` and `Real`. The `Real` type has four types: `Integer`, `AbstractFloat`, `Irrational` and `Rational`. The exact number hierarchy is as follow:
+```
+Number
+ ↳ Complex
+ ↳ Real
+    ↳ AbstractFloat 
+	   ↳ BigFloat 
+	   ↳ Float64 
+	   ↳ Float32 
+	   ↳ Float16
+    ↳ Integer
+	   ↳ BigInt
+	   ↳ Bool
+	   ↳ Signed
+	      ↳ Int128 
+		  ↳ Int64 
+		  ↳ Int32 
+		  ↳ Int16 
+		  ↳ Int8
+	   ↳ Unsigned
+	      ↳ UInt128 
+		  ↳ Int64 
+		  ↳ UInt32 
+		  ↳ UInt16 
+		  ↳ UInt8
+	↳ Irrational
+	↳ Rational
+```
 
 ## Creating vectors and matrices
 A vector is created as follow
@@ -172,11 +195,13 @@ In the following, the tutorials are given in Jupyter notebook form.
 
 # Example 1: Loading and plotting mass spectrometry data
 This tutorial shows how to use how to import data and how to plot mass spectra.
-[Notebook](notebooks/example1.ipynb)
+[html export](notebooks/example1.html)   [Notebook](notebooks/example1.ipynb)
+
 
 # Example 2: Filtering and averaging
 This notebook shows how to filter and average data.
-[Notebook](notebooks/example2.ipynb)
+[Notebook](notebooks/example2.html)      [Notebook](notebooks/example2.ipynb)
+
 
 # Example 3: Data treatment for UV spectroscopy
-
+[Notebook](notebooks/example3.html)      [Notebook](notebooks/example3.ipynb)
