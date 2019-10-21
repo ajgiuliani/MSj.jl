@@ -6,9 +6,32 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 
 ga('create', 'UA-132913317-2', 'auto');
 ga('send', 'pageview');
-</script><link rel="canonical" href="https://ajgiuliani.github.io/msJ.jl/stable/tutorial/index.html"/><link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" rel="stylesheet" type="text/css"/><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link href="../assets/documenter.css" rel="stylesheet" type="text/css"/><link href="../assets/favicon.ico" rel="icon" type="image/x-icon"/></head><body><nav class="toc"><a href="../"><img class="logo" src="../assets/logo.png" alt="msJ.jl logo"/></a><h1>msJ.jl</h1><select id="version-selector" onChange="window.location.href=this.value" style="visibility: hidden"></select><form class="search" id="search-form" action="../search/"><input id="search-query" name="q" type="text" placeholder="Search docs"/></form><ul><li><a class="toctext" href="../">Home</a></li><li class="current"><a class="toctext" href>Tutorial</a><ul class="internal"><li class="toplevel"><a class="toctext" href="#The-Julia-language-1">The Julia language</a></li><li><a class="toctext" href="#Installation-1">Installation</a></li><li><a class="toctext" href="#Executing-Julia-code-1">Executing Julia code</a></li><li><a class="toctext" href="#Types-1">Types</a></li><li><a class="toctext" href="#Creating-vectors-and-matrices-1">Creating vectors and matrices</a></li><li><a class="toctext" href="#Operations-1">Operations</a></li><li><a class="toctext" href="#Loops-1">Loops</a></li><li><a class="toctext" href="#Functions-and-methods-1">Functions and methods</a></li><li><a class="toctext" href="#Importing-and-using-Packages-1">Importing and using Packages</a></li><li class="toplevel"><a class="toctext" href="#Jupyter-notebooks-1">Jupyter notebooks</a></li><li class="toplevel"><a class="toctext" href="#Example-1:-Loading-and-plotting-mass-spectrometry-data-1">Example 1: Loading and plotting mass spectrometry data</a></li><li class="toplevel"><a class="toctext" href="#Example-2:-Filtering-and-averaging-1">Example 2: Filtering and averaging</a></li><li class="toplevel"><a class="toctext" href="#Example-3:-Data-treatment-for-UV-spectroscopy-1">Example 3: Data treatment for UV spectroscopy</a></li></ul></li><li><a class="toctext" href="../manual/">Manual</a></li><li><a class="toctext" href="../reference/">Reference</a></li><li><a class="toctext" href="../misc/">Miscellaneous</a></li></ul></nav><article id="docs"><header><nav><ul><li><a href>Tutorial</a></li></ul><a class="edit-page" href="https://github.com/ajgiuliani/msJ.jl/blob/master/docs/src/tutorial.md"><span class="fa"></span> Edit on GitHub</a></nav><hr/><div id="topbar"><span>Tutorial</span><a class="fa fa-bars" href="#"></a></div></header><h1><a class="nav-anchor" id="Tutorial-1" href="#Tutorial-1">Tutorial</a></h1><p>The msJ package intends to provide an access to the common open source mass spectrometry file format using <a href="https://julialang.org/">Julia</a>.</p><h1><a class="nav-anchor" id="The-Julia-language-1" href="#The-Julia-language-1">The Julia language</a></h1><p>Julia is an open source programming language designed for scientific and technical computing. This section will give a very brief introduction to the Julia language. </p><p>!!! note: see also</p><pre><code class="language-none">The [Julia](https://julialang.org/) language home page  
-Introduction to Julia [Wikibook](https://en.wikibooks.org/wiki/Introducing_Julia)</code></pre><h2><a class="nav-anchor" id="Installation-1" href="#Installation-1">Installation</a></h2><p>Julia binaries are available for various platforms and can be downloaded <a href="https://julialang.org/downloads">here</a>.  Plateform specific instructions may be found <a href="https://julialang.org/downloads/platform.html">here</a>.</p><h2><a class="nav-anchor" id="Executing-Julia-code-1" href="#Executing-Julia-code-1">Executing Julia code</a></h2><p>Julia code can be executed interactively using the REPL as follow:</p><pre><code class="language-julia-repl">julia&gt; println(&quot;Hello&quot;)
-Hello</code></pre><p>The <code>println(&quot;Hello&quot;)</code> line can be put in a file, such as <code>hello.jl</code> and executed as a script, which will produce the same output.</p><pre><code class="language-none">$ julia hello.jl</code></pre><p>You can also put <code>#!/usr/local/bin/julia</code> in the first line of the <code>hello.jl</code> file, make it executable (<code>chmod +x hello.jl</code>) and execute it like any other executable.</p><p>Finally, Julia scripts can be executed within Jupyter Notebooks, see the dedicated section <a href="@ref"><code>Jupyter notebooks</code></a>.</p><h2><a class="nav-anchor" id="Types-1" href="#Types-1">Types</a></h2><p>Julia is a strongly typed language. Julia has the following predefined types (from <a href="https://en.wikibooks.org/wiki/Introducing_Julia/Types#Type_hierarchy">the julia wikibook</a>): <img src="assets/Type-hierarchy-for-julia-numbers.png" alt/></p><p>In Julia types are organized in a hierarchy with a tree structure. The root of the tree is the <code>Any</code> type.  The <code>Number</code> type is a direct child of <code>Any</code> and possesses two subtypes: <code>Complex</code> and <code>Real</code>. The <code>Real</code> type has three types: <code>Integer</code>, <code>AbstractFloat</code>, <code>Irrational</code> and <code>Rational</code>.</p><h2><a class="nav-anchor" id="Creating-vectors-and-matrices-1" href="#Creating-vectors-and-matrices-1">Creating vectors and matrices</a></h2><p>A vector is created as follow</p><pre><code class="language-julia-repl">julia&gt; A = [1, 2, 3]                  # vector
+</script><link rel="canonical" href="https://ajgiuliani.github.io/msJ.jl/stable/tutorial/index.html"/><link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" rel="stylesheet" type="text/css"/><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link href="../assets/documenter.css" rel="stylesheet" type="text/css"/><link href="../assets/favicon.ico" rel="icon" type="image/x-icon"/></head><body><nav class="toc"><a href="../"><img class="logo" src="../assets/logo.png" alt="msJ.jl logo"/></a><h1>msJ.jl</h1><select id="version-selector" onChange="window.location.href=this.value" style="visibility: hidden"></select><form class="search" id="search-form" action="../search/"><input id="search-query" name="q" type="text" placeholder="Search docs"/></form><ul><li><a class="toctext" href="../">Home</a></li><li class="current"><a class="toctext" href>Tutorial</a><ul class="internal"><li class="toplevel"><a class="toctext" href="#The-Julia-language-1">The Julia language</a></li><li><a class="toctext" href="#Installation-1">Installation</a></li><li><a class="toctext" href="#Executing-Julia-code-1">Executing Julia code</a></li><li><a class="toctext" href="#Types-1">Types</a></li><li><a class="toctext" href="#Creating-vectors-and-matrices-1">Creating vectors and matrices</a></li><li><a class="toctext" href="#Operations-1">Operations</a></li><li><a class="toctext" href="#Loops-1">Loops</a></li><li><a class="toctext" href="#Functions-and-methods-1">Functions and methods</a></li><li><a class="toctext" href="#Importing-and-using-Packages-1">Importing and using Packages</a></li><li class="toplevel"><a class="toctext" href="#Jupyter-notebooks-1">Jupyter notebooks</a></li><li class="toplevel"><a class="toctext" href="#Example-1:-Loading-and-plotting-mass-spectrometry-data-1">Example 1: Loading and plotting mass spectrometry data</a></li><li class="toplevel"><a class="toctext" href="#Example-2:-Filtering-and-averaging-1">Example 2: Filtering and averaging</a></li><li class="toplevel"><a class="toctext" href="#Example-3:-Data-treatment-for-UV-spectroscopy-1">Example 3: Data treatment for UV spectroscopy</a></li></ul></li><li><a class="toctext" href="../manual/">Manual</a></li><li><a class="toctext" href="../reference/">Reference</a></li><li><a class="toctext" href="../misc/">Miscellaneous</a></li></ul></nav><article id="docs"><header><nav><ul><li><a href>Tutorial</a></li></ul><a class="edit-page" href="https://github.com/ajgiuliani/msJ.jl/blob/master/docs/src/tutorial.md"><span class="fa"></span> Edit on GitHub</a></nav><hr/><div id="topbar"><span>Tutorial</span><a class="fa fa-bars" href="#"></a></div></header><h1><a class="nav-anchor" id="Tutorial-1" href="#Tutorial-1">Tutorial</a></h1><p>The msJ package intends to provide an access to the common open source mass spectrometry file format using <a href="https://julialang.org/">Julia</a>.</p><h1><a class="nav-anchor" id="The-Julia-language-1" href="#The-Julia-language-1">The Julia language</a></h1><p>Julia is an open source programming language designed for scientific and technical computing. This section will give a very brief introduction to the Julia language. </p><div class="admonition note"><div class="admonition-title">Note</div><div class="admonition-text"><p>See also the <a href="https://julialang.org/">Julia</a> language home page, the <a href="https://en.wikibooks.org/wiki/Introducing_Julia">Wikibook</a> introduction to Julia or <a href="https://juliabyexample.helpmanual.io">Julia by example</a>.</p></div></div><h2><a class="nav-anchor" id="Installation-1" href="#Installation-1">Installation</a></h2><p>Julia binaries are available for various platforms and can be downloaded <a href="https://julialang.org/downloads">here</a>.  Plateform specific instructions may be found <a href="https://julialang.org/downloads/platform.html">here</a>.</p><h2><a class="nav-anchor" id="Executing-Julia-code-1" href="#Executing-Julia-code-1">Executing Julia code</a></h2><p>Julia code can be executed interactively using the REPL as follow:</p><pre><code class="language-julia-repl">julia&gt; println(&quot;Hello&quot;)
+Hello</code></pre><p>The <code>println(&quot;Hello&quot;)</code> line can be put in a file, such as <code>hello.jl</code> and executed as a script, which will produce the same output.</p><pre><code class="language-none">$ julia hello.jl</code></pre><p>You can also put <code>#!/usr/local/bin/julia</code> in the first line of the <code>hello.jl</code> file, make it executable (<code>chmod +x hello.jl</code>) and execute it like any other executable.</p><p>Finally, Julia scripts can be executed within Jupyter Notebooks, see the dedicated section <a href="#Jupyter-notebooks-1">Jupyter notebooks</a>.</p><h2><a class="nav-anchor" id="Types-1" href="#Types-1">Types</a></h2><p>Julia is a strongly typed language ( see <a href="https://en.wikibooks.org/wiki/Introducing_Julia/Types#Type_hierarchy">the julia wikibook</a>) In Julia types are organized in a hierarchy with a tree structure. The root of the tree is the <code>Any</code> type.  The <code>Number</code> type is a direct child of <code>Any</code> and possesses two subtypes: <code>Complex</code> and <code>Real</code>. The <code>Real</code> type has four types: <code>Integer</code>, <code>AbstractFloat</code>, <code>Irrational</code> and <code>Rational</code>. The exact number hierarchy is as follow:</p><pre><code class="language-none">Number
+ ↳ Complex
+ ↳ Real
+    ↳ AbstractFloat 
+	   ↳ BigFloat 
+	   ↳ Float64 
+	   ↳ Float32 
+	   ↳ Float16
+    ↳ Integer
+	   ↳ BigInt
+	   ↳ Bool
+	   ↳ Signed
+	      ↳ Int128 
+		  ↳ Int64 
+		  ↳ Int32 
+		  ↳ Int16 
+		  ↳ Int8
+	   ↳ Unsigned
+	      ↳ UInt128 
+		  ↳ Int64 
+		  ↳ UInt32 
+		  ↳ UInt16 
+		  ↳ UInt8
+	↳ Irrational
+	↳ Rational</code></pre><h2><a class="nav-anchor" id="Creating-vectors-and-matrices-1" href="#Creating-vectors-and-matrices-1">Creating vectors and matrices</a></h2><p>A vector is created as follow</p><pre><code class="language-julia-repl">julia&gt; A = [1, 2, 3]                  # vector
 3-element Array{Int64,1}:
  1
  2
@@ -22,16 +45,16 @@ julia&gt; A = range(1, 10, length = 5) # linearly spaced
 
 julia&gt; A = rand(10)                 # random with 10 elements
 10-element Array{Float64,1}:
- 0.8747708333597881
- 0.09847951515901321
- 0.5866129418418489
- 0.04901009055631311
- 0.31240806914863617
- 0.35100722328923406
- 0.6514738215985585
- 0.8066973996245328
- 0.012524312907828072
- 0.6387619404466887
+ 0.1284380942066934
+ 0.28737107195575207
+ 0.9419782715904039
+ 0.5321929120359026
+ 0.7150816238838889
+ 0.6002368172839705
+ 0.7788246720151035
+ 0.6673957855296027
+ 0.8413079011015532
+ 0.49969941753093416
 
 julia&gt; j = 2; k = 2; n = 10;
 
@@ -43,25 +66,25 @@ julia&gt; A = j:k:n                    # from j to n with step size k
 
 julia&gt; A = rand(2, 2)               # random 2x2 matrix
 2×2 Array{Float64,2}:
- 0.966018  0.407333
- 0.99905   0.0996432</code></pre><p>Vector and matrices can be manipulated as follow:</p><pre><code class="language-">transpose(A)                 # Return the transpose of A
+ 0.156823  0.211358
+ 0.827804  0.104193</code></pre><p>Vector and matrices can be manipulated as follow:</p><pre><code class="language-">transpose(A)                 # Return the transpose of A
 A[:]                         # Flatten matrix A (convert matrix to vector)
 A[2,2]                       # Accessing element at row 2 and colomun 2
 A[1:4, :]                    # Accessing specific rows 1 to 4</code></pre><p>Vector and matrix may be preallocated like this:</p><pre><code class="language-julia-repl">julia&gt; A = rand(5)                  # a vector / matrix
 5-element Array{Float64,1}:
- 0.804826013726655
- 0.2422275313222717
- 0.7794750811103146
- 0.6750979389405591
- 0.1817491084907401
+ 0.9293039690505933
+ 0.9134723563468705
+ 0.43165237060693307
+ 0.9705663138912939
+ 0.05057869241435875
 
 julia&gt; B = similar(A)               # an emply vector / matrix similar to A
 5-element Array{Float64,1}:
- 0.0
- 5.0e-324
- 0.0
- 2.5e-323
- 1.5e-323</code></pre><h2><a class="nav-anchor" id="Operations-1" href="#Operations-1">Operations</a></h2><p>The following present a few example of operations:</p><pre><code class="language-">julia&gt; dot(A,B)                     # dot product between A and B 
+ 6.8982431038442e-310
+ 6.8982353943822e-310
+ 6.8982163154033e-310
+ 6.89823539437587e-310
+ 6.89823539437903e-310</code></pre><h2><a class="nav-anchor" id="Operations-1" href="#Operations-1">Operations</a></h2><p>The following present a few example of operations:</p><pre><code class="language-">julia&gt; dot(A,B)                     # dot product between A and B 
 julia&gt; A .* B                       # Element wise multiplication
 julia&gt; A * B                        # Matrix multiplcation
 julia&gt; norm(A)                      # Euclidian norm
@@ -88,4 +111,4 @@ julia&gt; Pkg.add(&quot;A_package&quot;)
 julia&gt; using A_package</code></pre><p>Now every public function from A_package is available directly. Private functions have to be called like this: </p><pre><code class="language-">julia&gt; A_package.a_private_function()        # Calling private functions
 julia&gt; a_public_function()                   # Calling a public function</code></pre><p>The same is true for the variables defined in the packages.</p><h1><a class="nav-anchor" id="Jupyter-notebooks-1" href="#Jupyter-notebooks-1">Jupyter notebooks</a></h1><p><a href="https://jupyter.org/">Jupyter</a> notebooks are web based documents that may contains both codes, figures and other textual elements (such as equations, links, ...).  Jupyter notebook may be installed easily using Julia:</p><pre><code class="language-none">julia&gt; using Pkg
 julia&gt; Pkg.add(&quot;IJulia&quot;)</code></pre><p>When IJulia is installed, then a notebook may be launch like this:</p><pre><code class="language-none">julia&gt; using IJulia
-julia&gt; notebook()</code></pre><p>The <code>notebook()</code> function should launch a web browser from which a new notebook  may be started. On each entry of the notebook code, Markdown or text may be inserted. Each line of code may be executed and will eventually return a result. In the following, the tutorials are given in Jupyter notebook form.</p><h1><a class="nav-anchor" id="Example-1:-Loading-and-plotting-mass-spectrometry-data-1" href="#Example-1:-Loading-and-plotting-mass-spectrometry-data-1">Example 1: Loading and plotting mass spectrometry data</a></h1><p>This tutorial shows how to use how to import data and how to plot mass spectra. <a href="../notebooks/example1.ipynb">Notebook</a></p><h1><a class="nav-anchor" id="Example-2:-Filtering-and-averaging-1" href="#Example-2:-Filtering-and-averaging-1">Example 2: Filtering and averaging</a></h1><p>This notebook shows how to filter and average data. <a href="../notebooks/example2.ipynb">Notebook</a></p><h1><a class="nav-anchor" id="Example-3:-Data-treatment-for-UV-spectroscopy-1" href="#Example-3:-Data-treatment-for-UV-spectroscopy-1">Example 3: Data treatment for UV spectroscopy</a></h1><footer><hr/><a class="previous" href="../"><span class="direction">Previous</span><span class="title">Home</span></a><a class="next" href="../manual/"><span class="direction">Next</span><span class="title">Manual</span></a></footer></article></body></html>
+julia&gt; notebook()</code></pre><p>The <code>notebook()</code> function should launch a web browser from which a new notebook  may be started. On each entry of the notebook code, Markdown or text may be inserted. Each line of code may be executed and will eventually return a result. In the following, the tutorials are given in Jupyter notebook form.</p><h1><a class="nav-anchor" id="Example-1:-Loading-and-plotting-mass-spectrometry-data-1" href="#Example-1:-Loading-and-plotting-mass-spectrometry-data-1">Example 1: Loading and plotting mass spectrometry data</a></h1><p>This tutorial shows how to use how to import data and how to plot mass spectra. <a href="../notebooks/example1.html">html export</a>   <a href="../notebooks/example1.ipynb">Notebook</a></p><h1><a class="nav-anchor" id="Example-2:-Filtering-and-averaging-1" href="#Example-2:-Filtering-and-averaging-1">Example 2: Filtering and averaging</a></h1><p>This notebook shows how to filter and average data. <a href="../notebooks/example2.html">Notebook</a>      <a href="../notebooks/example2.ipynb">Notebook</a></p><h1><a class="nav-anchor" id="Example-3:-Data-treatment-for-UV-spectroscopy-1" href="#Example-3:-Data-treatment-for-UV-spectroscopy-1">Example 3: Data treatment for UV spectroscopy</a></h1><p><a href="../notebooks/example3.html">Notebook</a>      <a href="../notebooks/example3.ipynb">Notebook</a></p><footer><hr/><a class="previous" href="../"><span class="direction">Previous</span><span class="title">Home</span></a><a class="next" href="../manual/"><span class="direction">Next</span><span class="title">Manual</span></a></footer></article></body></html>
