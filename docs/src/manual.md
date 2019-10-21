@@ -12,7 +12,7 @@ The functions below are exported:
 - [`info`](@ref) 
 - [`load`](@ref) 
 - [`chromatogram`](@ref)
-- [`msfilter`](@ref)
+- [`average`](@ref)
 - [`extract`](@ref)
 - [`centroid`](@ref)
 - [`smooth`](@ref)
@@ -132,10 +132,10 @@ julia> msJ.retention_time("filename")
 ### Average
 -------------
 
-The [`msfilter`](@ref) returns the average of the mass spectra directly from a `Vector{MSscan}` after [Importing data](@ref) data or directly from the `filename`.
+The [`average`](@ref) returns the average of the mass spectra directly from a `Vector{MSscan}` after [Importing data](@ref) data or directly from the `filename`.
 
 ```julia-repl
-julia> msfilter("filename")
+julia> average("filename")
 msJ.MSscans([1, 2, 3 ....
 
 julia> scans = load("filename")
@@ -143,40 +143,40 @@ julia> scans = load("filename")
  msJ.MSscan(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....)
 ...
 
-julia> msfilter(scans)
+julia> average(scans)
 msJ.MSscans([1, 2, 3 ....
 
 ```
 
 Operating on files takes more time than working on `Vector{MSscan}` but may be useful to reduce the memory load.
 
-Without any argument the [`msfilter`](@ref) function averages the entire content of the data and the [`chromatogram`](@ref) function operates on also on the entire data.
+Without any argument the [`average`](@ref) function averages the entire content of the data and the [`chromatogram`](@ref) function operates on also on the entire data.
 
 
 ### Filtering
 ------------
 
-The [`msfilter`](@ref) and [`chromatogram`](@ref) functions may takes arguments to select specific fields of interest within the data and operate on them. The argument belongs to the [`msJ.FilterType`](@ref). Their properties are listed below:
+The [`average`](@ref) and [`chromatogram`](@ref) functions may takes arguments to select specific fields of interest within the data and operate on them. The argument belongs to the [`msJ.FilterType`](@ref). Their properties are listed below:
 
 | FilterType            | Description       | Arguments                                | Specificity            |
 |-----------------------|-------------------|------------------------------------------|------------------------|
-| msJ.Scan              | Scan num          | Int, Vector{Int}                         | msfilter, chromatogram |
-| msJ.Level             | MS level          | Int, Vector{Int}                         | msfilter, chromatogram |
-| msJ.Polarity          | Polarity          | String, Vector{String}                   | msfilter, chromatogram |
-| msJ.Activation_Method | Activation method | String, Vector{String}                   | msfilter, chromatogram |
-| msJ.Activation_Energy | Activation energy | Real, Vector{Real}                       | msfilter, chromatogram |
-| msJ.Precursor         | Precursor _m/z_   | Real, Vector{Real}                       | msfilter, chromatogram |
-| msJ.RT                | Retention time    | Real, Vector{Real}, Vector{Vector{Real}} | msfilter               |
-| msJ.IC                | Ion current       | Vector{Real}                             | msfilter               |
+| msJ.Scan              | Scan num          | Int, Vector{Int}                         | average, chromatogram |
+| msJ.Level             | MS level          | Int, Vector{Int}                         | average, chromatogram |
+| msJ.Polarity          | Polarity          | String, Vector{String}                   | average, chromatogram |
+| msJ.Activation_Method | Activation method | String, Vector{String}                   | average, chromatogram |
+| msJ.Activation_Energy | Activation energy | Real, Vector{Real}                       | average, chromatogram |
+| msJ.Precursor         | Precursor _m/z_   | Real, Vector{Real}                       | average, chromatogram |
+| msJ.RT                | Retention time    | Real, Vector{Real}, Vector{Vector{Real}} | average               |
+| msJ.IC                | Ion current       | Vector{Real}                             | average               |
 
 
 
 !!! note
 
-    The filtering function goes first through the argument and setup an array of scan num that matches the conditions. Then it uses this array to calculate the average mass spectrum.  So this procedure needs two passes through the data, which is not very efficient. This is a point to make better in the future.
+    The filtering function goes first through all the arguments and setup an array of scan num that matches the conditions. Then it uses this array to calculate the average mass spectrum.  So this procedure needs two passes through the data, which is not very efficient. This is a point to make better in the future.
  
 
-When the argument is restricted to a single value, such as `msJ.Scan(1)`, filtering is performed on that specific value. If the argument is a vector then filtering involves all the values within the range.  Filtering on `msJ.scan([1,10])` means that the result will be obtained for scans ranging from 1 to 10.  The same applies for all `FilterType`with the exception of `msJ.∆MZ`, for which the first value of the vector represents the *mz* and the second value represents the spread ∆mz, so that filtering is operated for all *mz* value in the range [m/z - ∆mz , m/z + ∆mz].  The `msJ.RT`type may take a vector or vectors as argument, such `msJ.RT([ [1,10], [20, 30] ]).  In that case, mass spectra will be averaged in [1,10] and [20,30] range.
+When the argument is restricted to a single value, such as `msJ.Scan(1)`, filtering is performed on that specific value. If the argument is a vector then filtering involves all the values within the range.  Filtering on `msJ.scan([1,10])` means that the result will be obtained for scans ranging from 1 to 10.  The same applies for all `FilterType` with the exception of `msJ.∆MZ`, for which the first value of the vector represents the *mz* and the second value represents the spread ∆mz, so that filtering is operated for all *mz* value in the range [m/z - ∆mz , m/z + ∆mz].  The `msJ.RT` type may take a vector or vectors as argument, such `msJ.RT([ [1,10], [20, 30] ]).  In that case, mass spectra will be averaged in [1,10] and [20,30] range.
 
 
 These filters may be combined together if necessary. For example, the input below returns the average mass spectrum for:
@@ -186,17 +186,17 @@ These filters may be combined together if necessary. For example, the input belo
 - with an activation energy of 18 
 - and for retention times in the 1 to 60 s range.
 
-```julia
-msfilter("filename", msJ.Precursor(1255.5),
-                     msJ.Activation_Energy(18),
-                     msJ.Activation_Method("CID"),
-                     msJ.Level(2),
-                     msJ.RT( [1, 60] ),
-                     )
+```julia-repl
+average("filename", msJ.Precursor(1255.5),
+                    msJ.Activation_Energy(18),
+                    msJ.Activation_Method("CID"),
+                    msJ.Level(2),
+                    msJ.RT( [1, 60] ),
+                    )
 ```
 
 Several filter types may also be combined for `chromatograms`:
-```julia
+```julia-repl
 chromatogram("filename", msJ.Precursor(1255.5),
                          msJ.Activation_Energy(18),
                          msJ.Activation_Method("CID"),
@@ -231,8 +231,8 @@ chromatogram("filename", method = msJ.∆MZ( [258, 1] ) )
 The [`extract`](@ref) returns a Vector of `MSscan`from either a file of from a Vector{MSscan} following a ['load'](@ref) command, which corresponds to the filter conditions. See the [filtering](Filtering) part above.
 
 ```julia
-sub_set = extract("filename")                     # extracting without any conditions returns a vector identical to the output 
-sub_set = extract("filename", msJ.Level(2) )      # extract MS/MS spectra
+sub_set = extract("filename")                       # extracting without any conditions returns a vector identical to the output 
+sub_set = extract("filename", msJ.Level(2) )        # extract MS/MS spectra
 scans = load("test.mzxml")                          # load mass spectra
 sub_set = extract(scans)                            # extract a sub_set without conditions returns the original data
 ```
@@ -276,15 +276,15 @@ centroid(scan)
 ```
 
 #### Signal to Noise Ratio Analysis (SNRA)
-Signal to noise ratio analysis is a very general approach, which relies on the definition of noise. Here, we use TopHat filter to define the noise. Then the signal to noise ratio is calculated. Peaks are found by searching for a local maximum for which the signal to noise ratio is above the threshold. By defaults the `msJ.SNRA` uses a threshold = 1.0 and a structuring element of 10 points.
+Signal to noise ratio analysis is a very general approach, which relies on the definition of noise. Here, we use TopHat filter to define the noise. Then the signal to noise ratio is calculated. Peaks are found by searching for a local maximum for which the signal to noise ratio is above the threshold. By defaults the `msJ.SNRA` uses a threshold = 1.0 and a structuring element of 100 points.
 ```julia
-centroid(scan, method = SNRA(1., 10)
+centroid(scan, method = msJ.SNRA(1., 100)
 ```
 
 #### Threshold base peak detection algorithm (TBPD)
 The TBPD method identifies features based on their similarity (as described by the Pearson correlation coefficient) with a [template peak](https://doi.org/10.1007/978-1-60761-987-1_22). By default the `msJ.TBPD` method type uses a Gaussian function, with 1000 mass resolving power and a threshold level set to 0.2% as :
 ```julia
-centroid(scan, method = TBPD(:gauss, 1000, 0.2)
+centroid(scan, method = msJ.TBPD(:gauss, 1000, 0.2)
 ```
 Two other shape functions are available:
 - `:loretz` which uses a Cauchy-Lorentz function and
@@ -293,8 +293,8 @@ Two other shape functions are available:
 The `:lorentz` profile fits better Fourrier Transform mass spectra. The `:voigt` shape is the result of the convolution of gaussi and Cauchy-Lorentz shape.
 
 ```julia
-centroid(scan, method = TBPD(:lorentz, 1000., 0.1)
-centroid(scan, method = TBPD(:voight,  1000., 0.1)
+centroid(scan, method = msJ.TBPD(:lorentz, 1000., 0.1)
+centroid(scan, method = msJ.TBPD(:voight,  1000., 0.1)
 ```
 
 
@@ -304,8 +304,8 @@ centroid(scan, method = TBPD(:voight,  1000., 0.1)
 
 Plotting facilities are available as a submodule to the `msJ` package.  The [`msJ.plots`](@ref) module relies on the [RecipesBase package](https://github.com/JuliaPlots/RecipesBase.jl), which allows writing recipes to plot users' data types. Hence, recipes have been created for `MSscan`, `Msscans` and `Chromatogram`:
 
-```julia-repl
-julia> plot(scans[1], method = :relative))
+```julia
+plot(scans[1], method = :relative))
 
 ```
 

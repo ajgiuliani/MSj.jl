@@ -1,6 +1,6 @@
 References
 ==========
-
+msJ.builoto
 ```@meta
 CurrentModule = msJ
 DocTestSetup  = quote
@@ -42,6 +42,10 @@ msJ.∆MZ
 msJ.MZ
 msJ.SG
 msJ.TBPD
+msJ.SNRA
+msJ.TopHat
+msJ.LOESS
+msJ.IPSA
 ```
 
 ### Filters
@@ -68,7 +72,7 @@ msJ.info(filename::String; verbose::Bool = false)
 msJ.load(filename::String)
 msJ.retention_time(filename::String)
 msJ.chromatogram(filename::String, filters::FilterType...; method::MethodType=TIC())
-msJ.msfilter(filename::String, arguments::FilterType...; stats::Bool=true)
+msJ.average(filename::String, arguments::FilterType...; stats::Bool=true)
 ```
 
 ### mzXML
@@ -104,7 +108,7 @@ msJ.composite_spectra(filename::String, indices::Vector{Int}, stats::Bool)
 
 ## Filtering
 ```@docs
-msJ.msfilter(scans::Vector{MSscan}, arguments::FilterType...; stats::Bool=true)
+msJ.average(scans::Vector{MSscan}, arguments::FilterType...; stats::Bool=true)
 msJ.chromatogram(scans::Vector{MSscan}, filters::FilterType...; method::MethodType=TIC())
 msJ.retention_time(scans::Vector{MSscan})
 msJ.filter(scans::Vector{MSscan}, argument::Scan{<:Int})
@@ -131,8 +135,8 @@ msJ.composite_spectra(scans::Vector{MSscan}, indices::Vector{Int}, stats::Bool)
 ```@docs
 msJ.extract(filename::String, arguments::FilterType...)
 msJ.extract(scans::Vector{MSscan}, arguments::FilterType...)
-msJ.buid_subset(filename::String, indices::Vector{Int})
-msJ.buid_subset(scans::Vector{MSscan}, indices::Vector{Int})
+msJ.build_subset(filename::String, indices::Vector{Int})
+msJ.build_subset(scans::Vector{MSscan}, indices::Vector{Int})
 ```
 
 ## Process
@@ -143,14 +147,16 @@ msJ.buid_subset(scans::Vector{MSscan}, indices::Vector{Int})
 ```@docs
 msJ.smooth(scan::MScontainer; method::MethodType=SG(5, 9, 0))
 msJ.savitzky_golay_filtering(scan::MScontainer, order::Int, window::Int, deriv::Int)
-msJ.centroid(scan::MScontainer; method::MethodType=TBPD(:gauss, 4500., 0.2) )
-msJ.centroid(scans::Vector{MSscan}; method::MethodType=TBPD(:gauss, 4500., 0.2) )
+msJ.centroid(scan::MScontainer; method::MethodType=SNRA(1., 100) )
+msJ.centroid(scans::Vector{MSscan}; method::MethodType=SNRA(1., 100) 
+msJ.snra(scan::MScontainer, thres::Real, region::Int)
+msJ.tbpd(scan::MScontainer, model::Function,  ∆mz::Real, thres::Real)
 msJ.gauss(x::Float64, p::Vector{Float64})
 msJ.lorentz(x::Float64, p::Vector{Float64})
 msJ.voigt(x::Float64, p::Vector{Float64})
 msJ.tbpd(scan::MScontainer, shape::Symbol,  R::Real, thres::Real)
-msJ.baseline_correction(scan::MScontainer; method::MethodType=IPSA(51, 100) )
-msJ.baseline_correction(scans::Vector{MSscan}; method::MethodType=IPSA(51, 100) )
+msJ.baseline_correction(scan::MScontainer; method::MethodType=TopHat(100) )
+msJ.baseline_correction(scans::Vector{MSscan}; method::MethodType=TopHat(100))
 msJ.tophat_filter(scan::MScontainer, region::Int )
 msJ.tophat_filter(scans::Vector{MSscan}, region::Int )
 msJ.loess(scans::Vector{MSscan}, iter::Int )
@@ -194,5 +200,14 @@ Modules = [msJ.plots]
 msJ.avg(a::MScontainer, b::MScontainer)
 msJ.add_ion_current(x::Vector{Float64}, y::Vector{Float64}, a::Float64, b::Float64)
 msJ.num2pnt(x::Vector{Float64}, val::Real)
-
+savitzky_golay(int::AbstractArray, order::Int, window::Int, deriv::Int)
+extremefilt(input::AbstractArray, minmax::Function, region::Int)
+morpholaplace(input::AbstractArray, region::Int)
+morphogradient(input::AbstractArray, region::Int)
+tophat(input::AbstractArray, region::Int)
+bottomhat(input::AbstractArray, region::Int) 
+opening(input::AbstractArray, region::Int)
+closing(input::AbstractArray, region::Int)
+erosion(input::AbstractArray, region::Int)
+dilatation(input::AbstractArray, region::Int)
 ```

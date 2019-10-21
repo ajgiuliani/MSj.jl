@@ -22,13 +22,12 @@ Julia binaries are available for various platforms and can be downloaded [here](
 ## Executing Julia code
 Julia code can be executed interactively using the REPL as follow:
 
-```jldoctest
-julia> println("Hello")
-Hello
+```@repl
+println("Hello")
 ```
 
 The `println("Hello")` line can be put in a file, such as `hello.jl` and executed as a script, which will produce the same output.
-```jldoctest; output = false
+```
 $ julia hello.jl
 ```
 
@@ -41,41 +40,36 @@ Finally, Julia scripts can be executed within Jupyter Notebooks, see the dedicat
 Julia is a strongly typed language. Julia has the following predefined types (from [the julia wikibook](https://en.wikibooks.org/wiki/Introducing_Julia/Types#Type_hierarchy)):
 ![](assets/Type-hierarchy-for-julia-numbers.png)
 
-In Julia types are organized in a hierarchy with a tree structure. The root of the tree is the `Any` type.  The `Number` type is a direct child of `Any` and possesses two subtypes: `Complex` and `Real`. The `Real` type has three types: `Integer`, `AbstractFloat`, `Irrational` and `Rational`. The hierarchy can checked using building functions:
-```@jldoctest
-julia> subtypes(Number)
-```
-```@jldoctest
-julia> showtypetree(Number)
-```
+In Julia types are organized in a hierarchy with a tree structure. The root of the tree is the `Any` type.  The `Number` type is a direct child of `Any` and possesses two subtypes: `Complex` and `Real`. The `Real` type has three types: `Integer`, `AbstractFloat`, `Irrational` and `Rational`.
 
 ## Creating vectors and matrices
 A vector is created as follow
-```@jldoctest
-julia> A = [1 2 3]                  # vector
-julia> A = range(1, 10, step = 2)   # linearly spaced
-julia> A = range(1, 10, length = 5) # linearly spaced
-julia> A = rand(10)                 # random with 10 elements
-julia> A = j:k:n                    # from j to n with step size k
+```@repl
+A = [1, 2, 3]                  # vector
+A = range(1, 10, step = 2)   # linearly spaced
+A = range(1, 10, length = 5) # linearly spaced
+A = rand(10)                 # random with 10 elements
+j = 2; k = 2; n = 10;
+A = j:k:n                    # from j to n with step size k
 ```
 and similarly for matrices
-```@jldoctest
-julia> A = [1 2; 3 4]               # matrix
-julia> A = rand(2, 2)               # random 2x2 matrix
+```@repl
+A = [1 2; 3 4]               # matrix
+A = rand(2, 2)               # random 2x2 matrix
 ```
 
 Vector and matrices can be manipulated as follow:
 ```@jldoctest
-julia> transpose(A)                 # Return the transpose of A
-julia> A[:]                         # Flatten matrix A (convert matrix to vector)
-julia> A[2,2]                       # Accessing element at row 2 and colomun 2
-julia> A[1:4, :]                    # Accessing specific rows 1 to 4
+transpose(A)                 # Return the transpose of A
+A[:]                         # Flatten matrix A (convert matrix to vector)
+A[2,2]                       # Accessing element at row 2 and colomun 2
+A[1:4, :]                    # Accessing specific rows 1 to 4
 ```
 
 Vector and matrix may be preallocated like this:
-```@jldoctest
-julia> A = rand(10)                 # a vector / matrix
-julia> B = similar(A)               # an emply vector / matrix similar to A
+```@repl
+A = rand(5)                  # a vector / matrix
+B = similar(A)               # an emply vector / matrix similar to A
 ```
 
 ## Operations
@@ -163,13 +157,13 @@ The same is true for the variables defined in the packages.
 
 
 # Jupyter notebooks
-[Jupyter](https://jupyter.org/) notebooks are web based documents that may contains both codes, figures and other textual elements (such as equations, links, ...).  Jupyter notebook may be installed easily :
-```jldoctest
+[Jupyter](https://jupyter.org/) notebooks are web based documents that may contains both codes, figures and other textual elements (such as equations, links, ...).  Jupyter notebook may be installed easily using Julia:
+```
 julia> using Pkg
 julia> Pkg.add("IJulia")
 ```
 When IJulia is installed, then a notebook may be launch like this:
-```jldoctest
+```
 julia> using IJulia
 julia> notebook()
 ```
