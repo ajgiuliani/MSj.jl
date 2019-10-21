@@ -25,7 +25,7 @@ Pkg.add(PackageSpec(url="https://github.com/ajgiuliani/msJ.jl"))
 ```
 
 ## Documentation
-Documentation has been made with [Documenter.jl](https://github.com/JuliaDocs/Documenter.jl) and is available [here](https://ajgiuliani.github.io/msJ.jl/dev).
+Documentation is available [here](https://ajgiuliani.github.io/msJ.jl/dev).
 
 
 ## Project Status
