@@ -1,5 +1,4 @@
 using Documenter, msJ
-using DocumenterLaTeX
 
 makedocs(
     format = Documenter.HTML(
