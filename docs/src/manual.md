@@ -13,10 +13,10 @@ The functions below are exported:
 - [`load`](@ref) 
 - [`chromatogram`](@ref)
 - [`average`](@ref)
+- [`baseline_correction`](@ref)
 - [`extract`](@ref)
 - [`centroid`](@ref)
 - [`smooth`](@ref)
-- [`baseline_correction`](@ref)
 
 
 ## Data types
