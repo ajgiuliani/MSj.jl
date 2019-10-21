@@ -68,15 +68,15 @@ end
  
 
 """
-    centroid(scan::MScontainer; method::MethodType=MethodType=SNRA(1., 10) )
-Peak picking algorithm taking a MSscan or MSscans object as input and returning an object of the same type containing the detected peaks.  Available algorithm are : Signal to Noise Ratio (SNR) and Template Based Peak Detection (TBPD). Default method is Signal to Noise Ratio Analysis (SNRA), with default threshold = 1.0 and region = 10.
+    centroid(scan::MScontainer; method::MethodType=MethodType=SNRA(1., 100) )
+Peak picking algorithm taking a MSscan or MSscans object as input and returning an object of the same type containing the detected peaks.  Available algorithm are : Signal to Noise Ratio (SNR) and Template Based Peak Detection (TBPD). Default method is Signal to Noise Ratio Analysis (SNRA), with default threshold = 1.0 and region = 100.
 # Examples
 ```julia-repl
 julia> centroid(scans)
 MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
-function centroid(scan::MScontainer; method::MethodType=SNRA(1., 10) )
+function centroid(scan::MScontainer; method::MethodType=SNRA(1., 100) )
     if method isa TBPD
         ∆mz = 500.0 / method.resolution       # according to mz / ∆mz  = R, we take the value @ m/z 500
         if method.shape == :gauss
@@ -101,8 +101,8 @@ function centroid(scan::MScontainer; method::MethodType=SNRA(1., 10) )
 end
 
 """
-    centroid(scans::Vector{MSscan}; method::MethodType=SNRA(1., 10) )
-Peak picking algorithm taking an array of MSscan as input and returning an object of the same type containing the detected peaks. Available algorithm are : Signal to Noise Ratio (SNR) and Template Based Peak Detection (TBPD). Default method is Signal to Noise Ratio Analysis (SNRA), with default threshold = 1.0 and region = 10.
+    centroid(scans::Vector{MSscan}; method::MethodType=SNRA(1., 100) )
+Peak picking algorithm taking an array of MSscan as input and returning an object of the same type containing the detected peaks. Available algorithm are : Signal to Noise Ratio (SNR) and Template Based Peak Detection (TBPD). Default method is Signal to Noise Ratio Analysis (SNRA), with default threshold = 1.0 and region = 100.
 # Examples
 ```julia-repl
 julia> reduced_data = centroid(scans)
@@ -110,8 +110,7 @@ julia> reduced_data = centroid(scans)
 MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
-#function centroid(scans::Vector{MSscan}; method::MethodType=TBPD(:gauss, 4500., 0.2) )
-function centroid(scans::Vector{MSscan}; method::MethodType=SNRA(1., 10) )
+function centroid(scans::Vector{MSscan}; method::MethodType=SNRA(1., 100) )
     cent_scans = Vector{MSscan}(undef,0)
     if method isa TBPD
         for el in scans
@@ -186,8 +185,8 @@ end
     tbpd(scan::msJ.MScontainer, shape::Symbol,  R::Real, thres::Real)
 Template based beak detection algorithm returning the m/z and intensity of the peaks detected
 """
-#function tbpd(scan::MScontainer, shape::Symbol,  R::Real, thres::Real)   #template based peak detection
 function tbpd(scan::MScontainer, model::Function,  ∆mz::Real, thres::Real)   #template based peak detection
+#function tbpd(scan::MScontainer, shape::Symbol,  R::Real, thres::Real)   #template based peak detection
     box = num2pnt(scan.mz, scan.mz[1]+0.4) - 1        # taking a box of 0.5 width m/z
     correlation = zeros(length(scan.mz))
     maxi = maximum(scan.int)
@@ -301,7 +300,7 @@ end
 
 """
     baseline_correction(scan::MScontainer; method::MethodType=TopHat(100) )
-Baseline correction taking a MSscan or MSscans object as input and returning an object of the same type as the input with the mass spectra corrected for their base line. Available algorithms are Top Hat, Locally Weighted Error Sum of Squares regression (LOESS) and Iterative Polynomial Smoothing Algorithm (IPSA). The default method is TopHat with a structuring element width of 100 points.
+Baseline correction takes a MSscan or MSscans object as input and returns an object of the same type as the input with the mass spectra corrected for their base line. Available algorithms are Top Hat, Locally Weighted Error Sum of Squares regression (LOESS) and Iterative Polynomial Smoothing Algorithm (IPSA). The default method is TopHat with a structuring element width of 100 points.
 # Examples
 ```julia-repl
 julia> reduced_data = baseline_correction(scan)
@@ -326,7 +325,7 @@ end
 
 """
     baseline_correction(scans::Vector{MSscan}; method::MethodType=TopHat(100) )
-Baseline correction taking a Vector of MSscan as input and returning a Vector of MSscan with the mass spectra corrected for their base line. Available algorithms are Top Hat, Locally Weighted Error Sum of Squares regression (LOESS) and Iterative Polynomial Smoothing Algorithm (IPSA). The default method is TopHat with a structuring element width of 100 points.
+Baseline correction takes a Vector of MSscan as input and returns a Vector of MSscan with the mass spectra corrected for their base line. Available algorithms are Top Hat, Locally Weighted Error Sum of Squares regression (LOESS) and Iterative Polynomial Smoothing Algorithm (IPSA). The default method is TopHat with a structuring element width of 100 points.
 # Examples
 ```julia-repl
 julia> reduced_data = baseline_correction(scans)
