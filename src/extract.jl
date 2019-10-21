@@ -52,7 +52,7 @@ function extract(filename::String, arguments::FilterType...)
     free(xdoc)
     indices = sort([ i for i in index])
     if length(indices) >= 1
-        return buid_subset(filename, indices)
+        return build_subset(filename, indices)
     else
         ErrorException("No matching spectra.")
     end
@@ -61,10 +61,10 @@ end
 
 
 """
-    buid_subset(filename::String, indices::Vector{Int})
+    build_subset(filename::String, indices::Vector{Int})
 Returns a Vector of MSscan from the input file according to the scan num (indices).
 """
-function buid_subset(filename::String, indices::Vector{Int})
+function build_subset(filename::String, indices::Vector{Int})
     sub_set = Vector{MSscan}(undef,0)   
     for i = 1:length(indices)
         push!(sub_set, load_mzxml(filename, indices[i]))
@@ -101,7 +101,7 @@ function extract(scans::Vector{MSscan}, arguments::FilterType...)
     indices = sort([ i for i in index])
     
     if length(indices) >= 1
-        return buid_subset(scans, indices)
+        return build_subset(scans, indices)
     else
         ErrorException("No matching spectra found.")
     end
@@ -109,10 +109,10 @@ function extract(scans::Vector{MSscan}, arguments::FilterType...)
 end
 
 """
-    buid_subset(scans::Vector{MSscan}, indices::Vector{Int})
+    build_subset(scans::Vector{MSscan}, indices::Vector{Int})
 Returns a Vector of MSscan according to the input scan num.
 """
-function buid_subset(scans::Vector{MSscan}, indices::Vector{Int})
+function build_subset(scans::Vector{MSscan}, indices::Vector{Int})
     sub_set = Vector{MSscan}(undef,0)
     for i = 1:length(indices)
         push!(sub_set, scans[indices[i]])
