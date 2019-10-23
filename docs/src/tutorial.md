@@ -195,13 +195,19 @@ In the following, the tutorials are given in Jupyter notebook form.
 
 # Example 1: Loading and plotting mass spectrometry data
 This tutorial shows how to use how to import data and how to plot mass spectra.
-[html export](notebooks/example1.html)   [Notebook](notebooks/example1.ipynb)
+View [Notebook](https://github.com/ajgiuliani/msJ.jl/blob/master/docs/src/notebooks/example1.ipynb)
+View [HTML export](notebooks/example1.html)
+Download [Notebook](notebooks/example1.ipynb)
 
 
 # Example 2: Filtering and averaging
 This notebook shows how to filter and average data.
-[Notebook](notebooks/example2.html)      [Notebook](notebooks/example2.ipynb)
+View [Notebook](https://github.com/ajgiuliani/msJ.jl/blob/master/docs/src/notebooks/example2.ipynb)
+View [HTML export](notebooks/example2.html)
+Download [Notebook](notebooks/example2.ipynb)
 
 
 # Example 3: Data treatment for UV spectroscopy
-[Notebook](notebooks/example3.html)      [Notebook](notebooks/example3.ipynb)
+View [Notebook](https://github.com/ajgiuliani/msJ.jl/blob/master/docs/src/notebooks/example3.ipynb)
+View [HTML export](notebooks/example3.html)
+Download [Notebook](notebooks/example3.ipynb)
