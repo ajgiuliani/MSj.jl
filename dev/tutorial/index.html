@@ -45,16 +45,16 @@ julia&gt; A = range(1, 10, length = 5) # linearly spaced
 
 julia&gt; A = rand(10)                 # random with 10 elements
 10-element Array{Float64,1}:
- 0.20061057393705117
- 0.3371746788111185
- 0.9555674715045799
- 0.2513137991072494
- 0.8997394412334867
- 0.1948753216051733
- 0.30477221069376825
- 0.38850973869354544
- 0.08313187387093657
- 0.757681010486122
+ 0.21885723311275807
+ 0.579700129846191
+ 0.579051828483012
+ 0.6126046525278199
+ 0.9456853372015506
+ 0.31071176458647587
+ 0.9582102785678304
+ 0.595953083058127
+ 0.7221681638993587
+ 0.6908440361578727
 
 julia&gt; j = 2; k = 2; n = 10;
 
@@ -66,25 +66,25 @@ julia&gt; A = j:k:n                    # from j to n with step size k
 
 julia&gt; A = rand(2, 2)               # random 2x2 matrix
 2×2 Array{Float64,2}:
- 0.399568  0.721645
- 0.953666  0.866847</code></pre><p>Vector and matrices can be manipulated as follow:</p><pre><code class="language-">transpose(A)                 # Return the transpose of A
+ 0.684216  0.641165
+ 0.1529    0.553595</code></pre><p>Vector and matrices can be manipulated as follow:</p><pre><code class="language-">transpose(A)                 # Return the transpose of A
 A[:]                         # Flatten matrix A (convert matrix to vector)
 A[2,2]                       # Accessing element at row 2 and colomun 2
 A[1:4, :]                    # Accessing specific rows 1 to 4</code></pre><p>Vector and matrix may be preallocated like this:</p><pre><code class="language-julia-repl">julia&gt; A = rand(5)                  # a vector / matrix
 5-element Array{Float64,1}:
- 0.4504337168932935
- 0.8496643677254345
- 0.7288644263013531
- 0.1075582269935842
- 0.48444730493643684
+ 0.6468306850344825
+ 0.7400217166789671
+ 0.70924859592354
+ 0.7549131488438405
+ 0.9018672126409923
 
 julia&gt; B = similar(A)               # an emply vector / matrix similar to A
 5-element Array{Float64,1}:
- 6.9019575753058e-310
- 6.9019403433273e-310
- 6.9019403433289e-310
- 6.90194034333205e-310
- 6.9019577607927e-310</code></pre><h2><a class="nav-anchor" id="Operations-1" href="#Operations-1">Operations</a></h2><p>The following present a few example of operations:</p><pre><code class="language-">julia&gt; dot(A,B)                     # dot product between A and B 
+ 0.0
+ 5.0e-324
+ 6.93781424963296e-310
+ 5.0e-324
+ 5.0e-324</code></pre><h2><a class="nav-anchor" id="Operations-1" href="#Operations-1">Operations</a></h2><p>The following present a few example of operations:</p><pre><code class="language-">julia&gt; dot(A,B)                     # dot product between A and B 
 julia&gt; A .* B                       # Element wise multiplication
 julia&gt; A * B                        # Matrix multiplcation
 julia&gt; norm(A)                      # Euclidian norm
@@ -111,4 +111,4 @@ julia&gt; Pkg.add(&quot;A_package&quot;)
 julia&gt; using A_package</code></pre><p>Now every public function from A_package is available directly. Private functions have to be called like this: </p><pre><code class="language-">julia&gt; A_package.a_private_function()        # Calling private functions
 julia&gt; a_public_function()                   # Calling a public function</code></pre><p>The same is true for the variables defined in the packages.</p><h1><a class="nav-anchor" id="Jupyter-notebooks-1" href="#Jupyter-notebooks-1">Jupyter notebooks</a></h1><p><a href="https://jupyter.org/">Jupyter</a> notebooks are web based documents that may contains both codes, figures and other textual elements (such as equations, links, ...).  Jupyter notebook may be installed easily using Julia:</p><pre><code class="language-none">julia&gt; using Pkg
 julia&gt; Pkg.add(&quot;IJulia&quot;)</code></pre><p>When IJulia is installed, then a notebook may be launch like this:</p><pre><code class="language-none">julia&gt; using IJulia
-julia&gt; notebook()</code></pre><p>The <code>notebook()</code> function should launch a web browser from which a new notebook  may be started. On each entry of the notebook code, Markdown or text may be inserted. Each line of code may be executed and will eventually return a result. In the following, the tutorials are given in Jupyter notebook form.</p><h1><a class="nav-anchor" id="Example-1:-Loading-and-plotting-mass-spectrometry-data-1" href="#Example-1:-Loading-and-plotting-mass-spectrometry-data-1">Example 1: Loading and plotting mass spectrometry data</a></h1><p>This tutorial shows how to use how to import data and how to plot mass spectra. <a href="../notebooks/example1.html">html export</a>   <a href="../notebooks/example1.ipynb">Notebook</a></p><h1><a class="nav-anchor" id="Example-2:-Filtering-and-averaging-1" href="#Example-2:-Filtering-and-averaging-1">Example 2: Filtering and averaging</a></h1><p>This notebook shows how to filter and average data. <a href="../notebooks/example2.html">Notebook</a>      <a href="../notebooks/example2.ipynb">Notebook</a></p><h1><a class="nav-anchor" id="Example-3:-Data-treatment-for-UV-spectroscopy-1" href="#Example-3:-Data-treatment-for-UV-spectroscopy-1">Example 3: Data treatment for UV spectroscopy</a></h1><p><a href="../notebooks/example3.html">Notebook</a>      <a href="../notebooks/example3.ipynb">Notebook</a></p><footer><hr/><a class="previous" href="../"><span class="direction">Previous</span><span class="title">Home</span></a><a class="next" href="../manual/"><span class="direction">Next</span><span class="title">Manual</span></a></footer></article></body></html>
+julia&gt; notebook()</code></pre><p>The <code>notebook()</code> function should launch a web browser from which a new notebook  may be started. On each entry of the notebook code, Markdown or text may be inserted. Each line of code may be executed and will eventually return a result. In the following, the tutorials are given in Jupyter notebook form.</p><h1><a class="nav-anchor" id="Example-1:-Loading-and-plotting-mass-spectrometry-data-1" href="#Example-1:-Loading-and-plotting-mass-spectrometry-data-1">Example 1: Loading and plotting mass spectrometry data</a></h1><p>This tutorial shows how to use how to import data and how to plot mass spectra. View <a href="https://github.com/ajgiuliani/msJ.jl/blob/master/docs/src/notebooks/example1.ipynb">Notebook</a> View <a href="../notebooks/example1.html">HTML export</a> Download <a href="../notebooks/example1.ipynb">Notebook</a></p><h1><a class="nav-anchor" id="Example-2:-Filtering-and-averaging-1" href="#Example-2:-Filtering-and-averaging-1">Example 2: Filtering and averaging</a></h1><p>This notebook shows how to filter and average data. View <a href="https://github.com/ajgiuliani/msJ.jl/blob/master/docs/src/notebooks/example2.ipynb">Notebook</a> View <a href="../notebooks/example2.html">HTML export</a> Download <a href="../notebooks/example2.ipynb">Notebook</a></p><h1><a class="nav-anchor" id="Example-3:-Data-treatment-for-UV-spectroscopy-1" href="#Example-3:-Data-treatment-for-UV-spectroscopy-1">Example 3: Data treatment for UV spectroscopy</a></h1><p>View <a href="https://github.com/ajgiuliani/msJ.jl/blob/master/docs/src/notebooks/example3.ipynb">Notebook</a> View <a href="../notebooks/example3.html">HTML export</a> Download <a href="../notebooks/example3.ipynb">Notebook</a></p><footer><hr/><a class="previous" href="../"><span class="direction">Previous</span><span class="title">Home</span></a><a class="next" href="../manual/"><span class="direction">Next</span><span class="title">Manual</span></a></footer></article></body></html>
