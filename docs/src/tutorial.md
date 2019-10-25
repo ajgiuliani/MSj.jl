@@ -160,20 +160,20 @@ julia> f!(y, x)
 
 ## Importing and using Packages
 Julia code is organized into files, modules and packages. A file using the `.jl` extension contains julia code.
-Related functions and variable may be gathered in `modules`.  One or more modules may be organized into `packages`. Packages may be installed like hits:
+Related functions and variable may be gathered in `modules`.  One or more modules may be organized into `packages`. To use a package, it has to be called like this:
 ```@jldoctest
 julia> using A_package
 ```
-Or like this if it is not installed:
+If it is not installed, before being used:
 ```@jldoctest
 julia> using Pkg                      # using the Package manager package
 julia> Pkg.add("A_package")
 julia> using A_package
 ```
-Now every public function from A_package is available directly. Private functions have to be called like this: 
+Now every public function which is made available by the package `A_package` is available directly. Private functions have to be called like this: 
 ```@jldoctest
-julia> A_package.a_private_function()        # Calling private functions
 julia> a_public_function()                   # Calling a public function
+julia> A_package.a_private_function()        # Calling private functions
 ```
 The same is true for the variables defined in the packages.
 
@@ -191,9 +191,7 @@ julia> using IJulia
 julia> notebook()
 ```
 The `notebook()` function should launch a web browser from which a new notebook  may be started. On each entry of the notebook code, Markdown or text may be inserted. Each line of code may be executed and will eventually return a result.
-In the following, the tutorials are given in Jupyter notebook form.
-
-The tutorial can be viewed on [nbviewer](http://nbviewer.jupyter.org/)
+In the following, the tutorials are given in Jupyter notebook form and can be viewed on [nbviewer](http://nbviewer.jupyter.org/)
 
 # Example 1: Loading and plotting mass spectrometry data
 This tutorial shows how to use how to import data and how to plot mass spectra.
