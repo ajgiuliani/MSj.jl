@@ -279,6 +279,11 @@ Pseudo-Voigt profile function used by the TBPD method
 """
 function voigt(x::Float64, p::AbstractArray)
     # pseudo-voigt profile
+    # width            = p[1]
+    # x0               = p[2]
+    # height           = p[3]
+    # background level = p[4]
+    
     γg = p[1] / (2.0 * sqrt(log(2.0)))
     γl = p[1] / 2.0
     γ = (γg^5 + 2.69269 * γg^4 * γl + 2.42843 * γg^3 * γl^2 + 4.47163 * γg^2 * γl^3 + 0.07842 * γg * γl^4 + γl^5)^(1/5)
