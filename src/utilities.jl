@@ -15,7 +15,7 @@ export avg, num2pnt
 
 """
     /(a::MSscan, N::Real)
-Divide the intensity and the tic data of a MSscan by a number
+Divide the intensity and the tic data of a MSscan by a number.
 ```julia-repl
 julia> scans[1] / 1.0e2
 msJ.MSscan(1, 0.1384, 50819.5, [140. ....
@@ -28,7 +28,7 @@ end
 
 """
     /(a::MSscans, N::Real)
-Divide in the intenisty, tic and variance of a MSscans by a number
+Divide in the intenisty, tic and variance of a MSscans by a number.
 ```julia-repl
 julia> a / 1.0e2
 msJ.MSscans(1, 0.1384, 50819.5, [140. ....
@@ -40,7 +40,7 @@ end
 
 """
     *(a::MSscan, N::Real)
-Multiply the intensity and the tic data of a MSscan by a number
+Multiply the intensity and the tic data of a MSscan by a number.
 ```julia-repl
 julia> scans[1] * 1.0e2
 msJ.MSscan(1, 0.1384, 50819.5, [140. ....
@@ -52,7 +52,7 @@ end
 
 """
     *(a::MSscans, N::Real)
-Multiply in the intenisty, tic and variance of a MSscans by a number
+Multiply in the intenisty, tic and variance of a MSscans by a number.
 ```julia-repl
 julia> a * 1.0e2
 msJ.MSscans(1, 0.1384, 50819.5, [140. ....
@@ -64,7 +64,7 @@ end
 
 """
     *(N::Real, a::MScontainer)
-Commutation of multiplication of number with MSscontainer
+Commutation of multiplication of number with MSscontainer.
 """
 function *(N::Real, a::MScontainer)
     return a * N
@@ -119,7 +119,7 @@ end
 
 """
     -(a::MScontainer, b::MScontainer)
-Substraction of mass spectra elementwise. Negative scan num refers the 'b' MScontainer
+Substraction of mass spectra elementwise. Negative scan num refers the 'b' MScontainer.
 ```julia-repl
 julia> a - b
 msJ.MSscans([1, 4], [0.1384, 3.7578, -0.1384, -3.7578]...
@@ -395,7 +395,7 @@ end
 
 
 """
-    savitzky_golay(int::Vector{Float64}, order::Int, window::Int, deriv::Int)
+    savitzky_golay(int::AbstractArray, order::Int, window::Int, deriv::Int)
 Savinsky and Golay filter removes high frequency noise from data. Parameters:
     int::AbstractArray
     order::Int   order of the polynomial
@@ -424,9 +424,33 @@ function savitzky_golay(int::AbstractArray, order::Int, window::Int, deriv::Int)
     yfirst = int[1]*ones(half_window)
     ylast = int[end]*ones(half_window)
     pad = vcat(yfirst, int, ylast)
-    y = conv(coefs[end:-1:1], pad)[2 * half_window + 1 : end - 2 * half_window]
+    y = convolve(coefs[end:-1:1], pad)[1 + 2 * half_window : end]
+   # y = conv(coefs[end:-1:1], pad)[2 * half_window + 1 : end - 2 * half_window]
     
     return y
+end
+
+
+"""
+    convolve(a::AbstractArray, b::AbstractArray)
+Convolve arrays a and b using the Fourier transform algorithm.
+"""
+function convolve(a::AbstractArray, b::AbstractArray)
+    na = length(a)
+    nb = length(b)
+    if nb > na
+        u=b
+        v=a            # smallest array need to be padded
+    else
+        u=a
+        v=b            # smallest array need to be padded
+    end
+    if length(a) != length(b)
+        pad = zeros(abs(nb - na))
+        padded = vcat(v, pad)
+    end
+    
+    real(FFTViews.ifft( FFTViews.fft(padded) .* FFTViews.fft(u)))
 end
 
 
@@ -513,4 +537,4 @@ function extremefilt(input::AbstractArray, minmax::Function, region::Int)
 end
 
 
-          
+
