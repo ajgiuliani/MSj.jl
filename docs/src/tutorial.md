@@ -159,7 +159,7 @@ julia> f!(y, x)
 
 
 ## Importing and using Packages
-Julia code is organized into files, modules and packages. A file using the `.jl` extension contains julia code.
+The Julia code is organized into files, modules and packages. A file using the `.jl` extension contains julia code.
 Related functions and variable may be gathered in `modules`.  One or more modules may be organized into `packages`. To use a package, it has to be called like this:
 ```@jldoctest
 julia> using A_package
@@ -193,7 +193,7 @@ julia> notebook()
 The `notebook()` function should launch a web browser from which a new notebook  may be started. On each entry of the notebook code, Markdown or text may be inserted. Each line of code may be executed and will eventually return a result.
 In the following, the tutorials are given in Jupyter notebook form and can be viewed on [nbviewer](http://nbviewer.jupyter.org/)
 
-# msJ
+# The msJ package
 ## Loading and plotting mass spectrometry data
 This tutorial shows how to use how to import data and how to plot mass spectra.
 
