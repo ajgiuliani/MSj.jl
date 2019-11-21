@@ -193,21 +193,27 @@ julia> notebook()
 The `notebook()` function should launch a web browser from which a new notebook  may be started. On each entry of the notebook code, Markdown or text may be inserted. Each line of code may be executed and will eventually return a result.
 In the following, the tutorials are given in Jupyter notebook form and can be viewed on [nbviewer](http://nbviewer.jupyter.org/)
 
-# Example 1: Loading and plotting mass spectrometry data
+# msJ
+## Loading and plotting mass spectrometry data
 This tutorial shows how to use how to import data and how to plot mass spectra.
 
-[Example 1: loading and plotting data](https://nbviewer.jupyter.org/github/ajgiuliani/msJ.jl/blob/master/docs/src/notebooks/example1.ipynb)
+[Loading and plotting data](https://nbviewer.jupyter.org/github/ajgiuliani/msJ.jl/blob/master/docs/src/notebooks/loading_plotting.ipynb)
 
-
-# Example 2: Filtering and averaging
+	
+## Filtering and averaging
 This notebook shows how to filter and average data.
 
-
-[Exemple 2: Filtering and averaging data](https://nbviewer.jupyter.org/github/ajgiuliani/msJ.jl/blob/master/docs/src/notebooks/example2.ipynb)
-
+[Filtering and averaging data](https://nbviewer.jupyter.org/github/ajgiuliani/msJ.jl/blob/master/docs/src/notebooks/filtering_averagging.ipynb)
 
 
-# Example 3: Extracting data from several files
+## Extracting data from several files
 This tutorial gives an example how to extract UV spectroscpy data from different files containing UV activation at different wavelengths.
 
-[Example 3: Extracting data from several files](https://nbviewer.jupyter.org/github/ajgiuliani/msJ.jl/blob/master/docs/src/notebooks/example3.ipynb)
+[Extracting data from several files](https://nbviewer.jupyter.org/github/ajgiuliani/msJ.jl/blob/master/docs/src/notebooks/spectroscopy.ipynb)
+
+
+## Isotopic distributions
+Here we will calculate the isotopic distribution of a compound, simulate a mass spectrum from that distribution and compare this result to experimental data.
+
+[Isotopic Distributions](https://nbviewer.jupyter.org/github/ajgiuliani/msJ.jl/blob/master/docs/src/notebooks/isotopic_distributions.ipynb)
+
