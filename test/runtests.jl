@@ -261,6 +261,18 @@ function tests()
        cr = msJ.chromatogram(scans, method = msJ.BasePeak() )
        @test length(cr.rt) == 6                                                        #99
 
+       m =msJ.formula("CH3(13C)H3Kr(Na)2")                                             #100
+      @test m == Dict("Na" => 2,"Kr" => 1,"C" => 1,"13C" => 1,"H" => 6) 
+
+       m = msJ.masses("C254 H377 N65 O75 S6")                                          #101
+      @test m == Dict("Monoisotopic" => 5729.60087099839, "Average" => 5733.55, "Nominal" => 5727.0) 
+
+      I = msJ.isotopic_distribution("CH4", 0.9999, charge = +1)                        #102
+      @test I[2,1:end] == [16.03130012908, 0.9887541751052761, 1, 0, 4, 0]
+      
+      a = msJ.simulate(I, 0.4, Npoints = 5)                                            #103
+      @test a.int == [100.0, 36.560922455912404, 2.181489132894455, 1.1021861850827237, 0.39852085074059823]
+
     end
 end
 tests()
