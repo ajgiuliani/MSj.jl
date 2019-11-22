@@ -234,7 +234,7 @@ function formula(formula::String)
                 if occursin(r"[1-9]", formula[l+2:l+2])   #  indice found after )
                     k = l+2
                     if k < length(formula)
-                        while occursin(r"[1-9]", formula[k:k])
+                        while occursin(r"[0-9]", formula[k:k])
                             k += 1
                         end
                         mult = parse(Int,formula[l+2:k-1])
@@ -245,6 +245,7 @@ function formula(formula::String)
                     mult = 1
                 end
             end
+            #println("mult :$mult")
             while !occursin(r"[)]", formula[j:j])       # repeat until the end
                 l = j
                 if occursin(r"[0-9]", formula[j:j])                      # number found after ( --> isotope
@@ -256,7 +257,7 @@ function formula(formula::String)
                         j=l
                         if occursin(r"[)]", formula[j+1:j+1])        # no indice after element --> indice = 1
                             next = "1"
-                        elseif occursin(r"[0-9]", formula[j+1:j+1])
+                        elseif occursin(r"[1-9]", formula[j+1:j+1])
                             l = j+1
                             while occursin(r"[0-9]", formula[l:l])
                                 l+=1
@@ -281,19 +282,22 @@ function formula(formula::String)
                     if occursin(r"[a-z]", formula[j+1:j+1])                 # is the capital is followed by a lower-case ? 
                         prev = prev * formula[j+1:j+1]
                         j += 1
-                        if occursin(r"[)]", formula[j+1:j+1])
+                        println(prev)
+                        if occursin(r"[)]", formula[j+1:j+1])               # capital letter followed by ) indice -> 1
                             next = "1"
                         elseif occursin(r"[1-9]", formula[j+1:j+1])            # finding indices
                             l = j+1
-                            while occursin(r"[1-9]", formula[l:l])
+                            while occursin(r"[0-9]", formula[l:l])
                                 l += 1
                             end
                             next = formula[j+1:l-1]
                             j = l-1
+                        elseif  occursin(r"[A-Z]", formula[j+1:j+1])        # is followed by another element
+                            next = "1"
                         end
                     elseif occursin(r"[1-9]", formula[j+1:j+1])            # finding indices
                         l = j+1
-                        while occursin(r"[1-9]", formula[l:l])
+                        while occursin(r"[0-9]", formula[l:l])
                             l += 1
                         end
                         next = formula[j+1:l-1]
@@ -303,7 +307,7 @@ function formula(formula::String)
                     elseif occursin(r"[)]", formula[j+1:j+1])               # last element before )
                         next = "1"
                     end
-                    if haskey(msJ.Elements, prev)               # element found
+                    if haskey(msJ.Elements, prev)                             # element found
 
                         if !haskey(form_dict, prev)                           # already found ?
                             form_dict[prev] = parse(Int,next) * mult         # no --> indice
@@ -321,11 +325,6 @@ function formula(formula::String)
         i += 1
     end
 
-#    for (key, value) in form_dict
-#        print("$key$value ")
-#    end
-#    println()
-     println(form_dict)
     form_dict
 end
 
