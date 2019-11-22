@@ -3,12 +3,14 @@
 *A mass spectrometry package for Julia*
 
 [![Build Status](https://travis-ci.org/ajgiuliani/msJ.jl.svg?branch=master)](https://travis-ci.org/ajgiuliani/msJ.jl)
+[![][appveyor-img]][appveyor-url]
 
 [![Coverage Status](https://coveralls.io/repos/github/ajgiuliani/msJ.jl/badge.svg?branch=master)](https://coveralls.io/github/ajgiuliani/msJ.jl?branch=master)
 [![codecov](https://codecov.io/gh/ajgiuliani/msJ.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/ajgiuliani/msJ.jl)
 
 [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://ajgiuliani.github.io/msJ.jl/stable)
 [![](https://img.shields.io/badge/docs-dev-blue.svg)](https://ajgiuliani.github.io/msJ.jl/dev/)
+
 
 
 ## Installation
