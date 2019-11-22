@@ -18,11 +18,11 @@ makedocs(
     authors = "Alexandre Giuliani.",
 
     pages = [
-        "Home"           => "index.md",
-        "Tutorial"       => "tutorial.md",
-        "Manual"         => "manual.md",
-        "Reference"      => "reference.md",
-        "Miscellaneous"  => "misc.md",
+        "Home"            => "index.md",
+        "Tutorials"       => "tutorial.md",
+        "Manual"          => "manual.md",
+        "References"      => "reference.md",
+        "Miscellaneous"   => "misc.md",
     ],
     #strict = true,
 )
