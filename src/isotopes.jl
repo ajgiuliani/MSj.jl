@@ -62,8 +62,8 @@ end
 
 
 """
-    simulate(I::Array{Union{Float64, Int64, String}}, ∆mz::Real; Npoints::Int=1000)
-From an isotopic distribution and a peak width returns a mass spectrum (MSScan). The number of points of the resulting mass spectrum is passed as an optional argument.
+    simulate(I::Array{Union{Float64, Int64, String}}, ∆mz::Real; model::Symbol=:gauss, Npoints::Int=1000)
+From an isotopic distribution and a peak width returns a mass spectrum (MSScan). The number of points of the resulting mass spectrum is passed as an optional argument. Peak shape are :gauss (default), :lorentz, :voight.
 # Examples
 ```julia-repl
 julia>  a = simulate(I, 0.4)
