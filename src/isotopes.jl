@@ -8,7 +8,7 @@ include("isotopes-data.jl")
 # ---------------
 
 
-export isotopic_distribution, masses, simulate
+export isotopic_distribution, masses, simulate, formula
 
 
 """
@@ -26,6 +26,23 @@ Dict{String,Float64} with 3 entries:
 """
 function masses(input::String)
     f = formula(input)
+    masses(f)
+end
+
+"""
+    masses(f::Dict{String,Int64})
+Calculates the average, monoistopic and nominal masses for the chemical formula dictionary, such as prodcued by msJ.formula. The result is returned in a dictionary with the following entries: "Monoiotopic", Average" and "Nominal".
+# Examples
+```julia-repl
+julia> masses("C254 H377 N65 O75 S6")
+Dict("S" => 6,"C" => 254,"N" => 65,"H" => 377,"O" => 75)
+Dict{String,Float64} with 3 entries:
+  "Monoisotopic" => 5729.6
+  "Average"      => 5733.55
+  "Nominal"      => 5727.0
+```
+"""
+function masses(f::Dict{String,Int64})
     m = Dict{String, Float64}()
 
     # exact mass
@@ -87,8 +104,6 @@ function simulate(I::Array{Union{Float64, Int64, String}}, ∆mz::Real; model::S
     MSscan(1, 0.0, sum(p), mz, p, 0, basePeakMz, 100.0, 0.0, "", "", 0.0)
 end
 
-
-
 """
     isotopic_distribution(input::String, p_target::Real; charge::Int = +1, tau::Real = 0.1, Elements::Dict{String,Array{msJ.Isotope,1}} = msJ.Elements)
 Calculates the isotopic distribution of input formula for which the overall probabilities equals p_target using the isospec algorithm. The charge state is entered as an optional argument. The peaks detection threshold tau is by default set to 10%.
@@ -121,7 +136,12 @@ Dict("S" => 6,"C" => 254,"N" => 65,"H" => 377,"O" => 75)
 ```
 """
 function isotopic_distribution(input::String, p_target::Real; charge::Int = +1, tau::Real = 0.1, Elements::Dict{String,Array{msJ.Isotope,1}} = msJ.Elements)
-    form = formula(input)
+    f = formula(input)
+    println(f)
+    isotopic_distribution(formula(input), p_target, charge = charge, tau = tau)
+end
+
+function isotopic_distribution(form::Dict{String,Int64}, p_target::Real; charge::Int = +1, tau::Real = 0.1, Elements::Dict{String,Array{msJ.Isotope,1}} = msJ.Elements)
     c_form = collect(form)
     sort_formula(x) = 
         begin 
@@ -141,7 +161,6 @@ function isotopic_distribution(input::String, p_target::Real; charge::Int = +1, 
     end
     N += 2                              # columns
     M = length(I)                       # rows
-    result = Matrix{Any}(nothing, M+1,N)
     result = Matrix{Union{String, Float64, Int}}(undef, M+1,N)
     labels = Vector{String}(undef, N)
     labels[1] = "Masses"
@@ -569,7 +588,7 @@ function trim!( I::PriorityQueue, p_target::Real, summ::Real)
     somme = 0.0
     while true
         if !isempty(I)
-            somme = sum( collect( values(I)  ) )
+            somme = sum( collect( values(I) )[2:end] )
         end
         if somme <= p_target
             break
@@ -578,8 +597,7 @@ function trim!( I::PriorityQueue, p_target::Real, summ::Real)
             break
         else
             dequeue!(I)
-        end
-        
+        end       
     end
     I
 end
