@@ -59,8 +59,8 @@ msJ.Polarity
 msJ.Activation_Method
 msJ.Activation_Energy
 msJ.Precursor
+msJ.Isotopes
 ```
-
 
 ## I/O
 ------
@@ -173,6 +173,15 @@ msJ.ipsa(scans::Vector{MSscan}, width::Real, maxiter::Int)
 No functions yet. To be added.
 
 
+## Simulation
+-------------
+```@docs
+msJ.formula
+msJ.masses
+msJ.isotopic_distribution
+msJ.simulate
+```
+
 
 ## Plots
 --------
@@ -202,14 +211,15 @@ Modules = [msJ.plots]
 msJ.avg(a::MScontainer, b::MScontainer)
 msJ.add_ion_current(x::Vector{Float64}, y::Vector{Float64}, a::Float64, b::Float64)
 msJ.num2pnt(x::Vector{Float64}, val::Real)
-savitzky_golay(int::AbstractArray, order::Int, window::Int, deriv::Int)
-extremefilt(input::AbstractArray, minmax::Function, region::Int)
-morpholaplace(input::AbstractArray, region::Int)
-morphogradient(input::AbstractArray, region::Int)
-tophat(input::AbstractArray, region::Int)
-bottomhat(input::AbstractArray, region::Int) 
-opening(input::AbstractArray, region::Int)
-closing(input::AbstractArray, region::Int)
-erosion(input::AbstractArray, region::Int)
-dilatation(input::AbstractArray, region::Int)
+msJ.savitzky_golay(int::AbstractArray, order::Int, window::Int, deriv::Int)
+msJ.extremefilt(input::AbstractArray, minmax::Function, region::Int)
+msJ.morpholaplace(input::AbstractArray, region::Int)
+msJ.morphogradient(input::AbstractArray, region::Int)
+msJ.tophat(input::AbstractArray, region::Int)
+msJ.bottomhat(input::AbstractArray, region::Int) 
+msJ.opening(input::AbstractArray, region::Int)
+msJ.closing(input::AbstractArray, region::Int)
+msJ.erosion(input::AbstractArray, region::Int)
+msJ.dilatation(input::AbstractArray, region::Int)
+msJ.convolve(a::AbstractArray, b::AbstractArray)
 ```

@@ -177,7 +177,7 @@ These filters may be combined together if necessary. For example, the input belo
 - with an activation energy of 18 
 - and for retention times in the 1 to 60 s range.
 
-```julia-repl
+```julia
 average("filename", msJ.Precursor(1255.5),
                     msJ.Activation_Energy(18),
                     msJ.Activation_Method("CID"),
@@ -187,7 +187,7 @@ average("filename", msJ.Precursor(1255.5),
 ```
 
 Several filter types may also be combined for `chromatograms`:
-```julia-repl
+```julia
 chromatogram("filename", msJ.Precursor(1255.5),
                          msJ.Activation_Energy(18),
                          msJ.Activation_Method("CID"),
@@ -218,7 +218,7 @@ chromatogram("filename", method = msJ.∆MZ( [258, 1] ) )
 
 ## Extracting subsets
 
-The [`extract`](@ref) returns a Vector of `MSscan`from either a file of from a Vector{MSscan} following a ['load'](@ref) command, which corresponds to the filter conditions. See the [filtering](Filtering) part above.
+The [`extract`](@ref) returns a Vector of `MSscan`from either a file of from a Vector{MSscan} following a [`load`](@ref) command, which corresponds to the filter conditions. See the [Filtering](@ref) part above.
 
 ```julia
 sub_set = extract("filename")                       # extracting without any conditions returns a vector identical to the output 
@@ -314,8 +314,8 @@ Dict("C" => 1,"13C" => 1,"H" => 6)
 ```
 These expressions are equivalent: "CH3(13C)H3", "CH3(13CH3)", "C(13C)H6".
 The following isotopes are recognized by msJ.formula:
-- 1H   for <sup>1</sup>H<sub>1</sub> (protium)
-- 2H   for <sup>2</sup>H<sub>1</sub> (deuterium)
+- 1H   for ^1H\_1 (protium)
+- 2H   for ``{}^2H_{2}`` (deuterium)
 - D    equivalent to 2H
 - 12C  for <sup>12</sup>C<sub>6</sub>
 - 13C  for <sup>13</sup>C<sub>6</sub>
@@ -402,11 +402,13 @@ Dict("C" => 6,"H" => 14)
  87.1129     0.0612122       5       1       14      0 
  88.1163     0.00166891      4       2       14      0 
  87.1158     0.00151559      6       0       13      1
- ```
+```
+ 
+
 The resulting array is intend to be readable easily, and thus the first line contains the descriptors or the columns. It may also be easily exported to a delimited file.
 
 ## Simulated mass spectra
-The result of an isotopic distribution calculation may be convoluted by a experimental peak shape to produce a simulated mass spectrum. Such an operatio, is achieved by the [`simulate`](@re) function.
+The result of an isotopic distribution calculation may be convoluted by a experimental peak shape to produce a simulated mass spectrum. Such an operatio, is achieved by the [`simulate`](@ref) function.
 The function takes the following arguments:
 - I: the `Array`resulting from the `isotopic_distribution` calculation
 - ∆mz: the width in Dalton of the peak shape
@@ -420,6 +422,7 @@ julia> Using Plots
 julia> plot(sim)
  ```
 See [## Plotting](@ref) for more information on how to plot mass spectra.
+
 
 # Plotting
 Plotting facilities are available as a submodule to the `msJ` package.  The [`msJ.plots`](@ref) module relies on the [RecipesBase package](https://github.com/JuliaPlots/RecipesBase.jl), which allows writing recipes to plot users' data types. Hence, recipes have been created for `MSscan`, `Msscans` and `Chromatogram`:
