@@ -276,10 +276,10 @@ function tests()
        m = msJ.masses(f)                                                               #104
       @test m == Dict("Monoisotopic" => 282.0028349717, "Average" => 281.902086912, "Nominal" => 282.0) 
 
-      I = msJ.isotopic_distribution(f, 0.9999, charge = +1)                             #102
+      I = msJ.isotopic_distribution(f, 0.9999, charge = +1)                            #105
       @test I[2,1:end][1:2] == [282.0028349717, 0.5630635281692917]
       
-      a = msJ.simulate(I, 0.4, model=:lorentz, Npoints = 5)                             #103
+      a = msJ.simulate(I, 0.4, model=:lorentz, Npoints = 5)                            #106
       @test a.int == [1.0392077560077122, 17.523433547791814, 100.0, 1.8273069587773836, 0.41728492055754945]
 
     end
