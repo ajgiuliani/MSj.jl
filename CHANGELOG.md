@@ -1,4 +1,4 @@
-# msJ.jl changelog
+# MSJ.jl changelog
 
 ## Version `v0.3.0`
 

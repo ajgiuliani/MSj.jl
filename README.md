@@ -2,13 +2,13 @@
 
 *A mass spectrometry package for Julia*
 
-[![Build Status](https://travis-ci.org/ajgiuliani/msJ.jl.svg?branch=master)](https://travis-ci.org/ajgiuliani/msJ.jl)
+[![Build Status](https://travis-ci.org/ajgiuliani/MSJ.jl.svg?branch=master)](https://travis-ci.org/ajgiuliani/MSJ.jl)
 
-[![Coverage Status](https://coveralls.io/repos/github/ajgiuliani/msJ.jl/badge.svg?branch=master)](https://coveralls.io/github/ajgiuliani/msJ.jl?branch=master)
-[![codecov](https://codecov.io/gh/ajgiuliani/msJ.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/ajgiuliani/msJ.jl)
+[![Coverage Status](https://coveralls.io/repos/github/ajgiuliani/MSJ.jl/badge.svg?branch=master)](https://coveralls.io/github/ajgiuliani/MSJ.jl?branch=master)
+[![codecov](https://codecov.io/gh/ajgiuliani/MSJ.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/ajgiuliani/MSJ.jl)
 
-[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://ajgiuliani.github.io/msJ.jl/stable)
-[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://ajgiuliani.github.io/msJ.jl/dev/)
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://ajgiuliani.github.io/MSJ.jl/stable)
+[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://ajgiuliani.github.io/MSJ.jl/dev/)
 
 
 
@@ -16,17 +16,17 @@
 This package is unregistered. It can be installed either with the Julia package manager.
 From the Julia REPL, type `]` to enter the Pkg REPL mode and run:
 ```julia
-(v1.2) pkg> add https://github.com/ajgiuliani/msJ.jl
+(v1.2) pkg> add https://github.com/ajgiuliani/MSJ.jl
 ```
 or using the package API:
 
 ```julia
 using Pkg
-Pkg.add(PackageSpec(url="https://github.com/ajgiuliani/msJ.jl"))
+Pkg.add(PackageSpec(url="https://github.com/ajgiuliani/MSJ.jl"))
 ```
 
 ## Documentation
-Documentation is available [here](https://ajgiuliani.github.io/msJ.jl/stable).
+Documentation is available [here](https://ajgiuliani.github.io/MSJ.jl/stable).
 
 
 ## Project Status
