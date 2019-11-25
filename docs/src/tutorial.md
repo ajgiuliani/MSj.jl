@@ -6,7 +6,7 @@ Tutorials
 using Plots
 ```
 
-The msJ package intends to provide an access to the common open source mass spectrometry file format using [Julia](https://julialang.org/).
+The MSJ package intends to provide an access to the common open source mass spectrometry file format using [Julia](https://julialang.org/).
 
 # The Julia language
 Julia is an open source programming language designed for scientific and technical computing. This section will give a very brief introduction to the Julia language. 
@@ -193,33 +193,30 @@ julia> notebook()
 The `notebook()` function should launch a web browser from which a new notebook  may be started. On each entry of the notebook code, Markdown or text may be inserted. Each line of code may be executed and will eventually return a result.
 In the following, the tutorials are given in Jupyter notebook form and can be viewed on [nbviewer](http://nbviewer.jupyter.org/)
 
-# The msJ package
+# The MSJ package
 ## Loading and plotting mass spectrometry data
 This tutorial shows how to use how to import data and how to plot mass spectra.
 
-[Loading and plotting data](https://nbviewer.jupyter.org/github/ajgiuliani/msJ.jl/blob/master/docs/src/notebooks/Loading_plotting.ipynb)
+[Loading and plotting data](https://nbviewer.jupyter.org/github/ajgiuliani/MSJ.jl/blob/master/docs/src/notebooks/Loading_plotting.ipynb)
 
-View [HTML export](https://github.com/ajgiuliani/msJ.jl/blob/master/docs/src/notebooks/Loading_plotting.html))
+View [HTML export](https://github.com/ajgiuliani/MSJ.jl/blob/master/docs/src/notebooks/Loading_plotting.html))
 
 
 ## Filtering and averaging
 This notebook shows how to filter and average data.
 
-[Filtering and averaging data](https://nbviewer.jupyter.org/github/ajgiuliani/msJ.jl/blob/master/docs/src/notebooks/Filtering_averagging.ipynb)
+[Filtering and averaging data](https://nbviewer.jupyter.org/github/ajgiuliani/MSJ.jl/blob/master/docs/src/notebooks/Filtering_averagging.ipynb)
 
-View [HTML export](https://github.com/ajgiuliani/msJ.jl/blob/master/docs/src/notebooks/Filtering_averagging.html)
 
 ## Extracting data from several files
 This tutorial gives an example how to extract UV spectroscpy data from different files containing UV activation at different wavelengths.
 
-[Extracting data from several files](https://nbviewer.jupyter.org/github/ajgiuliani/msJ.jl/blob/master/docs/src/notebooks/Spectroscopy.ipynb)
+[Extracting data from several files](https://nbviewer.jupyter.org/github/ajgiuliani/MSJ.jl/blob/master/docs/src/notebooks/Spectroscopy.ipynb)
 
-View [HTML export](https://github.com/ajgiuliani/msJ.jl/blob/master/docs/src/notebooks/Spectroscopy.html)
 
 
 ## Isotopic distributions
 Here we will calculate the isotopic distribution of a compound, simulate a mass spectrum from that distribution and compare this result to experimental data.
 
-[Isotopic Distributions](https://nbviewer.jupyter.org/github/ajgiuliani/msJ.jl/blob/master/docs/src/notebooks/Isotopic_distributions.ipynb)
+[Isotopic Distributions](https://nbviewer.jupyter.org/github/ajgiuliani/MSJ.jl/blob/master/docs/src/notebooks/Isotopic_distributions.ipynb)
 
-View [HTML export](https://github.com/ajgiuliani/msJ.jl/blob/master/docs/src/notebooks/Isotopic_distributions.html)
