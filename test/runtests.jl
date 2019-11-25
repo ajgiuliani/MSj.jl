@@ -1,4 +1,4 @@
-using msJ, Test
+using MSJ, Test
 using Plots
 
 function tests()
