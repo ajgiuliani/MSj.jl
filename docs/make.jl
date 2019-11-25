@@ -1,10 +1,10 @@
-using Documenter, msJ
+using Documenter, MSJ
 
 makedocs(
     format = Documenter.HTML(
         # Use clean URLs, unless built as a "local" build
         prettyurls = !("local" in ARGS),
-        canonical = "https://ajgiuliani.github.io/msJ.jl/stable/",
+        canonical = "https://ajgiuliani.github.io/MSJ.jl/stable/",
         assets = ["assets/favicon.ico"],
         analytics = "UA-132913317-2",
     ),    
@@ -12,9 +12,9 @@ makedocs(
     #build   = "build",
     clean   = false,
     #doctest = true,
-    modules = [msJ],
+    modules = [MSJ],
     highlightsig = true,
-    sitename="msJ.jl",
+    sitename="MSJ.jl",
     authors = "Alexandre Giuliani.",
 
     pages = [
@@ -28,7 +28,7 @@ makedocs(
 )
 
 deploydocs(
-    repo = "github.com/ajgiuliani/msJ.jl.git",
+    repo = "github.com/ajgiuliani/MSJ.jl.git",
     target = "build",
 #    devbranch = "dev",
 #    branch = "gh-pages",
