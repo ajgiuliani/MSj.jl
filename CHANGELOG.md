@@ -2,6 +2,8 @@
 
 ## Version `v0.3.0`
 
+* ![BREAKING][badge-breaking] ![Enhancement][badge-enhancement] Renaming: `MSJ.jl` to be more inline with the package naming guidelines.
+
 * ![Feature][badge-feature] `formula`: public function. Parse a string containing the chemical formula to a dict{String, Int}.
 
 * ![Feature][badge-feature] `isotopic_distribution`: public function. Takes either the chemical formula or a dict{String,Int} and returns a set of isotopologues.
@@ -10,7 +12,7 @@
 * ![Feature][badge-feature] `simulate`: public function. From an isotpic distribution simulate a mass spectrum based on a resolution and a peak shape.
 
 ## Version `v0.2.0`
-* ![Enhancement][badge-enhancement] `msfilter` function is renamed `average`.
+* ![BREAKING][badge-breaking] `msfilter` function is renamed `average`.
 
 * ![Feature][badge-feature] `baseline_correction`: public function. Corrects the baseline using TopHat, Iterative polynomial smoothing algorithm (IPSA) or Locally weighted error sum of squares regression (LOESS).
 
