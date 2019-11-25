@@ -14,12 +14,12 @@ export smooth, centroid, baseline_correction
 Smooth the intensity of the input data and returns a similar structure.
 # Examples
 ```julia-repl
-julia> smoothed_data = msJ.smooth(scans)
-msJ.MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
+julia> smoothed_data = MSJ.smooth(scans)
+MSJ.MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
 function smooth(scan::MScontainer; method::MethodType=SG(5, 9, 0))
-    if method isa msJ.SG
+    if method isa MSJ.SG
         return savitzky_golay_filtering(scan, method.order, method.window, method.derivative)
     end  
 end
@@ -30,13 +30,13 @@ Smooth the intensity of the input data and returns a similar structure.
 # Examples
 ```julia-repl
 julia> scans = load("filename")
-julia> smoothed_data = msJ.smooth(scans)
-6-element Array{msJ.MSscan,1}:
- msJ.MSscan(1, 0.1384, 5.08195e6 .....
+julia> smoothed_data = MSJ.smooth(scans)
+6-element Array{MSJ.MSscan,1}:
+ MSJ.MSscan(1, 0.1384, 5.08195e6 .....
 ```
 """
 function smooth(scans::Vector{MSscan}; method::MethodType=SG(5, 9, 0))
-    if method isa msJ.SG
+    if method isa MSJ.SG
         sm_scans = Vector{MSscan}(undef, 0)
         for el in scans
             push!(sm_scans, savitzky_golay_filtering(el, method.order, method.window, method.derivative))
@@ -48,7 +48,7 @@ end
 
 
 """
-    savitzky_golay_filtering(scan::msJ.MScontainer, order::Int, window::Int, deriv::Int)
+    savitzky_golay_filtering(scan::MSJ.MScontainer, order::Int, window::Int, deriv::Int)
 Savinsky and Golay filtering of mz and int data within the MSscan(s) container.
 """
 function savitzky_golay_filtering(scan::MScontainer, order::Int, window::Int, deriv::Int)
@@ -106,7 +106,7 @@ Peak picking algorithm taking an array of MSscan as input and returning an objec
 # Examples
 ```julia-repl
 julia> reduced_data = centroid(scans)
-6-element Array{msJ.MSscan,1}:
+6-element Array{MSJ.MSscan,1}:
 MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
@@ -149,7 +149,7 @@ function snra(scan::MScontainer, thres::Real, region::Int)
     peaks_int = Vector{Float64}(undef,0)
     peaks_s = Vector{Float64}(undef,0)
     
-    noise  = msJ.opening(scan.int, region);
+    noise  = MSJ.opening(scan.int, region);
     SNR = scan.int ./ noise;
         
     maxi = maximum(scan.int)    
@@ -182,7 +182,7 @@ end
 
     
 """
-    tbpd(scan::msJ.MScontainer, shape::Symbol,  R::Real, thres::Real)
+    tbpd(scan::MSJ.MScontainer, shape::Symbol,  R::Real, thres::Real)
 Template based beak detection algorithm returning the m/z and intensity of the peaks detected
 """
 function tbpd(scan::MScontainer, model::Function,  ∆mz::Real, thres::Real)   #template based peak detection
@@ -310,10 +310,10 @@ Baseline correction takes a MSscan or MSscans object as input and returns an obj
 ```julia-repl
 julia> reduced_data = baseline_correction(scan)
 MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
-julia> reduced_data = baseline_correction(scans, method = msJ.LOESS(1))
+julia> reduced_data = baseline_correction(scans, method = MSJ.LOESS(1))
 MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
-julia> reduced_data = baseline_correction(scans, method = msJ.IPSA(51,100))
-6-element Array{msJ.MSscan,1}:
+julia> reduced_data = baseline_correction(scans, method = MSJ.IPSA(51,100))
+6-element Array{MSJ.MSscan,1}:
 MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
@@ -334,13 +334,13 @@ Baseline correction takes a Vector of MSscan as input and returns a Vector of MS
 # Examples
 ```julia-repl
 julia> reduced_data = baseline_correction(scans)
-6-element Array{msJ.MSscan,1}:
+6-element Array{MSJ.MSscan,1}:
 MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
-julia> reduced_data = baseline_correction(scans, method = msJ.LOESS(1))
-6-element Array{msJ.MSscan,1}:
+julia> reduced_data = baseline_correction(scans, method = MSJ.LOESS(1))
+6-element Array{MSJ.MSscan,1}:
 MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
-julia> reduced_data = baseline_correction(scans, method = msJ.IPSA(51,100))
-6-element Array{msJ.MSscan,1}:
+julia> reduced_data = baseline_correction(scans, method = MSJ.IPSA(51,100))
+6-element Array{MSJ.MSscan,1}:
 MSscans(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....
 ```
 """
