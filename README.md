@@ -1,4 +1,4 @@
-# msJ.jl
+# MSJ.jl
 
 *A mass spectrometry package for Julia*
 
