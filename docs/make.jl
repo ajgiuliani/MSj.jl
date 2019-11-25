@@ -29,7 +29,7 @@ makedocs(
 
 deploydocs(
     repo = "github.com/ajgiuliani/MSJ.jl.git",
-    target = "build",
+    #target = "build",
     #devbranch = "master",
     #devbranch = "dev",
     #branch = "gh-pages",
