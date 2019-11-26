@@ -191,15 +191,13 @@ julia> using IJulia
 julia> notebook()
 ```
 The `notebook()` function should launch a web browser from which a new notebook  may be started. On each entry of the notebook code, Markdown or text may be inserted. Each line of code may be executed and will eventually return a result.
-In the following, the tutorials are given in Jupyter notebook form and can be viewed on [nbviewer](http://nbviewer.jupyter.org/)
+In the following, the tutorials are given in `Jupyter notebook` form and can be viewed using [nbviewer](http://nbviewer.jupyter.org/).
 
 # The MSJ package
 ## Loading and plotting mass spectrometry data
 This tutorial shows how to use how to import data and how to plot mass spectra.
 
 [Loading and plotting data](https://nbviewer.jupyter.org/github/ajgiuliani/MSJ.jl/blob/master/docs/src/notebooks/Loading_plotting.ipynb)
-
-View [HTML export](https://github.com/ajgiuliani/MSJ.jl/blob/master/docs/src/notebooks/Loading_plotting.html))
 
 
 ## Filtering and averaging
