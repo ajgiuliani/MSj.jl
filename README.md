@@ -30,7 +30,7 @@ Documentation is available [here](https://ajgiuliani.github.io/MSj.jl/stable).
 
 
 ## Usage
-MS<sup>j</sup> is a package for loading, processing and plotting mass spectrometry data. It provides the following functionalities:
+`MS<sup>j</sup>` is a package for loading, processing and plotting mass spectrometry data. It provides the following functionalities:
 
     Getting information on the file
     Load a file
