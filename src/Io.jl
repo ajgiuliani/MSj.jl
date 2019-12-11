@@ -174,7 +174,7 @@ function chromatogram(filename::String, filters::FilterType...; method::MethodTy
 
         index = Set( i for i in 1:scanCount )
         
-        for el in filters
+        for el in filters          
             subindex = filter(msRun, el)
             index = intersect(index, subindex) 
         end
