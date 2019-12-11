@@ -1,8 +1,8 @@
-# MSJ.jl changelog
+# MSj.jl changelog
 
 ## Version `v0.3.0`
 
-* ![BREAKING][badge-breaking] ![Enhancement][badge-enhancement] Renaming: `MSJ.jl` to be more inline with the package naming guidelines.
+* ![BREAKING][badge-breaking] ![Enhancement][badge-enhancement] Renaming: `MSj.jl` to be more inline with the package naming guidelines.
 
 * ![Feature][badge-feature] `formula`: public function. Parse a string containing the chemical formula to a dict{String, Int}.
 
