@@ -2,7 +2,7 @@
 Main module for `msJ.jl`-- A Julia package to load and process mass spectrometry data.
 
 """
-module MSJ
+module MSj
 
 
 using Statistics           # used for Perasons correlation calculation
