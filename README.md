@@ -1,4 +1,4 @@
-# MS <sup>j</sup>.jl
+# MS<sup>j</sup>.jl
 
 *A mass spectrometry package for Julia*
 
@@ -16,7 +16,7 @@
 This package is unregistered. It can be installed either with the Julia package manager.
 From the Julia REPL, type `]` to enter the Pkg REPL mode and run:
 ```julia
-(v1.2) pkg> add https://github.com/ajgiuliani/MSj.jl
+(v1.3) pkg> add https://github.com/ajgiuliani/MSj.jl
 ```
 or using the package API:
 
@@ -29,8 +29,37 @@ Pkg.add(PackageSpec(url="https://github.com/ajgiuliani/MSj.jl"))
 Documentation is available [here](https://ajgiuliani.github.io/MSj.jl/stable).
 
 
-## Project Status
-The package is developed for Julia 1.0 and above on Linux and OSX. It should be working on Windows as well.
+## Usage
+MS<sup>j</sup> is a package for loading, processing and plotting mass spectrometry data. It provides the following functionalities:
+
+    Getting information on the file
+    Load a file
+    Averaging mass spectra based on various criteria that may be combined
+    Chromatogram and extracted chromatograms
+    Processing the data
+        smoothing
+        baseline correction
+        peak-picking
+    Calculation of isotopic distribution
+
+To get information on a file:
+```julia
+info("path/to/file")
+```
+
+Mass spectra can be loaded by:
+```julia
+data = load("path/to/file"))
+```
+
+And averaged as follow:
+```julia
+ms1 = average(data, MSj.Level(1))                   # full MS scans
+ms2 = average(data, MSj.Level(2))                   # MS2 spectra
+ms3 = average(data, MSj.Activation_Method("CID"))   # CID spectra
+```
+
+See the [documentation](https://ajgiuliani.github.io/MSj.jl/stable) for additional information.
 
 
 ## Other packages
