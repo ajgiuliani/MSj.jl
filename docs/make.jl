@@ -3,19 +3,20 @@ using Documenter, MSj
 makedocs(
     format = Documenter.HTML(
         # Use clean URLs, unless built as a "local" build
-        prettyurls = !("local" in ARGS),
+        #prettyurls = !("local" in ARGS),
+        prettyurls = get(ENV, "CI", nothing) == "true",
         canonical = "https://ajgiuliani.github.io/MSj.jl/stable/",
         assets = ["assets/favicon.ico"],
         analytics = "UA-132913317-2",
     ),    
     #source  = "src",
     #build   = "build",
-    clean   = false,
+    #clean   = false,
     #doctest = true,
     modules = [MSj],
     highlightsig = true,
     sitename="MSj.jl",
-    authors = "Alexandre Giuliani.",
+    authors = "Alexandre Giuliani",
 
     pages = [
         "Home"            => "index.md",
@@ -30,7 +31,7 @@ makedocs(
 deploydocs(
     repo = "github.com/ajgiuliani/MSj.jl.git",
     target = "build",
-    devbranch = "master",
+    devbranch = "dev",
     branch = "gh-pages",
     #devurl = "dev",
     #versions = ["stable" => "v^", "v#.#", devurl => devurl]
