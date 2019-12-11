@@ -2,7 +2,7 @@ Manual
 ======
 
 # Introduction
-The `MSJ` package aims at providing an API to the most common file format in mass spectrometry. The following file formats are currently supported:
+The `MSj` package aims at providing an API to the most common file format in mass spectrometry. The following file formats are currently supported:
 - mzXML 
 
 # Public elements
@@ -21,9 +21,9 @@ The functions below are exported:
 
 
 # Data types
-The main data type of the package is the abstract type [`MSJ.MScontainer`](@ref).
+The main data type of the package is the abstract type [`MSj.MScontainer`](@ref).
 
-Mass spectrometry scans are stored in the following structures, inspired from the mzXML format, which is a subtype of [`MSJ.MScontainer`](@ref). 
+Mass spectrometry scans are stored in the following structures, inspired from the mzXML format, which is a subtype of [`MSj.MScontainer`](@ref). 
 ```julia
 struct MSscan <: MScontainer
     num::Int                          # num
@@ -41,7 +41,7 @@ struct MSscan <: MScontainer
 end
 ```
 
-Another subtype, [`MSJ.Chromatogram`](@ref), is used to store the retention time, the ionic current and the maximum value of the ion current.
+Another subtype, [`MSj.Chromatogram`](@ref), is used to store the retention time, the ionic current and the maximum value of the ion current.
 
 ```julia
 struct Chromatogram  <: MScontainer
@@ -51,7 +51,7 @@ struct Chromatogram  <: MScontainer
 end
 ```
 
-Combination of mass spectra requires another subtype of [`MSJ.MScontainer`](@ref) called [`MSJ.MSscans`](@ref) (notice the ending s).
+Combination of mass spectra requires another subtype of [`MSj.MScontainer`](@ref) called [`MSj.MSscans`](@ref) (notice the ending s).
 
 ```julia
 struct MSscans  <: MScontainer
@@ -70,7 +70,7 @@ struct MSscans  <: MScontainer
     s::Vector{Float64}                # variance
 end
 ```
-The [`MSJ.MSscans`](@ref) structure is very similar to the [`MSJ.MSscan`](@ref) one, except that the fields `num`, `rt`, `precursor`, `polarity`, `activationMethod` and `collisionEnergy` are vectors. The idea is to keep track of the *history* of the operations that have led to this result. For example, if a `MSscans` element is the result of the addition of two individual scans such as scans[1] + scans[2], then the `num`field of resulting `MSscans` is an array [1, 2]. The same applies to the retention time, precursor m/z, polarity, activation method and collision energy fields.
+The [`MSj.MSscans`](@ref) structure is very similar to the [`MSj.MSscan`](@ref) one, except that the fields `num`, `rt`, `precursor`, `polarity`, `activationMethod` and `collisionEnergy` are vectors. The idea is to keep track of the *history* of the operations that have led to this result. For example, if a `MSscans` element is the result of the addition of two individual scans such as scans[1] + scans[2], then the `num`field of resulting `MSscans` is an array [1, 2]. The same applies to the retention time, precursor m/z, polarity, activation method and collision energy fields.
 
 # Information
 The [`info`](@ref) public function reads the content of a file, but without loading the mass spectrometry data, and returns a `Vector{String}`containing the number of scans, scans level and for MS/MS data, the precursor m/z, the activation method and energy. Additional information may be gained by setting `verbose = true`.
@@ -84,32 +84,32 @@ info(filename)
 ```
 
 # Importing data
-When loading a file containing more than a single acquisition, the individual mass spectrometry scans are pushed into an array of [`MSJ.MSscan`](@ref).  The individual scans may be retrieve from the array the usual way:
+When loading a file containing more than a single acquisition, the individual mass spectrometry scans are pushed into an array of [`MSj.MSscan`](@ref).  The individual scans may be retrieve from the array the usual way:
 
 ```julia-repl
 julia> scans = load("filename")
-51-element Array{MSJ.MSscan,1}:
- MSJ.MSscan(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....)
+51-element Array{MSj.MSscan,1}:
+ MSj.MSscan(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....)
 ...
 
 julia> scans[1]
-MSJ.MSscan(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....)
+MSj.MSscan(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....)
 ```
 
-As mentioned above, chromatograms may be retrieved from a file and imported in [`MSJ.Chromatogram`](@ref) :
+As mentioned above, chromatograms may be retrieved from a file and imported in [`MSj.Chromatogram`](@ref) :
 ```julia-repl
 julia> chromatogram("filename")
-MSJ.Chromatogram([0.1384, 0.7307, 2.1379, 3.7578, 4.3442, 5.7689], [5.08195e6, 9727.2, 11.3032, 4.8084e6, 12203.5, 4.84455], 5.08195e6)
+MSj.Chromatogram([0.1384, 0.7307, 2.1379, 3.7578, 4.3442, 5.7689], [5.08195e6, 9727.2, 11.3032, 4.8084e6, 12203.5, 4.84455], 5.08195e6)
 ```
 
-The function [`MSJ.retention_time`](@ref) reads the retention time of an input file and returns a `Vector{Float64}`containing the time in seconds.
+The function [`MSj.retention_time`](@ref) reads the retention time of an input file and returns a `Vector{Float64}`containing the time in seconds.
 ```julia-repl
-julia> MSJ.retention_time("filename")
+julia> MSj.retention_time("filename")
 51-element Array{Float64,1}:
   0.1384
   0.7307
   2.1379
-....MSJ.FilterType
+....MSj.FilterType
 
 ```
 
@@ -128,15 +128,15 @@ The [`average`](@ref) returns the average of the mass spectra directly from a `V
 
 ```julia-repl
 julia> average("filename")
-MSJ.MSscans([1, 2, 3 ....
+MSj.MSscans([1, 2, 3 ....
 
 julia> scans = load("filename")
-51-element Array{MSJ.MSscan,1}:
- MSJ.MSscan(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....)
+51-element Array{MSj.MSscan,1}:
+ MSj.MSscan(1, 0.1384, 5.08195e6, [140.083, 140.167, 140.25, 140.333, 140.417, 140.5, 140.583, 140.667, 140.75, 140.833  …  1999.25, 1999.33, 1999.42, ....)
 ...
 
 julia> average(scans)
-MSJ.MSscans([1, 2, 3 ....
+MSj.MSscans([1, 2, 3 ....
 
 ```
 
@@ -147,18 +147,18 @@ Without any argument the [`average`](@ref) function averages the entire content 
 
 ## Filtering
 
-The [`average`](@ref) and [`chromatogram`](@ref) functions may takes arguments to select specific fields of interest within the data and operate on them. The argument belongs to the [`MSJ.FilterType`](@ref). Their properties are listed below:
+The [`average`](@ref) and [`chromatogram`](@ref) functions may takes arguments to select specific fields of interest within the data and operate on them. The argument belongs to the [`MSj.FilterType`](@ref). Their properties are listed below:
 
 | FilterType            | Description       | Arguments                                | Specificity            |
 |-----------------------|-------------------|------------------------------------------|------------------------|
-| MSJ.Scan              | Scan num          | Int, Vector{Int}                         | average, chromatogram |
-| MSJ.Level             | MS level          | Int, Vector{Int}                         | average, chromatogram |
-| MSJ.Polarity          | Polarity          | String, Vector{String}                   | average, chromatogram |
-| MSJ.Activation_Method | Activation method | String, Vector{String}                   | average, chromatogram |
-| MSJ.Activation_Energy | Activation energy | Real, Vector{Real}                       | average, chromatogram |
-| MSJ.Precursor         | Precursor _m/z_   | Real, Vector{Real}                       | average, chromatogram |
-| MSJ.RT                | Retention time    | Real, Vector{Real}, Vector{Vector{Real}} | average               |
-| MSJ.IC                | Ion current       | Vector{Real}                             | average               |
+| MSj.Scan              | Scan num          | Int, Vector{Int}                         | average, chromatogram |
+| MSj.Level             | MS level          | Int, Vector{Int}                         | average, chromatogram |
+| MSj.Polarity          | Polarity          | String, Vector{String}                   | average, chromatogram |
+| MSj.Activation_Method | Activation method | String, Vector{String}                   | average, chromatogram |
+| MSj.Activation_Energy | Activation energy | Real, Vector{Real}                       | average, chromatogram |
+| MSj.Precursor         | Precursor _m/z_   | Real, Vector{Real}                       | average, chromatogram |
+| MSj.RT                | Retention time    | Real, Vector{Real}, Vector{Vector{Real}} | average               |
+| MSj.IC                | Ion current       | Vector{Real}                             | average               |
 
 
 
@@ -167,7 +167,7 @@ The [`average`](@ref) and [`chromatogram`](@ref) functions may takes arguments t
     The filtering function goes first through all the arguments and setup an array of scan num that matches the conditions. Then it uses this array to calculate the average mass spectrum.  So this procedure needs two passes through the data, which is not very efficient. This is a point to make better in the future.
  
 
-When the argument is restricted to a single value, such as `MSJ.Scan(1)`, filtering is performed on that specific value. If the argument is a vector then filtering involves all the values within the range.  Filtering on `MSJ.scan([1,10])` means that the result will be obtained for scans ranging from 1 to 10.  The same applies for all `FilterType` with the exception of `MSJ.∆MZ`, for which the first value of the vector represents the *mz* and the second value represents the spread ∆mz, so that filtering is operated for all *mz* value in the range [m/z - ∆mz , m/z + ∆mz].  The `MSJ.RT` type may take a vector or vectors as argument, such `MSJ.RT([ [1,10], [20, 30] ]).  In that case, mass spectra will be averaged in [1,10] and [20,30] range.
+When the argument is restricted to a single value, such as `MSj.Scan(1)`, filtering is performed on that specific value. If the argument is a vector then filtering involves all the values within the range.  Filtering on `MSj.scan([1,10])` means that the result will be obtained for scans ranging from 1 to 10.  The same applies for all `FilterType` with the exception of `MSj.∆MZ`, for which the first value of the vector represents the *mz* and the second value represents the spread ∆mz, so that filtering is operated for all *mz* value in the range [m/z - ∆mz , m/z + ∆mz].  The `MSj.RT` type may take a vector or vectors as argument, such `MSj.RT([ [1,10], [20, 30] ]).  In that case, mass spectra will be averaged in [1,10] and [20,30] range.
 
 
 These filters may be combined together if necessary. For example, the input below returns the average mass spectrum for:
@@ -178,42 +178,42 @@ These filters may be combined together if necessary. For example, the input belo
 - and for retention times in the 1 to 60 s range.
 
 ```julia
-average("filename", MSJ.Precursor(1255.5),
-                    MSJ.Activation_Energy(18),
-                    MSJ.Activation_Method("CID"),
-                    MSJ.Level(2),
-                    MSJ.RT( [1, 60] ),
+average("filename", MSj.Precursor(1255.5),
+                    MSj.Activation_Energy(18),
+                    MSj.Activation_Method("CID"),
+                    MSj.Level(2),
+                    MSj.RT( [1, 60] ),
                     )
 ```
 
 Several filter types may also be combined for `chromatograms`:
 ```julia
-chromatogram("filename", MSJ.Precursor(1255.5),
-                         MSJ.Activation_Energy(18),
-                         MSJ.Activation_Method("CID"),
-                         MSJ.Level(2),
+chromatogram("filename", MSj.Precursor(1255.5),
+                         MSj.Activation_Energy(18),
+                         MSj.Activation_Method("CID"),
+                         MSj.Level(2),
                          )
 ```
 
 If the condition does not match any existing data, then an `ErrorException` is returned with the `"No matching spectra."` message.
 
 
-The `chromatogram` function has some methods using `MSJ.MethodType` arguments:
+The `chromatogram` function has some methods using `MSj.MethodType` arguments:
 
 | MethodType   | Description         | Arguments    | Remark  |
 |--------------|---------------------|--------------|---------|
-| MSJ.TIC      | Total ion current   | None         | Default |
-| MSJ.BasePeak | Base peak intensity | None         |         |
-| MSJ.MZ       | *m/z* range         | Vector{Real} |         |
-| MSJ.∆MZ      | *m/z* ± ∆mz         | Vector{Real} |         |
+| MSj.TIC      | Total ion current   | None         | Default |
+| MSj.BasePeak | Base peak intensity | None         |         |
+| MSj.MZ       | *m/z* range         | Vector{Real} |         |
+| MSj.∆MZ      | *m/z* ± ∆mz         | Vector{Real} |         |
 
 
-These types control the way chromatograms are calculated: either using the total ionic current, the base peak intensity or using a *m/z* range.  The `method` argument of the `MSJ.chromatogram`function is set to MSJ.TIC() by default. This setting may be overruled by setting the method to desired value:
+These types control the way chromatograms are calculated: either using the total ionic current, the base peak intensity or using a *m/z* range.  The `method` argument of the `MSj.chromatogram`function is set to MSj.TIC() by default. This setting may be overruled by setting the method to desired value:
 
 ```julia
-chromatogram("filename", method = MSJ.BasePeak())
-chromatogram("filename", method = MSJ.MZ( [257, 259] ) ) 
-chromatogram("filename", method = MSJ.∆MZ( [258, 1] ) ) 
+chromatogram("filename", method = MSj.BasePeak())
+chromatogram("filename", method = MSj.MZ( [257, 259] ) ) 
+chromatogram("filename", method = MSj.∆MZ( [258, 1] ) ) 
 ```
 
 ## Extracting subsets
@@ -222,7 +222,7 @@ The [`extract`](@ref) returns a Vector of `MSscan`from either a file of from a V
 
 ```julia
 sub_set = extract("filename")                       # extracting without any conditions returns a vector identical to the output 
-sub_set = extract("filename", MSJ.Level(2) )        # extract MS/MS spectra
+sub_set = extract("filename", MSj.Level(2) )        # extract MS/MS spectra
 scans = load("test.mzxml")                          # load mass spectra
 sub_set = extract(scans)                            # extract a sub_set without conditions returns the original data
 ```
@@ -230,19 +230,19 @@ sub_set = extract(scans)                            # extract a sub_set without 
 
 # Processing
 ## Smooth
-The [`smooth`](@ref) function is public and applies on `MSscan`or `MSscans` objects, with an optional `method` argument set to `MSJ.SG(5, 9, 0)`.  Smoothing is performed on the `int` field using the [Savinsky and Golay](https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter). The first argument is the order (5 by default), the second is the number of points (default 9)  and the last, is the derivative level (0).
+The [`smooth`](@ref) function is public and applies on `MSscan`or `MSscans` objects, with an optional `method` argument set to `MSj.SG(5, 9, 0)`.  Smoothing is performed on the `int` field using the [Savinsky and Golay](https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter). The first argument is the order (5 by default), the second is the number of points (default 9)  and the last, is the derivative level (0).
 The function returns an `MScontainer` type identical to the input. 
 	
 ## Base line correction
 Base line correction is performed using the [`baseline_correction`](@ref) function. This function as two methods and operates either on [`MScontainer`](@ref) or on Array of [`MSscan`](@ref) such as obtained after [importing data](Importing data).
 ```julia
 baseline_correction(scans)
-baseline_correction(scans, method = MSJ.IPSA(51, 100))
+baseline_correction(scans, method = MSj.IPSA(51, 100))
 ```
 The `method` argument allows choosing the algorithm. 
 
 #### Top Hat
-This filter is based Top Hat transform used in image processing ([wikipedia](https://en.wikipedia.org/wiki/Top-hat_transform), [Sauve et al. (2004)](https://pdfs.semanticscholar.org/c04c/afc9b2670edd1ea38f0f724cadbe2ec321e9.pdf). The region onto which the operation is performed is set using the `region`field of the [`MSJ.TopHat`](@ref). This filter removes every structure from the input which are smaller in size than the structuring element. Usually a region of 100 points is enough.This filter is fast and works quite well on large and complex backgrounds.
+This filter is based Top Hat transform used in image processing ([wikipedia](https://en.wikipedia.org/wiki/Top-hat_transform), [Sauve et al. (2004)](https://pdfs.semanticscholar.org/c04c/afc9b2670edd1ea38f0f724cadbe2ec321e9.pdf). The region onto which the operation is performed is set using the `region`field of the [`MSj.TopHat`](@ref). This filter removes every structure from the input which are smaller in size than the structuring element. Usually a region of 100 points is enough.This filter is fast and works quite well on large and complex backgrounds.
 
 #### Iterative polynomial smoothing algorithm (IPSA)
 The default algorithm is the IPSA for iterative polynomial smoothing algorithm ([Wang et al. (2017)](https://doi.org/10.1177/0003702816670915). This iterative algorithm use a zero ordre Savinsly and Golay smoothing to estimate a background. Then a new input, constructed by taking the minimum of either the original spectrum or the background, is smooth again. The process is repeated until the maximum iteration is reached or when the background does not change much. The termination criteria has been changed from the original paper.
@@ -254,20 +254,20 @@ This algorithm takes the number of iteration to be performed. Usually 3 iteratio
 
 
 ## Peak picking
-Pick-picking is performed using the public [`centroid`](@ref) function. It operates on `MSscan`or `MSscans`type of data and return a similar type. It takes a method argument, set by default to the Signal to Noise Analysis method: `MSJ.SNRA`.
+Pick-picking is performed using the public [`centroid`](@ref) function. It operates on `MSscan`or `MSscans`type of data and return a similar type. It takes a method argument, set by default to the Signal to Noise Analysis method: `MSj.SNRA`.
 ```julia
 centroid(scan)
 ```
 #### Signal to Noise Ratio Analysis (SNRA)
-Signal to noise ratio analysis is a very general approach, which relies on the definition of noise. Here, we use TopHat filter to define the noise. Then the signal to noise ratio is calculated. Peaks are found by searching for a local maximum for which the signal to noise ratio is above the threshold. By defaults the `MSJ.SNRA` uses a threshold = 1.0 and a structuring element of 100 points.
+Signal to noise ratio analysis is a very general approach, which relies on the definition of noise. Here, we use TopHat filter to define the noise. Then the signal to noise ratio is calculated. Peaks are found by searching for a local maximum for which the signal to noise ratio is above the threshold. By defaults the `MSj.SNRA` uses a threshold = 1.0 and a structuring element of 100 points.
 ```julia
-centroid(scan, method = MSJ.SNRA(1., 100)
+centroid(scan, method = MSj.SNRA(1., 100)
 ```
 
 #### Threshold base peak detection algorithm (TBPD)
-The TBPD method identifies features based on their similarity (as described by the Pearson correlation coefficient) with a [template peak](https://doi.org/10.1007/978-1-60761-987-1_22). By default the `MSJ.TBPD` method type uses a Gaussian function, with 1000 mass resolving power and a threshold level set to 0.2% as :
+The TBPD method identifies features based on their similarity (as described by the Pearson correlation coefficient) with a [template peak](https://doi.org/10.1007/978-1-60761-987-1_22). By default the `MSj.TBPD` method type uses a Gaussian function, with 1000 mass resolving power and a threshold level set to 0.2% as :
 ```julia
-centroid(scan, method = MSJ.TBPD(:gauss, 1000, 0.2)
+centroid(scan, method = MSj.TBPD(:gauss, 1000, 0.2)
 ```
 Two other shape functions are available:
 - `:loretz` which uses a Cauchy-Lorentz function and
@@ -276,8 +276,8 @@ Two other shape functions are available:
 The `:lorentz` profile fits better Fourrier Transform mass spectra. The `:voigt` shape is the result of the convolution of gaussi and Cauchy-Lorentz shape.
 
 ```julia
-centroid(scan, method = MSJ.TBPD(:lorentz, 1000., 0.1)
-centroid(scan, method = MSJ.TBPD(:voight,  1000., 0.1)
+centroid(scan, method = MSj.TBPD(:lorentz, 1000., 0.1)
+centroid(scan, method = MSj.TBPD(:voight,  1000., 0.1)
 ```
 
 # Properties calculations
@@ -287,9 +287,9 @@ From a molecular formula, it is possible to :
 - simulate a mass spectrum providing and isotopic distribution and a peak width.
 
 ## Parsing a chemical formula
-The private function [`MSJ.formula`](@ref) takes an input string representing a chemical formula, such as "CH4", counts the number of atoms in the formula and returns a [dictionary](https://docs.julialang.org/en/v1/base/collections/#Dictionaries-1). 
+The private function [`MSj.formula`](@ref) takes an input string representing a chemical formula, such as "CH4", counts the number of atoms in the formula and returns a [dictionary](https://docs.julialang.org/en/v1/base/collections/#Dictionaries-1). 
 ```julia
-MSJ.formula("CH3Br")
+MSj.formula("CH3Br")
 Dict("Br" => 1,"C" => 1,"H" => 3)
 Dict{String,Int64} with 3 entries:
   "Br" => 1
@@ -297,23 +297,23 @@ Dict{String,Int64} with 3 entries:
   "H"  => 3
 ```
 In the previous example, the dictionary had three elements corresponding to the three atomic species found in the "CH3Br" formula. The "Br" key has the value 1, the "C" key has also 1 and the "H" key has a value equals to 3. The output of this function will be used by all the other functions, which will calculate properties from it.
-The  [`MSJ.formula`](@ref) function accepts stoichiometric regular molecular formulas as well as more developed forms. For hexane the following entries "C6H14", "CH3CH2CH2CH2CH2CH3" or "CH3(CH2)4CH3" are equivalents. 
+The  [`MSj.formula`](@ref) function accepts stoichiometric regular molecular formulas as well as more developed forms. For hexane the following entries "C6H14", "CH3CH2CH2CH2CH2CH3" or "CH3(CH2)4CH3" are equivalents. 
 ```julia
-MSJ.formula("C2H14");
+MSj.formula("C2H14");
 Dict("C" => 2,"H" => 14)
-MSJ.formula("CH3CH2CH2CH2CH2CH3");
+MSj.formula("CH3CH2CH2CH2CH2CH3");
 Dict("C" => 2,"H" => 14)
-MSJ.formula("CH3(CH2)4CH3");
+MSj.formula("CH3(CH2)4CH3");
 Dict("C" => 2,"H" => 14)
 ```
 The indices found after a parenthesis are used to multiply the elements inside the parenthesis. If no indices are found after ")", then the group is not multiply.
 The parenthesis are also used to specify an isotope, for example, consider ethane isotopically labelled with carbon 13:
 ```julia
-MSJ.formula("CH3(13C)H3");
+MSj.formula("CH3(13C)H3");
 Dict("C" => 1,"13C" => 1,"H" => 6)
 ```
 These expressions are equivalent: "CH3(13C)H3", "CH3(13CH3)", "C(13C)H6".
-The following isotopes are recognized by MSJ.formula:
+The following isotopes are recognized by MSj.formula:
 - 1H   for ^1H\_1 (protium)
 - 2H   for ``{}^2H_{2}`` (deuterium)
 - D    equivalent to 2H
@@ -326,7 +326,7 @@ The following isotopes are recognized by MSJ.formula:
 - 32S  for <sup>32</sup>S<sub>16</sub>
 - 34S  for <sup>34</sup>S<sub>16</sub>
 
-The elements are stored in a dictionary called MSJ.Elements. Each key of the MSJ.Elements points to an `Array` of [`MSJ.Isotope`](@ref), which is a structure used to stored the different properties of the isotopes:
+The elements are stored in a dictionary called MSj.Elements. Each key of the MSj.Elements points to an `Array` of [`MSj.Isotope`](@ref), which is a structure used to stored the different properties of the isotopes:
 ```julia
 struct Isotope
     m::Float64           # mass
@@ -339,18 +339,18 @@ end
 ```
 The isotopes are sorted by natural frequency. Hence, for instance, the first sulfur isotope is <sup>32</sup>S<sub>16</sub> with a natural frenquency of 0.995 followed by <sup>34</sup>S<sub>16</sub> with 0.043, etc.
 ```julia
-julia> E = MSJ.Elements["S"]
-4-element Array{MSJ.Isotope,1}:
- MSJ.Isotope(31.9720711741, 0.9498500119990401, -0.051451188958515866, 16, 32, false)
- MSJ.Isotope(33.96786703, 0.04252059835213182, -3.157766653355949, 16, 34, false)
- MSJ.Isotope(32.9714589101, 0.00751939844812415, -4.890269137820559, 16, 33, false)
- MSJ.Isotope(35.9670812, 0.00010999120070394368, -9.115110188972029, 16, 36, false)
+julia> E = MSj.Elements["S"]
+4-element Array{MSj.Isotope,1}:
+ MSj.Isotope(31.9720711741, 0.9498500119990401, -0.051451188958515866, 16, 32, false)
+ MSj.Isotope(33.96786703, 0.04252059835213182, -3.157766653355949, 16, 34, false)
+ MSj.Isotope(32.9714589101, 0.00751939844812415, -4.890269137820559, 16, 33, false)
+ MSj.Isotope(35.9670812, 0.00010999120070394368, -9.115110188972029, 16, 36, false)
 ```
 The first element of the array, is the most naturally abundant isotope. The properties of the isotopes may be accessed by:
 ```julia
-	julia> E = MSJ.Elements["S"];
+	julia> E = MSj.Elements["S"];
 julia> E[1]           # returns the most abundant isotope of sulfur
-MSJ.Isotope(31.9720711741, 0.9498500119990401, -0.051451188958515866, 16, 32, false)
+MSj.Isotope(31.9720711741, 0.9498500119990401, -0.051451188958515866, 16, 32, false)
 julia> E[2].f       # returns natural abundance of the second most abundant istotope of sulfur.
 0.04252059835213182
 ```
@@ -390,7 +390,7 @@ The public function [`isotopic_distribution`](@ref) calculates the isotopic dist
 - target probability: `Real` number 
 - charge: optional argument `Int`, by default = +1
 - tau: optional `Real` number set by default to 0.1
-- the elements dictionary: set by default to `MSJ.Elements`.
+- the elements dictionary: set by default to `MSj.Elements`.
 
 The calculations is based on the implementation of the [`isospec`](https://doi.org/10.1021/acs.analchem.6b01459) algorithm.  Briefly, the algorithm search for the small set of [`isotopologues`](https://en.wikipedia.org/wiki/Isotopologue) for which the total abundance is equal to the target probability. The calculation return a vector with all the configurations found. The first column gives the masses, the second column the probabilities of the configurations, and the following columns gives the configurations, such as:
 ```julia
@@ -425,7 +425,7 @@ See [## Plotting](@ref) for more information on how to plot mass spectra.
 
 
 # Plotting
-Plotting facilities are available as a submodule to the `MSJ` package.  The [`MSJ.plots`](@ref) module relies on the [RecipesBase package](https://github.com/JuliaPlots/RecipesBase.jl), which allows writing recipes to plot users' data types. Hence, recipes have been created for `MSscan`, `Msscans` and `Chromatogram`:
+Plotting facilities are available as a submodule to the `MSj` package.  The [`MSj.plots`](@ref) module relies on the [RecipesBase package](https://github.com/JuliaPlots/RecipesBase.jl), which allows writing recipes to plot users' data types. Hence, recipes have been created for `MSscan`, `Msscans` and `Chromatogram`:
 
 ```julia
 plot(scans[1], method = :relative))

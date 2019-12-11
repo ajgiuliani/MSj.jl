@@ -1,7 +1,7 @@
 Home
 ====
 
-`MSJ.jl` is a package for loading, processing and plotting mass spectrometry data. It provides a range of functionalities such as:
+`MSj.jl` is a package for loading, processing and plotting mass spectrometry data. It provides a range of functionalities such as:
 * Getting information on the file
 * Load a file
 * Averaging mass spectra based on various criteria that may be combined
@@ -20,14 +20,14 @@ The [tutorial page](tutorial.md) shows examples how to use this package and prov
 There are two ways of installing the package.
 ```julia
 julia> using Pkg ;
-julia> Pkg.add(PackageSpec(url="https://github.com/ajgiuliani/MSJ.jl"))
+julia> Pkg.add(PackageSpec(url="https://github.com/ajgiuliani/MSj.jl"))
 ```
 
 or
 
 ```julia
 julia> ]
-(v1.1) pkg>  add https://github.com/ajgiuliani/MSJ.jl
+(v1.1) pkg>  add https://github.com/ajgiuliani/MSj.jl
 ```
 
 

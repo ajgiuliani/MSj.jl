@@ -1,14 +1,14 @@
 References
 ==========
-MSJ.builoto
+MSj.builoto
 ```@meta
-CurrentModule = MSJ
+CurrentModule = MSj
 DocTestSetup  = quote
     using LightXML
 end
 ```
 
-This page lists all the documented elements of the `MSJ.jl` package covering all modules and submodules.
+This page lists all the documented elements of the `MSj.jl` package covering all modules and submodules.
 
 ## Contents
 
@@ -18,7 +18,7 @@ Pages = ["reference.md"]
 
 # Main module
 ```@docs
-MSJ
+MSj
 ```
 
 ## Types
@@ -27,39 +27,39 @@ Submodule with types and structures used to stored the data and dispatch to the 
 
 ### Data types
 ```@docs
-MSJ.MScontainer
-MSJ.MSscan
-MSJ.MSscans
-MSJ.Chromatogram
+MSj.MScontainer
+MSj.MSscan
+MSj.MSscans
+MSj.Chromatogram
 ```
 
 ### Methods Types
 ```@docs
-MSJ.MethodType
-MSJ.BasePeak
-MSJ.TIC
-MSJ.∆MZ
-MSJ.MZ
-MSJ.SG
-MSJ.TBPD
-MSJ.SNRA
-MSJ.TopHat
-MSJ.LOESS
-MSJ.IPSA
+MSj.MethodType
+MSj.BasePeak
+MSj.TIC
+MSj.∆MZ
+MSj.MZ
+MSj.SG
+MSj.TBPD
+MSj.SNRA
+MSj.TopHat
+MSj.LOESS
+MSj.IPSA
 ```
 
 ### Filters
 ```@docs
-MSJ.FilterType
-MSJ.RT
-MSJ.IC
-MSJ.Level
-MSJ.Scan
-MSJ.Polarity
-MSJ.Activation_Method
-MSJ.Activation_Energy
-MSJ.Precursor
-MSJ.Isotopes
+MSj.FilterType
+MSj.RT
+MSj.IC
+MSj.Level
+MSj.Scan
+MSj.Polarity
+MSj.Activation_Method
+MSj.Activation_Energy
+MSj.Precursor
+MSj.Isotopes
 ```
 
 ## I/O
@@ -68,11 +68,11 @@ MSJ.Isotopes
 Module for importing and exporting data. Dispatch to specific methods according to the file extension
 
 ```@docs
-MSJ.info(filename::String; verbose::Bool = false)
-MSJ.load(filename::String)
-MSJ.retention_time(filename::String)
-MSJ.chromatogram(filename::String, filters::FilterType...; method::MethodType=TIC())
-MSJ.average(filename::String, arguments::FilterType...; stats::Bool=true)
+MSj.info(filename::String; verbose::Bool = false)
+MSj.load(filename::String)
+MSj.retention_time(filename::String)
+MSj.chromatogram(filename::String, filters::FilterType...; method::MethodType=TIC())
+MSj.average(filename::String, arguments::FilterType...; stats::Bool=true)
 ```
 
 ### mzXML
@@ -80,63 +80,63 @@ MSJ.average(filename::String, arguments::FilterType...; stats::Bool=true)
 Interface to the mzxml file format
 
 ```@docs
-MSJ.info_mzxml
-MSJ.load_mzxml_all
-MSJ.load_mzxml
-MSJ.load_mzxml_spectrum
-MSJ.retention_time(msRun::XMLElement)
-MSJ.average(msRun::XMLElement, argument::Level{<:Int})
-MSJ.average(msRun::XMLElement, argument::Level{<:AbstractVector})
-MSJ.average(msRun::XMLElement, argument::Scan{<:Int})
-MSJ.average(msRun::XMLElement, argument::Scan{<:AbstractVector})
-MSJ.average(msRun::XMLElement, argument::Polarity{<:String})
-MSJ.average(msRun::XMLElement, argument::Polarity{<:AbstractVector})
-MSJ.average(msRun::XMLElement, argument::RT{<:Real})
-MSJ.average(msRun::XMLElement, argument::RT{<:AbstractVector})
-MSJ.average(msRun::XMLElement, argument::RT{<:AbstractVector{<:AbstractVector} } )
-MSJ.average(msRun::XMLElement, argument::IC{<:AbstractVector})
-MSJ.average(msRun::XMLElement, argument::Precursor{<:Real})
-MSJ.average(msRun::XMLElement, argument::Precursor{<:AbstractVector})
-MSJ.average(msRun::XMLElement, argument::Activation_Energy{<:Real})
-MSJ.average(msRun::XMLElement, argument::Activation_Energy{<:AbstractVector})
-MSJ.average(msRun::XMLElement, argument::Activation_Method{<:String})
-MSJ.average(msRun::XMLElement, argument::Activation_Method{<:AbstractVector})
-MSJ.extracted_chromatogram(filename::String, indices::Vector{Int},method::MethodType)
-MSJ.composite_spectra(filename::String, indices::Vector{Int}, stats::Bool)
+MSj.info_mzxml
+MSj.load_mzxml_all
+MSj.load_mzxml
+MSj.load_mzxml_spectrum
+MSj.retention_time(msRun::XMLElement)
+MSj.average(msRun::XMLElement, argument::Level{<:Int})
+MSj.average(msRun::XMLElement, argument::Level{<:AbstractVector})
+MSj.average(msRun::XMLElement, argument::Scan{<:Int})
+MSj.average(msRun::XMLElement, argument::Scan{<:AbstractVector})
+MSj.average(msRun::XMLElement, argument::Polarity{<:String})
+MSj.average(msRun::XMLElement, argument::Polarity{<:AbstractVector})
+MSj.average(msRun::XMLElement, argument::RT{<:Real})
+MSj.average(msRun::XMLElement, argument::RT{<:AbstractVector})
+MSj.average(msRun::XMLElement, argument::RT{<:AbstractVector{<:AbstractVector} } )
+MSj.average(msRun::XMLElement, argument::IC{<:AbstractVector})
+MSj.average(msRun::XMLElement, argument::Precursor{<:Real})
+MSj.average(msRun::XMLElement, argument::Precursor{<:AbstractVector})
+MSj.average(msRun::XMLElement, argument::Activation_Energy{<:Real})
+MSj.average(msRun::XMLElement, argument::Activation_Energy{<:AbstractVector})
+MSj.average(msRun::XMLElement, argument::Activation_Method{<:String})
+MSj.average(msRun::XMLElement, argument::Activation_Method{<:AbstractVector})
+MSj.extracted_chromatogram(filename::String, indices::Vector{Int},method::MethodType)
+MSj.composite_spectra(filename::String, indices::Vector{Int}, stats::Bool)
 ```
 
 
 ## Filtering
 ```@docs
-MSJ.average(scans::Vector{MSscan}, arguments::FilterType...; stats::Bool=true)
-MSJ.chromatogram(scans::Vector{MSscan}, filters::FilterType...; method::MethodType=TIC())
-MSJ.retention_time(scans::Vector{MSscan})
-MSJ.average(scans::Vector{MSscan}, argument::Scan{<:Int})
-MSJ.average(scans::Vector{MSscan}, argument::Scan{<:AbstractVector})
-MSJ.average(scans::Vector{MSscan}, argument::Level{<:Int})
-MSJ.average(scans::Vector{MSscan}, argument::Level{<:AbstractVector})
-MSJ.average(scans::Vector{MSscan}, argument::Precursor{<:Real})
-MSJ.average(scans::Vector{MSscan}, argument::Precursor{<:AbstractVector})
-MSJ.average(scans::Vector{MSscan}, argument::Activation_Energy{<:Real})
-MSJ.average(scans::Vector{MSscan}, argument::Activation_Energy{<:AbstractVector})
-MSJ.average(scans::Vector{MSscan}, argument::Activation_Method{<:String})
-MSJ.average(scans::Vector{MSscan}, argument::Activation_Method{<:AbstractVector})
-MSJ.average(scans::Vector{MSscan}, argument::Polarity{<:String})
-MSJ.average(scans::Vector{MSscan}, argument::Polarity{<:AbstractVector})
-MSJ.average(scans::Vector{MSscan}, argument::RT{<:Real}) 
-MSJ.average(scans::Vector{MSscan}, argument::RT{<:AbstractVector})
-MSJ.average(scans::Vector{MSscan}, argument::RT{<:AbstractVector{<:AbstractVector} } )
-MSJ.average(scans::Vector{MSscan}, argument::IC{<:AbstractVector})
-MSJ.extracted_chromatogram(scans::Vector{MSscan}, indices::Vector{Int},method::MethodType)
-MSJ.composite_spectra(scans::Vector{MSscan}, indices::Vector{Int}, stats::Bool)
+MSj.average(scans::Vector{MSscan}, arguments::FilterType...; stats::Bool=true)
+MSj.chromatogram(scans::Vector{MSscan}, filters::FilterType...; method::MethodType=TIC())
+MSj.retention_time(scans::Vector{MSscan})
+MSj.average(scans::Vector{MSscan}, argument::Scan{<:Int})
+MSj.average(scans::Vector{MSscan}, argument::Scan{<:AbstractVector})
+MSj.average(scans::Vector{MSscan}, argument::Level{<:Int})
+MSj.average(scans::Vector{MSscan}, argument::Level{<:AbstractVector})
+MSj.average(scans::Vector{MSscan}, argument::Precursor{<:Real})
+MSj.average(scans::Vector{MSscan}, argument::Precursor{<:AbstractVector})
+MSj.average(scans::Vector{MSscan}, argument::Activation_Energy{<:Real})
+MSj.average(scans::Vector{MSscan}, argument::Activation_Energy{<:AbstractVector})
+MSj.average(scans::Vector{MSscan}, argument::Activation_Method{<:String})
+MSj.average(scans::Vector{MSscan}, argument::Activation_Method{<:AbstractVector})
+MSj.average(scans::Vector{MSscan}, argument::Polarity{<:String})
+MSj.average(scans::Vector{MSscan}, argument::Polarity{<:AbstractVector})
+MSj.average(scans::Vector{MSscan}, argument::RT{<:Real}) 
+MSj.average(scans::Vector{MSscan}, argument::RT{<:AbstractVector})
+MSj.average(scans::Vector{MSscan}, argument::RT{<:AbstractVector{<:AbstractVector} } )
+MSj.average(scans::Vector{MSscan}, argument::IC{<:AbstractVector})
+MSj.extracted_chromatogram(scans::Vector{MSscan}, indices::Vector{Int},method::MethodType)
+MSj.composite_spectra(scans::Vector{MSscan}, indices::Vector{Int}, stats::Bool)
 ```
 
 ## Extracting subsets
 ```@docs
-MSJ.extract(filename::String, arguments::FilterType...)
-MSJ.extract(scans::Vector{MSscan}, arguments::FilterType...)
-MSJ.build_subset(filename::String, indices::Vector{Int})
-MSJ.build_subset(scans::Vector{MSscan}, indices::Vector{Int})
+MSj.extract(filename::String, arguments::FilterType...)
+MSj.extract(scans::Vector{MSscan}, arguments::FilterType...)
+MSj.build_subset(filename::String, indices::Vector{Int})
+MSj.build_subset(scans::Vector{MSscan}, indices::Vector{Int})
 ```
 
 ## Process
@@ -145,26 +145,26 @@ MSJ.build_subset(scans::Vector{MSscan}, indices::Vector{Int})
 ### Mass spectrum
 -----------------
 ```@docs
-MSJ.smooth(scan::MScontainer; method::MethodType=SG(5, 9, 0))
-MSJ.smooth(scans::Vector{MSscan}; method::MethodType=SG(5, 9, 0))
-MSJ.savitzky_golay_filtering(scan::MScontainer, order::Int, window::Int, deriv::Int)
-MSJ.smooth(scans::Vector{MSscan}; method::MethodType=SG(5, 9, 0))
-MSJ.centroid(scan::MScontainer; method::MethodType=SNRA(1., 100) )
-MSJ.centroid(scans::Vector{MSscan}; method::MethodType=SNRA(1., 100) 
-MSJ.snra(scan::MScontainer, thres::Real, region::Int)
-MSJ.tbpd(scan::MScontainer, model::Function,  ∆mz::Real, thres::Real)
-MSJ.gauss(x::Float64, p::Vector{Float64})
-MSJ.lorentz(x::Float64, p::Vector{Float64})
-MSJ.voigt(x::Float64, p::Vector{Float64})
-MSJ.tbpd(scan::MScontainer, shape::Symbol,  R::Real, thres::Real)
-MSJ.baseline_correction(scan::MScontainer; method::MethodType=TopHat(100) )
-MSJ.baseline_correction(scans::Vector{MSscan}; method::MethodType=TopHat(100) )
-MSJ.tophat_filter(scan::MScontainer, region::Int )
-MSJ.tophat_filter(scans::Vector{MSscan}, region::Int )
-MSJ.loess(scans::Vector{MSscan}, iter::Int )
-MSJ.loess(scan::MScontainer, iter::Int )
-MSJ.ipsa(scan::MScontainer, width::Real, maxiter::Int)
-MSJ.ipsa(scans::Vector{MSscan}, width::Real, maxiter::Int)
+MSj.smooth(scan::MScontainer; method::MethodType=SG(5, 9, 0))
+MSj.smooth(scans::Vector{MSscan}; method::MethodType=SG(5, 9, 0))
+MSj.savitzky_golay_filtering(scan::MScontainer, order::Int, window::Int, deriv::Int)
+MSj.smooth(scans::Vector{MSscan}; method::MethodType=SG(5, 9, 0))
+MSj.centroid(scan::MScontainer; method::MethodType=SNRA(1., 100) )
+MSj.centroid(scans::Vector{MSscan}; method::MethodType=SNRA(1., 100) 
+MSj.snra(scan::MScontainer, thres::Real, region::Int)
+MSj.tbpd(scan::MScontainer, model::Function,  ∆mz::Real, thres::Real)
+MSj.gauss(x::Float64, p::Vector{Float64})
+MSj.lorentz(x::Float64, p::Vector{Float64})
+MSj.voigt(x::Float64, p::Vector{Float64})
+MSj.tbpd(scan::MScontainer, shape::Symbol,  R::Real, thres::Real)
+MSj.baseline_correction(scan::MScontainer; method::MethodType=TopHat(100) )
+MSj.baseline_correction(scans::Vector{MSscan}; method::MethodType=TopHat(100) )
+MSj.tophat_filter(scan::MScontainer, region::Int )
+MSj.tophat_filter(scans::Vector{MSscan}, region::Int )
+MSj.loess(scans::Vector{MSscan}, iter::Int )
+MSj.loess(scan::MScontainer, iter::Int )
+MSj.ipsa(scan::MScontainer, width::Real, maxiter::Int)
+MSj.ipsa(scans::Vector{MSscan}, width::Real, maxiter::Int)
 ```
 
 
@@ -176,17 +176,17 @@ No functions yet. To be added.
 ## Simulation
 -------------
 ```@docs
-MSJ.formula
-MSJ.masses
-MSJ.isotopic_distribution
-MSJ.simulate
+MSj.formula
+MSj.masses
+MSj.isotopic_distribution
+MSj.simulate
 ```
 
 
 ## Plots
 --------
 ```@autodocs
-Modules = [MSJ.plots]
+Modules = [MSj.plots]
 
 ```
 
@@ -208,18 +208,18 @@ Modules = [MSJ.plots]
 
 ### Utility function
 ```@docs
-MSJ.avg(a::MScontainer, b::MScontainer)
-MSJ.add_ion_current(x::Vector{Float64}, y::Vector{Float64}, a::Float64, b::Float64)
-MSJ.num2pnt(x::Vector{Float64}, val::Real)
-MSJ.savitzky_golay(int::AbstractArray, order::Int, window::Int, deriv::Int)
-MSJ.extremefilt(input::AbstractArray, minmax::Function, region::Int)
-MSJ.morpholaplace(input::AbstractArray, region::Int)
-MSJ.morphogradient(input::AbstractArray, region::Int)
-MSJ.tophat(input::AbstractArray, region::Int)
-MSJ.bottomhat(input::AbstractArray, region::Int) 
-MSJ.opening(input::AbstractArray, region::Int)
-MSJ.closing(input::AbstractArray, region::Int)
-MSJ.erosion(input::AbstractArray, region::Int)
-MSJ.dilatation(input::AbstractArray, region::Int)
-MSJ.convolve(a::AbstractArray, b::AbstractArray)
+MSj.avg(a::MScontainer, b::MScontainer)
+MSj.add_ion_current(x::Vector{Float64}, y::Vector{Float64}, a::Float64, b::Float64)
+MSj.num2pnt(x::Vector{Float64}, val::Real)
+MSj.savitzky_golay(int::AbstractArray, order::Int, window::Int, deriv::Int)
+MSj.extremefilt(input::AbstractArray, minmax::Function, region::Int)
+MSj.morpholaplace(input::AbstractArray, region::Int)
+MSj.morphogradient(input::AbstractArray, region::Int)
+MSj.tophat(input::AbstractArray, region::Int)
+MSj.bottomhat(input::AbstractArray, region::Int) 
+MSj.opening(input::AbstractArray, region::Int)
+MSj.closing(input::AbstractArray, region::Int)
+MSj.erosion(input::AbstractArray, region::Int)
+MSj.dilatation(input::AbstractArray, region::Int)
+MSj.convolve(a::AbstractArray, b::AbstractArray)
 ```
