@@ -27,7 +27,7 @@ or
 
 ```julia
 julia> ]
-(v1.1) pkg>  add https://github.com/ajgiuliani/MSj.jl
+(v1.3) pkg>  add https://github.com/ajgiuliani/MSj.jl
 ```
 
 
