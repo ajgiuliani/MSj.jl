@@ -161,15 +161,20 @@ From an XMLElement, returns the data into an MSscan.
 function load_mzxml_spectrum(c::XMLElement)
     num = attribute(c, "num")
     msLevel = attribute(c, "msLevel")
+    polarity = ""
+    activationMethod = ""
     
     if has_attribute(c, "polarity")
         polarity = attribute(c, "polarity")
     end
-
+    
     if find_element(c, "precursorMz") != nothing
         precursorMz = find_element(c, "precursorMz")
         precursor = content(precursorMz)
-        activationMethod = attribute(precursorMz, "activationMethod")
+        if find_element(c, activationMethod) != nothing
+            activationMethod = attribute(precursorMz, "activationMethod")
+        end
+        
     else
         precursor = "0"
         activationMethod = ""
@@ -224,8 +229,7 @@ function load_mzxml_spectrum(c::XMLElement)
     elseif precision == "64"
         mz = convert(Array{Float64,1}, reinterpret(Float64, A[1:2:end]) )
     end
-
-    return MSscan(parse(Int,num) , parse(Float64, retentionTime[3:end-1]), parse(Float64,totIonCurrent), mz, int, parse(Int, msLevel), parse(Float64, basePeakMz), parse(Float64, basePeakIntensity) ,parse(Float64, precursor), polarity, activationMethod, parse(Float64, collisionEnergy) )
+    return MSscan(parse(Int,num) , parse(Float64, retentionTime[3:end-1]), parse(Float64,totIonCurrent), mz, int, parse(Int, msLevel), parse(Float64, basePeakMz), parse(Float64, basePeakIntensity), parse(Float64, precursor), polarity, activationMethod, parse(Float64, collisionEnergy) )
     
 end
 
