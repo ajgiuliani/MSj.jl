@@ -171,7 +171,7 @@ function load_mzxml_spectrum(c::XMLElement)
     if find_element(c, "precursorMz") != nothing
         precursorMz = find_element(c, "precursorMz")
         precursor = content(precursorMz)
-        if find_element(c, activationMethod) != nothing
+        if attribute(precursorMz, "activationMethod") != nothing
             activationMethod = attribute(precursorMz, "activationMethod")
         end
         
@@ -392,7 +392,7 @@ Search for scans matching the argument activation methods and returns a list of 
 """
 function filter(msRun::XMLElement, argument::Activation_Method{<:AbstractVector})
     subindex = Set{Int}()
-    for i in argument.arg       
+    for i in argument.arg
         for c in child_elements(msRun)
             while name(c) == "scan"
                 if load_mzxml_spectrum(c).activationMethod == i
