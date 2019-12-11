@@ -49,7 +49,7 @@ info("path/to/file")
 
 Mass spectra can be loaded by:
 ```julia
-data = load("path/to/file"))
+data = load("path/to/file")
 ```
 
 And averaged as follow:
