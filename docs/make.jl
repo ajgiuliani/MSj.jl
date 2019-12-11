@@ -31,8 +31,8 @@ makedocs(
 deploydocs(
     repo = "github.com/ajgiuliani/MSj.jl.git",
     target = "build",
-    devbranch = "dev",
     branch = "gh-pages",
-    #devurl = "dev",
-    #versions = ["stable" => "v^", "v#.#", devurl => devurl]
+    devbranch = "master",
+    devurl = "dev",
+    versions = ["stable" => "v^", "v#.#", devurl => devurl]
 )
