@@ -45,16 +45,16 @@ julia&gt; A = range(1, 10, length = 5) # linearly spaced
 
 julia&gt; A = rand(10)                 # random with 10 elements
 10-element Array{Float64,1}:
- 0.519375324947625
- 0.772136832168598
- 0.5964301113984825
- 0.5898539337331286
- 0.06344947710106341
- 0.9348718812799175
- 0.3975575263855089
- 0.1550650722445852
- 0.42203675805548446
- 0.8456837195521176
+ 0.29946026605859677
+ 0.08855828509855601
+ 0.6523796896282141
+ 0.18351524075168135
+ 0.8423541168991862
+ 0.46726274649455646
+ 0.8601796812025566
+ 0.46903844984639576
+ 0.05167441298225195
+ 0.42472331180128764
 
 julia&gt; j = 2; k = 2; n = 10;
 
@@ -66,25 +66,25 @@ julia&gt; A = j:k:n                    # from j to n with step size k
 
 julia&gt; A = rand(2, 2)               # random 2x2 matrix
 2×2 Array{Float64,2}:
- 0.951186  0.878495
- 0.555016  0.260557</code></pre><p>Vector and matrices can be manipulated as follow:</p><pre><code class="language-">transpose(A)                 # Return the transpose of A
+ 0.0405417  0.390516
+ 0.294299   0.762144</code></pre><p>Vector and matrices can be manipulated as follow:</p><pre><code class="language-">transpose(A)                 # Return the transpose of A
 A[:]                         # Flatten matrix A (convert matrix to vector)
 A[2,2]                       # Accessing element at row 2 and colomun 2
 A[1:4, :]                    # Accessing specific rows 1 to 4</code></pre><p>Vector and matrix may be preallocated like this:</p><pre><code class="language-julia-repl">julia&gt; A = rand(5)                  # a vector / matrix
 5-element Array{Float64,1}:
- 0.19988450118388945
- 0.7073098070725243
- 0.37971115136168576
- 0.4405886829073751
- 0.6491230628869402
+ 0.38489791383035343
+ 0.3099615789694006
+ 0.8604724806361623
+ 0.14178374576931607
+ 0.35915154094854707
 
 julia&gt; B = similar(A)               # an emply vector / matrix similar to A
 5-element Array{Float64,1}:
- 6.93961700993053e-310
- 6.93961700996373e-310
- 6.9396358395383e-310
- 6.9396406532262e-310
- 6.9396406229562e-310</code></pre><h2><a class="nav-anchor" id="Operations-1" href="#Operations-1">Operations</a></h2><p>The following present a few example of operations:</p><pre><code class="language-">julia&gt; dot(A,B)                     # dot product between A and B 
+ 0.0
+ 5.0e-324
+ 6.89936293135666e-310
+ 5.0e-324
+ 5.0e-324</code></pre><h2><a class="nav-anchor" id="Operations-1" href="#Operations-1">Operations</a></h2><p>The following present a few example of operations:</p><pre><code class="language-">julia&gt; dot(A,B)                     # dot product between A and B 
 julia&gt; A .* B                       # Element wise multiplication
 julia&gt; A * B                        # Matrix multiplcation
 julia&gt; norm(A)                      # Euclidian norm
