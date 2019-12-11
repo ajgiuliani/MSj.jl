@@ -3,12 +3,12 @@ using Plots
 
 function tests()
     @testset "Subset of tests"  begin
-        info = MSj.info("test.mzXML", verbose = true)
-        @test info[1] == "parentFile: test.raw"                                        #1
-        @test info[9] == "6 scans"                                                     #2
-        @test info[10] == "MS1+"                                                       #3
-        @test info[11] == "MS2+ 1255.5  CID(CE=18)"                                    #4
-        @test info[12] == "MS3+ 902.33  PQD(CE=35)"                                    #5
+        inf = MSj.info("test.mzXML", verbose = true)
+        @test inf[1] == "parentFile: test.raw"                                         #1
+        @test inf[9] == "6 scans"                                                      #2
+        @test inf[10] == "MS1+"                                                        #3
+        @test inf[11] == "MS2+ 1255.5  CID(CE=18)"                                     #4
+        @test inf[12] == "MS3+ 902.33  PQD(CE=35)"                                     #5
         
         scans = MSj.load("test.mzXML")
         @test eltype(scans)              == MSj.MSscan                                 #6
