@@ -32,7 +32,7 @@ deploydocs(
     repo = "github.com/ajgiuliani/MSj.jl.git",
     target = "build",
     branch = "gh-pages",
-    devbranch = "master",
+    devbranch = "dev",
     devurl = "dev",
     versions = ["stable" => "v^", "v#.#"]
 )
