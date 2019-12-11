@@ -62,5 +62,6 @@ ms3 = average(data, MSj.Activation_Method("CID"))   # CID spectra
 See the [documentation](https://ajgiuliani.github.io/MSj.jl/stable) for additional information.
 
 
-## Other packages
+## Other Julia packages
 * [mzXML](https://github.com/timholy/mzXML.jl): Load mass spectrometry mzXML files.
+* [MassSpec.jl](https://github.com/JuliaSpect/MassSpec.jl): Mass spectometry utilities for Julia
