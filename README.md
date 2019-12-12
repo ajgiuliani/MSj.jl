@@ -1,8 +1,8 @@
-# MS<sup>j</sup>.jl.    <img src="/docs/src/assets/logo.png" alt="hi" class="inline"/>
+# MS<sup>j</sup>.jl.  
 
 *A mass spectrometry package for Julia*
 
-
+![](/docs/src/assets/logo.png | =250x250)
 
 [![Build Status](https://travis-ci.org/ajgiuliani/MSj.jl.svg?branch=master)](https://travis-ci.org/ajgiuliani/MSj.jl)
 
