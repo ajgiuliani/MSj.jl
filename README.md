@@ -1,10 +1,7 @@
+# MS<sup>j</sup>.jl 
 <p align="center">
   <img align="center" src="docs/src/assets/logo.png" width="200" height="200" />
 </p>
-<p align="center">
-  <strong> #MS<sup>j</sup>.jl </strong>
-</p>
-
 <p align="center">
   <strong> A mass spectrometry package for Julia </strong>
 </p>
