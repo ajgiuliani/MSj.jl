@@ -1,4 +1,8 @@
-##### MS<sup>j</sup>.jl 
+<p align="center">
+  <large> MS<sup>j</sup>.jl </large>
+</p>
+
+
 <p align="center">
   <img align="center" src="docs/src/assets/logo.png" width="400" height="200" />
 </p>
