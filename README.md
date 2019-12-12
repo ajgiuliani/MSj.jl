@@ -6,9 +6,10 @@
   <img align="center" src="docs/src/assets/logo.png" width="400" height="200" />
 </p>
 <p align="center">
-  <strong> A mass spectrometry package for Julia </strong>
+  <normal> A mass spectrometry package for Julia </normal>
 </p>
 
+-----
 
 [![Build Status](https://travis-ci.org/ajgiuliani/MSj.jl.svg?branch=master)](https://travis-ci.org/ajgiuliani/MSj.jl)
 [![Coverage Status](https://coveralls.io/repos/github/ajgiuliani/MSj.jl/badge.svg?branch=master)](https://coveralls.io/github/ajgiuliani/MSj.jl?branch=master)
