@@ -1,5 +1,5 @@
 <p align="center">
-  <h1 style="text-align:center"> MS<sup>j</sup>.jl</h1>
+  <h1> MS<sup>j</sup>.jl </h1>
 </p>
 
 <p align="center">
