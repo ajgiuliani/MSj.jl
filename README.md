@@ -2,6 +2,9 @@
 
 *A mass spectrometry package for Julia*
 
+<img src="/docs/src/assets/logo.png" alt="hi" class="inline"/>
+
+
 [![Build Status](https://travis-ci.org/ajgiuliani/MSj.jl.svg?branch=master)](https://travis-ci.org/ajgiuliani/MSj.jl)
 
 [![Coverage Status](https://coveralls.io/repos/github/ajgiuliani/MSj.jl/badge.svg?branch=master)](https://coveralls.io/github/ajgiuliani/MSj.jl?branch=master)
@@ -61,6 +64,8 @@ ms3 = average(data, MSj.Activation_Method("CID"))   # CID spectra
 
 See the [documentation](https://ajgiuliani.github.io/MSj.jl/stable) for additional information.
 
+## Supported file format
+* mzxml
 
 ## Other Julia packages
 * [mzXML](https://github.com/timholy/mzXML.jl): Load mass spectrometry mzXML files.
