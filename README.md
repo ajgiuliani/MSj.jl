@@ -1,3 +1,10 @@
+[![Build Status](https://travis-ci.org/ajgiuliani/MSj.jl.svg?branch=master)](https://travis-ci.org/ajgiuliani/MSj.jl)
+[![Coverage Status](https://coveralls.io/repos/github/ajgiuliani/MSj.jl/badge.svg?branch=master)](https://coveralls.io/github/ajgiuliani/MSj.jl?branch=master)
+[![codecov](https://codecov.io/gh/ajgiuliani/MSj.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/ajgiuliani/MSj.jl)
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://ajgiuliani.github.io/MSj.jl/stable)
+[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://ajgiuliani.github.io/MSj.jl/dev/)
+
+
 <p align="center">
   <h1 align="center"> MS<sup>j</sup>.jl  </h1>
 </p>
@@ -10,13 +17,6 @@
 </p>
 
 -----
-
-[![Build Status](https://travis-ci.org/ajgiuliani/MSj.jl.svg?branch=master)](https://travis-ci.org/ajgiuliani/MSj.jl)
-[![Coverage Status](https://coveralls.io/repos/github/ajgiuliani/MSj.jl/badge.svg?branch=master)](https://coveralls.io/github/ajgiuliani/MSj.jl?branch=master)
-[![codecov](https://codecov.io/gh/ajgiuliani/MSj.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/ajgiuliani/MSj.jl)
-[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://ajgiuliani.github.io/MSj.jl/stable)
-[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://ajgiuliani.github.io/MSj.jl/dev/)
-
 
 
 ## Installation
