@@ -1,7 +1,4 @@
-<p align="center">
-  <large> MS<sup>j</sup>.jl </large>
-</p>
-
+<h1 style="text-align:center"> MS<sup>j</sup>.jl</h1>
 
 <p align="center">
   <img align="center" src="docs/src/assets/logo.png" width="400" height="200" />
