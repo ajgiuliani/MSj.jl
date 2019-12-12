@@ -16,6 +16,8 @@ using Combinatorics        # used for factorial & permutations
 using DataStructures       # used for PriorityQueue
 using Printf               # used for @sprintf
 
+using Libz
+
 import Base: +, -, *, /
 
 

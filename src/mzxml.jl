@@ -207,9 +207,17 @@ function load_mzxml_spectrum(c::XMLElement)
     if pairOrder != "m/z-int"
         return MSscan(0 , 0.0, 0.0, [], [], 0, 0.0, 0.0 , 0.0, "", "", 0.0 )
     end
+
+    
+    compression = attribute(peaks, "compressionType")
+    if compression == "zlib"
+        len = attribute(peaks, "compressedLen")       
+        data = Libz.inflate( decode( Base64, content(peaks) ) )
+    else   
+        data = decode(Base64, content(peaks))
+    end
     
     precision = attribute(peaks, "precision")
-    data = decode(Base64, content(peaks))
     if precision == "32"
         A = reinterpret(Float32, data)
     elseif precision == "64"
@@ -222,13 +230,9 @@ function load_mzxml_spectrum(c::XMLElement)
     else
         return MSscan(0 , 0.0, 0.0, [], [], 0, 0.0, 0.0 , 0.0, "", "", 0.0 )
     end
+    int = convert(Array{Float64,1}, A[2:2:end])
+    mz  = convert(Array{Float64,1}, A[1:2:end])
     
-    int = A[2:2:end]
-    if precision == "32"
-        mz = convert(Array{Float64,1}, reinterpret(Float32, A[1:2:end]) )
-    elseif precision == "64"
-        mz = convert(Array{Float64,1}, reinterpret(Float64, A[1:2:end]) )
-    end
     return MSscan(parse(Int,num) , parse(Float64, retentionTime[3:end-1]), parse(Float64,totIonCurrent), mz, int, parse(Int, msLevel), parse(Float64, basePeakMz), parse(Float64, basePeakIntensity), parse(Float64, precursor), polarity, activationMethod, parse(Float64, collisionEnergy) )
     
 end
