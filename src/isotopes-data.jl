@@ -9,14 +9,15 @@ Data for isotopic distrubution calculation.
     struct Isotope
 Data structure used to store individual properties of the isotopes.
 
-struct Isotope
-    m::Float64           # mass
-    f::Float64           # natural frequency
-    logf::Float64        # logarythm of the natural frequency
-    Z::Int               # atomic number
-    A::Int               # mass number
-    active::Bool         # is radioactive
-end
+    struct Isotope
+        m::Float64           # mass
+        f::Float64           # natural frequency
+        logf::Float64        # logarythm of the natural frequency
+        Z::Int               # atomic number
+        A::Int               # mass number
+        active::Bool         # is radioactive
+    end
+
 """
 struct Isotope
     m::Float64           # mass

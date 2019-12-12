@@ -1,5 +1,5 @@
 """
-Main module for `msJ.jl`-- A Julia package to load and process mass spectrometry data.
+Main module for `MSj.jl`-- A Julia package to load and process mass spectrometry data.
 
 """
 module MSj
