@@ -10,7 +10,7 @@
 
 
 
-## Badges
+##
 [![Build Status](https://travis-ci.org/ajgiuliani/MSj.jl.svg?branch=master)](https://travis-ci.org/ajgiuliani/MSj.jl)
 [![Coverage Status](https://coveralls.io/repos/github/ajgiuliani/MSj.jl/badge.svg?branch=master)](https://coveralls.io/github/ajgiuliani/MSj.jl?branch=master)
 [![codecov](https://codecov.io/gh/ajgiuliani/MSj.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/ajgiuliani/MSj.jl)
