@@ -230,7 +230,6 @@ function load_mzxml_spectrum(c::XMLElement)
     else
         return MSscan(0 , 0.0, 0.0, [], [], 0, 0.0, 0.0 , 0.0, "", "", 0.0 )
     end
-    @show A[1:2:end] 
     int = convert(Array{Float64,1}, A[2:2:end])
     mz  = convert(Array{Float64,1}, A[1:2:end])
     
