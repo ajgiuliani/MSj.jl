@@ -2,7 +2,7 @@
 
 *A mass spectrometry package for Julia*
 
-![](https://github.com/ajgiuliani/MSj.jl/blob/dev/docs/src/assets/logo.png)
+![](https://github.com/ajgiuliani/MSj.jl/blob/dev/docs/src/assets/logo.png| width=100)
 
 [![Build Status](https://travis-ci.org/ajgiuliani/MSj.jl.svg?branch=master)](https://travis-ci.org/ajgiuliani/MSj.jl)
 
