@@ -45,16 +45,16 @@ julia&gt; A = range(1, 10, length = 5) # linearly spaced
 
 julia&gt; A = rand(10)                 # random with 10 elements
 10-element Array{Float64,1}:
- 0.5089183237719284
- 0.5376424051645101
- 0.007922296912003635
- 0.3659453921897853
- 0.1552029907039829
- 0.8894245485465053
- 0.1094011505502619
- 0.5700747896735037
- 0.10961505163387963
- 0.9204928122277514
+ 0.3954309267368832
+ 0.34443712868981624
+ 0.16106341936019142
+ 0.13815412671332483
+ 0.0803718646357996
+ 0.9349207350798066
+ 0.7925314287155554
+ 0.05575576960386974
+ 0.11900046335780212
+ 0.9497440344945636
 
 julia&gt; j = 2; k = 2; n = 10;
 
@@ -66,25 +66,25 @@ julia&gt; A = j:k:n                    # from j to n with step size k
 
 julia&gt; A = rand(2, 2)               # random 2x2 matrix
 2×2 Array{Float64,2}:
- 0.111483  0.00608042
- 0.759408  0.993815</code></pre><p>Vector and matrices can be manipulated as follow:</p><pre><code class="language-">transpose(A)                 # Return the transpose of A
+ 0.437354  0.279598
+ 0.264387  0.518145</code></pre><p>Vector and matrices can be manipulated as follow:</p><pre><code class="language-">transpose(A)                 # Return the transpose of A
 A[:]                         # Flatten matrix A (convert matrix to vector)
 A[2,2]                       # Accessing element at row 2 and colomun 2
 A[1:4, :]                    # Accessing specific rows 1 to 4</code></pre><p>Vector and matrix may be preallocated like this:</p><pre><code class="language-julia-repl">julia&gt; A = rand(5)                  # a vector / matrix
 5-element Array{Float64,1}:
- 0.8836499059682255
- 0.36556454701884045
- 0.5077895513091981
- 0.6245266761996104
- 0.5716133581033518
+ 0.11333136272280764
+ 0.7171606372354002
+ 0.9414614538385118
+ 0.5329709078529503
+ 0.4494976248971121
 
 julia&gt; B = similar(A)               # an emply vector / matrix similar to A
 5-element Array{Float64,1}:
- 6.92470347455137e-310
- 6.9246852385888e-310
- 6.92468523859194e-310
- 6.9246852385935e-310
- 6.92468649103965e-310</code></pre><h2 id="Operations-1"><a class="docs-heading-anchor" href="#Operations-1">Operations</a><a class="docs-heading-anchor-permalink" href="#Operations-1" title="Permalink"></a></h2><p>The following present a few example of operations:</p><pre><code class="language-">julia&gt; dot(A,B)                     # dot product between A and B 
+ 6.94131214952465e-310
+ 6.9412932273294e-310
+ 6.94131214970765e-310
+ 6.94129322733254e-310
+ 6.9412932273341e-310</code></pre><h2 id="Operations-1"><a class="docs-heading-anchor" href="#Operations-1">Operations</a><a class="docs-heading-anchor-permalink" href="#Operations-1" title="Permalink"></a></h2><p>The following present a few example of operations:</p><pre><code class="language-">julia&gt; dot(A,B)                     # dot product between A and B 
 julia&gt; A .* B                       # Element wise multiplication
 julia&gt; A * B                        # Matrix multiplcation
 julia&gt; norm(A)                      # Euclidian norm
@@ -111,4 +111,4 @@ julia&gt; Pkg.add(&quot;A_package&quot;)
 julia&gt; using A_package</code></pre><p>Now every public function which is made available by the package <code>A_package</code> is available directly. Private functions have to be called like this: </p><pre><code class="language-">julia&gt; a_public_function()                   # Calling a public function
 julia&gt; A_package.a_private_function()        # Calling private functions</code></pre><p>The same is true for the variables defined in the packages.</p><h1 id="Jupyter-notebooks-1"><a class="docs-heading-anchor" href="#Jupyter-notebooks-1">Jupyter notebooks</a><a class="docs-heading-anchor-permalink" href="#Jupyter-notebooks-1" title="Permalink"></a></h1><p><a href="https://jupyter.org/">Jupyter</a> notebooks are web based documents that may contains both codes, figures and other textual elements (such as equations, links, ...).  Jupyter notebook may be installed easily using Julia:</p><pre><code class="language-none">julia&gt; using Pkg
 julia&gt; Pkg.add(&quot;IJulia&quot;)</code></pre><p>When IJulia is installed, then a notebook may be launch like this:</p><pre><code class="language-none">julia&gt; using IJulia
-julia&gt; notebook()</code></pre><p>The <code>notebook()</code> function should launch a web browser from which a new notebook  may be started. On each entry of the notebook code, Markdown or text may be inserted. Each line of code may be executed and will eventually return a result. In the following, the tutorials are given in <code>Jupyter notebook</code> form and can be viewed using <a href="http://nbviewer.jupyter.org/">nbviewer</a>.</p><h1 id="The-MSj-package-1"><a class="docs-heading-anchor" href="#The-MSj-package-1">The MSj package</a><a class="docs-heading-anchor-permalink" href="#The-MSj-package-1" title="Permalink"></a></h1><h2 id="Loading-and-plotting-mass-spectrometry-data-1"><a class="docs-heading-anchor" href="#Loading-and-plotting-mass-spectrometry-data-1">Loading and plotting mass spectrometry data</a><a class="docs-heading-anchor-permalink" href="#Loading-and-plotting-mass-spectrometry-data-1" title="Permalink"></a></h2><p>This tutorial shows how to use how to import data and how to plot mass spectra.</p><p><a href="https://nbviewer.jupyter.org/github/ajgiuliani/MSj.jl/blob/master/docs/src/notebooks/Loading_plotting.ipynb">Loading and plotting data</a></p><h2 id="Filtering-and-averaging-1"><a class="docs-heading-anchor" href="#Filtering-and-averaging-1">Filtering and averaging</a><a class="docs-heading-anchor-permalink" href="#Filtering-and-averaging-1" title="Permalink"></a></h2><p>This notebook shows how to filter and average data.</p><p><a href="https://nbviewer.jupyter.org/github/ajgiuliani/MSj.jl/blob/master/docs/src/notebooks/Filtering_averagging.ipynb">Filtering and averaging data</a></p><h2 id="Extracting-data-from-several-files-1"><a class="docs-heading-anchor" href="#Extracting-data-from-several-files-1">Extracting data from several files</a><a class="docs-heading-anchor-permalink" href="#Extracting-data-from-several-files-1" title="Permalink"></a></h2><p>This tutorial gives an example how to extract UV spectroscpy data from different files containing UV activation at different wavelengths.</p><p><a href="https://nbviewer.jupyter.org/github/ajgiuliani/MSj.jl/blob/master/docs/src/notebooks/Spectroscopy.ipynb">Extracting data from several files</a></p><h2 id="Isotopic-distributions-1"><a class="docs-heading-anchor" href="#Isotopic-distributions-1">Isotopic distributions</a><a class="docs-heading-anchor-permalink" href="#Isotopic-distributions-1" title="Permalink"></a></h2><p>Here we will calculate the isotopic distribution of a compound, simulate a mass spectrum from that distribution and compare this result to experimental data.</p><p><a href="https://nbviewer.jupyter.org/github/ajgiuliani/MSj.jl/blob/master/docs/src/notebooks/Isotopic_distributions.ipynb">Isotopic Distributions</a></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../manual/">Manual »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Thursday 12 December 2019 16:02">Thursday 12 December 2019</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+julia&gt; notebook()</code></pre><p>The <code>notebook()</code> function should launch a web browser from which a new notebook  may be started. On each entry of the notebook code, Markdown or text may be inserted. Each line of code may be executed and will eventually return a result. In the following, the tutorials are given in <code>Jupyter notebook</code> form and can be viewed using <a href="http://nbviewer.jupyter.org/">nbviewer</a>.</p><h1 id="The-MSj-package-1"><a class="docs-heading-anchor" href="#The-MSj-package-1">The MSj package</a><a class="docs-heading-anchor-permalink" href="#The-MSj-package-1" title="Permalink"></a></h1><h2 id="Loading-and-plotting-mass-spectrometry-data-1"><a class="docs-heading-anchor" href="#Loading-and-plotting-mass-spectrometry-data-1">Loading and plotting mass spectrometry data</a><a class="docs-heading-anchor-permalink" href="#Loading-and-plotting-mass-spectrometry-data-1" title="Permalink"></a></h2><p>This tutorial shows how to use how to import data and how to plot mass spectra.</p><p><a href="https://nbviewer.jupyter.org/github/ajgiuliani/MSj.jl/blob/master/docs/src/notebooks/Loading_plotting.ipynb">Loading and plotting data</a></p><h2 id="Filtering-and-averaging-1"><a class="docs-heading-anchor" href="#Filtering-and-averaging-1">Filtering and averaging</a><a class="docs-heading-anchor-permalink" href="#Filtering-and-averaging-1" title="Permalink"></a></h2><p>This notebook shows how to filter and average data.</p><p><a href="https://nbviewer.jupyter.org/github/ajgiuliani/MSj.jl/blob/master/docs/src/notebooks/Filtering_averagging.ipynb">Filtering and averaging data</a></p><h2 id="Extracting-data-from-several-files-1"><a class="docs-heading-anchor" href="#Extracting-data-from-several-files-1">Extracting data from several files</a><a class="docs-heading-anchor-permalink" href="#Extracting-data-from-several-files-1" title="Permalink"></a></h2><p>This tutorial gives an example how to extract UV spectroscpy data from different files containing UV activation at different wavelengths.</p><p><a href="https://nbviewer.jupyter.org/github/ajgiuliani/MSj.jl/blob/master/docs/src/notebooks/Spectroscopy.ipynb">Extracting data from several files</a></p><h2 id="Isotopic-distributions-1"><a class="docs-heading-anchor" href="#Isotopic-distributions-1">Isotopic distributions</a><a class="docs-heading-anchor-permalink" href="#Isotopic-distributions-1" title="Permalink"></a></h2><p>Here we will calculate the isotopic distribution of a compound, simulate a mass spectrum from that distribution and compare this result to experimental data.</p><p><a href="https://nbviewer.jupyter.org/github/ajgiuliani/MSj.jl/blob/master/docs/src/notebooks/Isotopic_distributions.ipynb">Isotopic Distributions</a></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../manual/">Manual »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Thursday 12 December 2019 17:31">Thursday 12 December 2019</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
