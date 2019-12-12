@@ -1,8 +1,17 @@
 # MSj.jl changelog
 
+## Version `v0.3.1`
+
+* ![Feature][badge-feature] `load`: mzxml import now support zlib compression.
+
+* ![Fix][badge-bugfix] Bug fix in mzXML loading: some mzXML contains a precursorMz entry without any ActivationMethod field. A test to ActivationMethod has been added in mzxml.jl.
+
+* ![BREAKING][badge-breaking] ![Enhancement][badge-enhancement] Renaming to `MSj.jl`. This short name should be easier to remember (as it refers to MSn).
+
+
 ## Version `v0.3.0`
 
-* ![BREAKING][badge-breaking] ![Enhancement][badge-enhancement] Renaming: `MSj.jl` to be more inline with the package naming guidelines.
+* ![BREAKING][badge-breaking] ![Enhancement][badge-enhancement] Renaming: `MSJ.jl` to be more inline with the package naming guidelines.
 
 * ![Feature][badge-feature] `formula`: public function. Parse a string containing the chemical formula to a dict{String, Int}.
 
