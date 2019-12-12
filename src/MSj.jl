@@ -15,8 +15,7 @@ using Unicode              # used for file io
 using Combinatorics        # used for factorial & permutations
 using DataStructures       # used for PriorityQueue
 using Printf               # used for @sprintf
-
-using Libz
+using Libz                 # used for zlib compression (mzxml import)
 
 import Base: +, -, *, /
 
