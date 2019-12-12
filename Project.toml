@@ -1,7 +1,7 @@
 name = "MSj"
 uuid = "6544b950-350e-11e9-1ffa-cf344a255499"
 authors = ["Alex Giuliani <giuliani@synchrotron-soleil.fr>"]
-version = "0.3.0"
+version = "0.3.1"
 
 [deps]
 Codecs = "19ecbf4d-ef7c-5e4b-b54a-0a0ff23c5aed"
