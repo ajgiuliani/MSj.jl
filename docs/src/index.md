@@ -12,7 +12,7 @@ Home
    - peak-picking
 * Calculation of isotopic distribution
 
-The [tutorial page](tutorial.md) shows examples how to use this package and provides a general guide to it. The [manual page](manual.md) explains the structure of the package and the [reference page](reference.md) gives a full documentation for each type and function.
+The [tutorial page](tutos/tutorials.md) shows examples how to use this package and provides a general guide to it. The [manual page](man/introduction.md) explains the structure of the package and the [reference page](reference.md) gives a full documentation for each type and function.
 
 
 ## Installation

@@ -15,20 +15,20 @@ abstract type MScontainer  end
     struct MSscan <: MScontainer
 Data structure used to store individual mass spectrometry scans organized following the structure of mzXML files.
 
-struct MSscan <: MScontainer
-    num::Int                          # num
-    rt::Float64                       # retentionTime
-    tic::Float64                      # totIonCurrent
-    mz::Vector{Float64}               # m/z
-    int::Vector{Float64}              # intensity
-    level::Int                        # msLevel
-    basePeakMz::Float64               # basePeakMz
-    basePeakIntensity::Float64        # basePeakIntensity
-    precursor::Float64                # precursorMz
-    polarity::String                  # polarity
-    activationMethod::String          # activationMethod
-    collisionEnergy::Float64          # collisionEnergy
-end
+    struct MSscan <: MScontainer      
+        num::Int                          # num
+        rt::Float64                       # retentionTime
+        tic::Float64                      # totIonCurrent
+        mz::Vector{Float64}               # m/z
+        int::Vector{Float64}              # intensity
+        level::Int                        # msLevel
+        basePeakMz::Float64               # basePeakMz
+        basePeakIntensity::Float64        # basePeakIntensity
+        precursor::Float64                # precursorMz
+        polarity::String                  # polarity
+        activationMethod::String          # activationMethod
+        collisionEnergy::Float64          # collisionEnergy
+    end
 
 
 """
@@ -51,21 +51,21 @@ end
     struct MSscans  <: MScontainer
 Data structure designed to store mass spectra obtained after filtering operation along with the history of these operation.
 
-struct MSscans  <: MScontainer
-    num::Vector{Int}                  # num
-    rt::Vector{Float64}               # retentionTime
-    tic::Float64                      # totIonCurrent
-    mz::Vector{Float64}               # m/z
-    int::Vector{Float64}              # intensity
-    level::Vector{Int}                # msLevel
-    basePeakMz::Float64               # basePeakMz
-    basePeakIntensity::Float64        # basePeakIntensity
-    precursor::Vector{Float64}        # precursorMz
-    polarity::Vector{String}          # polarity
-    activationMethod::Vector{String}  # activationMethod
-    collisionEnergy::Vector{Float64}  # collisionEnergy
-    s::Vector{Float64}                # variance
-end
+    struct MSscans  <: MScontainer        
+        num::Vector{Int}                  # num
+        rt::Vector{Float64}               # retentionTime
+        tic::Float64                      # totIonCurrent
+        mz::Vector{Float64}               # m/z
+        int::Vector{Float64}              # intensity
+        level::Vector{Int}                # msLevel
+        basePeakMz::Float64               # basePeakMz
+        basePeakIntensity::Float64        # basePeakIntensity
+        precursor::Vector{Float64}        # precursorMz
+        polarity::Vector{String}          # polarity
+        activationMethod::Vector{String}  # activationMethod
+        collisionEnergy::Vector{Float64}  # collisionEnergy
+        s::Vector{Float64}                # variance
+    end
 
 """
 struct MSscans  <: MScontainer
@@ -89,11 +89,11 @@ end
     struct Chromatogram  <: MScontainer
 Data structure used to retrieve chromatography data.
 
-struct Chromatogram  <: MScontainer
-    rt::Vector{Float64}
-    ic::Vector{Float64}
-    maxic::Float64
-end
+    struct Chromatogram  <: MScontainer   
+        rt::Vector{Float64}               # retention time
+        ic::Vector{Float64}               # ion current
+        maxic::Float64
+    end
 
 """
 struct Chromatogram  <: MScontainer

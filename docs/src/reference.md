@@ -1,6 +1,3 @@
-References
-==========
-MSj.builoto
 ```@meta
 CurrentModule = MSj
 DocTestSetup  = quote
@@ -9,8 +6,6 @@ end
 ```
 
 This page lists all the documented elements of the `MSj.jl` package covering all modules and submodules.
-
-## Contents
 
 ```@contents
 Pages = ["reference.md"]
@@ -31,6 +26,7 @@ MSj.MScontainer
 MSj.MSscan
 MSj.MSscans
 MSj.Chromatogram
+MSj.Isotope
 ```
 
 ### Methods Types
@@ -85,22 +81,23 @@ MSj.load_mzxml_all
 MSj.load_mzxml
 MSj.load_mzxml_spectrum
 MSj.retention_time(msRun::XMLElement)
-MSj.average(msRun::XMLElement, argument::Level{<:Int})
-MSj.average(msRun::XMLElement, argument::Level{<:AbstractVector})
-MSj.average(msRun::XMLElement, argument::Scan{<:Int})
-MSj.average(msRun::XMLElement, argument::Scan{<:AbstractVector})
-MSj.average(msRun::XMLElement, argument::Polarity{<:String})
-MSj.average(msRun::XMLElement, argument::Polarity{<:AbstractVector})
-MSj.average(msRun::XMLElement, argument::RT{<:Real})
-MSj.average(msRun::XMLElement, argument::RT{<:AbstractVector})
-MSj.average(msRun::XMLElement, argument::RT{<:AbstractVector{<:AbstractVector} } )
-MSj.average(msRun::XMLElement, argument::IC{<:AbstractVector})
-MSj.average(msRun::XMLElement, argument::Precursor{<:Real})
-MSj.average(msRun::XMLElement, argument::Precursor{<:AbstractVector})
-MSj.average(msRun::XMLElement, argument::Activation_Energy{<:Real})
-MSj.average(msRun::XMLElement, argument::Activation_Energy{<:AbstractVector})
-MSj.average(msRun::XMLElement, argument::Activation_Method{<:String})
-MSj.average(msRun::XMLElement, argument::Activation_Method{<:AbstractVector})
+MSj.average(filename::String, arguments::FilterType...; stats::Bool=true
+MSj.filter(msRun::XMLElement, argument::Level{<:Int})
+MSj.filter(msRun::XMLElement, argument::Level{<:AbstractVector})
+MSj.filter(msRun::XMLElement, argument::Scan{<:Int})
+MSj.filter(msRun::XMLElement, argument::Scan{<:AbstractVector})
+MSj.filter(msRun::XMLElement, argument::Polarity{<:String})
+MSj.filter(msRun::XMLElement, argument::Polarity{<:AbstractVector})
+MSj.filter(msRun::XMLElement, argument::RT{<:Real})
+MSj.filter(msRun::XMLElement, argument::RT{<:AbstractVector})
+MSj.filter(msRun::XMLElement, argument::RT{<:AbstractVector{<:AbstractVector} } )
+MSj.filter(msRun::XMLElement, argument::IC{<:AbstractVector})
+MSj.filter(msRun::XMLElement, argument::Precursor{<:Real})
+MSj.filter(msRun::XMLElement, argument::Precursor{<:AbstractVector})
+MSj.filter(msRun::XMLElement, argument::Activation_Energy{<:Real})
+MSj.filter(msRun::XMLElement, argument::Activation_Energy{<:AbstractVector})
+MSj.filter(msRun::XMLElement, argument::Activation_Method{<:String})
+MSj.filter(msRun::XMLElement, argument::Activation_Method{<:AbstractVector})
 MSj.extracted_chromatogram(filename::String, indices::Vector{Int},method::MethodType)
 MSj.composite_spectra(filename::String, indices::Vector{Int}, stats::Bool)
 ```
@@ -111,22 +108,22 @@ MSj.composite_spectra(filename::String, indices::Vector{Int}, stats::Bool)
 MSj.average(scans::Vector{MSscan}, arguments::FilterType...; stats::Bool=true)
 MSj.chromatogram(scans::Vector{MSscan}, filters::FilterType...; method::MethodType=TIC())
 MSj.retention_time(scans::Vector{MSscan})
-MSj.average(scans::Vector{MSscan}, argument::Scan{<:Int})
-MSj.average(scans::Vector{MSscan}, argument::Scan{<:AbstractVector})
-MSj.average(scans::Vector{MSscan}, argument::Level{<:Int})
-MSj.average(scans::Vector{MSscan}, argument::Level{<:AbstractVector})
-MSj.average(scans::Vector{MSscan}, argument::Precursor{<:Real})
-MSj.average(scans::Vector{MSscan}, argument::Precursor{<:AbstractVector})
-MSj.average(scans::Vector{MSscan}, argument::Activation_Energy{<:Real})
-MSj.average(scans::Vector{MSscan}, argument::Activation_Energy{<:AbstractVector})
-MSj.average(scans::Vector{MSscan}, argument::Activation_Method{<:String})
-MSj.average(scans::Vector{MSscan}, argument::Activation_Method{<:AbstractVector})
-MSj.average(scans::Vector{MSscan}, argument::Polarity{<:String})
-MSj.average(scans::Vector{MSscan}, argument::Polarity{<:AbstractVector})
-MSj.average(scans::Vector{MSscan}, argument::RT{<:Real}) 
-MSj.average(scans::Vector{MSscan}, argument::RT{<:AbstractVector})
-MSj.average(scans::Vector{MSscan}, argument::RT{<:AbstractVector{<:AbstractVector} } )
-MSj.average(scans::Vector{MSscan}, argument::IC{<:AbstractVector})
+MSj.filter(scans::Vector{MSscan}, argument::Scan{<:Int})
+MSj.filter(scans::Vector{MSscan}, argument::Scan{<:AbstractVector})
+MSj.filter(scans::Vector{MSscan}, argument::Level{<:Int})
+MSj.filter(scans::Vector{MSscan}, argument::Level{<:AbstractVector})
+MSj.filter(scans::Vector{MSscan}, argument::Precursor{<:Real})
+MSj.filter(scans::Vector{MSscan}, argument::Precursor{<:AbstractVector})
+MSj.filter(scans::Vector{MSscan}, argument::Activation_Energy{<:Real})
+MSj.filter(scans::Vector{MSscan}, argument::Activation_Energy{<:AbstractVector})
+MSj.filter(scans::Vector{MSscan}, argument::Activation_Method{<:String})
+MSj.filter(scans::Vector{MSscan}, argument::Activation_Method{<:AbstractVector})
+MSj.filter(scans::Vector{MSscan}, argument::Polarity{<:String})
+MSj.filter(scans::Vector{MSscan}, argument::Polarity{<:AbstractVector})
+MSj.filter(scans::Vector{MSscan}, argument::RT{<:Real}) 
+MSj.filter(scans::Vector{MSscan}, argument::RT{<:AbstractVector})
+MSj.filter(scans::Vector{MSscan}, argument::RT{<:AbstractVector{<:AbstractVector} } )
+MSj.filter(scans::Vector{MSscan}, argument::IC{<:AbstractVector})
 MSj.extracted_chromatogram(scans::Vector{MSscan}, indices::Vector{Int},method::MethodType)
 MSj.composite_spectra(scans::Vector{MSscan}, indices::Vector{Int}, stats::Bool)
 ```
@@ -148,7 +145,6 @@ MSj.build_subset(scans::Vector{MSscan}, indices::Vector{Int})
 MSj.smooth(scan::MScontainer; method::MethodType=SG(5, 9, 0))
 MSj.smooth(scans::Vector{MSscan}; method::MethodType=SG(5, 9, 0))
 MSj.savitzky_golay_filtering(scan::MScontainer, order::Int, window::Int, deriv::Int)
-MSj.smooth(scans::Vector{MSscan}; method::MethodType=SG(5, 9, 0))
 MSj.centroid(scan::MScontainer; method::MethodType=SNRA(1., 100) )
 MSj.centroid(scans::Vector{MSscan}; method::MethodType=SNRA(1., 100) 
 MSj.snra(scan::MScontainer, thres::Real, region::Int)
@@ -173,7 +169,7 @@ MSj.ipsa(scans::Vector{MSscan}, width::Real, maxiter::Int)
 No functions yet. To be added.
 
 
-## Simulation
+## Simulations
 -------------
 ```@docs
 MSj.formula
@@ -183,7 +179,7 @@ MSj.simulate
 ```
 
 
-## Plots
+# Plots
 --------
 ```@autodocs
 Modules = [MSj.plots]
@@ -191,10 +187,10 @@ Modules = [MSj.plots]
 ```
 
 
-## Utilities
+# Utilities
 ------------
 
-### Base overloaded
+## Base overloaded
 ```@docs
 +(a::MScontainer, b::MScontainer)
 -(a::MScontainer, b::MScontainer)
@@ -206,7 +202,7 @@ Modules = [MSj.plots]
 *(a::MScontainer, b::MScontainer)
 ```
 
-### Utility function
+## Utility function
 ```@docs
 MSj.avg(a::MScontainer, b::MScontainer)
 MSj.add_ion_current(x::Vector{Float64}, y::Vector{Float64}, a::Float64, b::Float64)

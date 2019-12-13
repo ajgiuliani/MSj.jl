@@ -1,13 +1,3 @@
-
-Tutorials
-========
-
-```@meta
-using Plots
-```
-
-The MSj package intends to provide an access to the common open source mass spectrometry file format using [Julia](https://julialang.org/).
-
 # The Julia language
 Julia is an open source programming language designed for scientific and technical computing. This section will give a very brief introduction to the Julia language. 
 
@@ -16,6 +6,7 @@ Julia is an open source programming language designed for scientific and technic
     See also the [Julia](https://julialang.org/) language home page, the [Wikibook](https://en.wikibooks.org/wiki/Introducing_Julia) introduction to Julia or [Julia by example](https://juliabyexample.helpmanual.io).
 	
 ## Installation
+
 Julia binaries are available for various platforms and can be downloaded [here](https://julialang.org/downloads).  Plateform specific instructions may be found [here](https://julialang.org/downloads/platform.html).
 
 ## Executing Julia code
@@ -113,7 +104,7 @@ julia> for i in 1:N
 julia>   #do something
 julia> end
 ```
-While loops my be achiçved like this:
+While loops my be achieved like this:
 ```@jldoctest
 julia> while i <= N
 julia>   #do something
@@ -147,7 +138,7 @@ julia> x = 1:10
 julia> f.(x)
 ```
 
-In Julia, functions that modify their arguments are named `!`, such as:
+In Julia, functions that modify their arguments are named with an exclamation mark `!` at the end of their name, such as:
 ```@jldoctest
 julia> function f!(out, x)
 julia>   out = x.^2
@@ -191,30 +182,4 @@ julia> using IJulia
 julia> notebook()
 ```
 The `notebook()` function should launch a web browser from which a new notebook  may be started. On each entry of the notebook code, Markdown or text may be inserted. Each line of code may be executed and will eventually return a result.
-In the following, the tutorials are given in `Jupyter notebook` form and can be viewed using [nbviewer](http://nbviewer.jupyter.org/).
-
-# The MSj package
-## Loading and plotting mass spectrometry data
-This tutorial shows how to use how to import data and how to plot mass spectra.
-
-[Loading and plotting data](https://nbviewer.jupyter.org/github/ajgiuliani/MSj.jl/blob/master/docs/src/notebooks/Loading_plotting.ipynb)
-
-
-## Filtering and averaging
-This notebook shows how to filter and average data.
-
-[Filtering and averaging data](https://nbviewer.jupyter.org/github/ajgiuliani/MSj.jl/blob/master/docs/src/notebooks/Filtering_averagging.ipynb)
-
-
-## Extracting data from several files
-This tutorial gives an example how to extract UV spectroscpy data from different files containing UV activation at different wavelengths.
-
-[Extracting data from several files](https://nbviewer.jupyter.org/github/ajgiuliani/MSj.jl/blob/master/docs/src/notebooks/Spectroscopy.ipynb)
-
-
-
-## Isotopic distributions
-Here we will calculate the isotopic distribution of a compound, simulate a mass spectrum from that distribution and compare this result to experimental data.
-
-[Isotopic Distributions](https://nbviewer.jupyter.org/github/ajgiuliani/MSj.jl/blob/master/docs/src/notebooks/Isotopic_distributions.ipynb)
-
+In the following, the tutorials are organized in [Jupyer notebooks](@ref) form and can be viewed using [nbviewer](http://nbviewer.jupyter.org/).
