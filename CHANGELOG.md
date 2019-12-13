@@ -2,6 +2,8 @@
 
 ## Version `v0.3.1`
 
+* [Enhacement][badge-enhancement]: documentation has been updated.
+
 * ![Feature][badge-feature] `load`: mzxml import now support zlib compression.
 
 * ![Fix][badge-bugfix] Bug fix in mzXML loading: some mzXML contains a precursorMz entry without any ActivationMethod field. A test to ActivationMethod has been added in mzxml.jl.
