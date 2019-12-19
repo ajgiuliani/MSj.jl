@@ -48,6 +48,6 @@ deploydocs(
     target = "build",
     branch = "gh-pages",
     devbranch = "master",
-    #devurl = "dev",
+    devurl = "stable",
     #versions = ["stable" => "v^", "v#.#"]
 )
